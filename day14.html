@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 14 | Load Balancer &amp; Application Gateway</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 14</div>
+  <h1>Load Balancer &amp; Application Gateway</h1>
+  <p>L4 vs L7 負載平衡精要：五元組雜湊、URL 路徑路由、WAF 整合與全域四強選型</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day13.html">← Day 13</a>
+    <a class="nav-link" href="day15.html">Day 15 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境說明</div>
+    <span id="scenarioText"></span>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "全球複合架構選型",
+    scene: "Titan 科技電商平台三大需求：①URL 路徑精確分流（/media/* 與 /checkout/*）；②應用層 WAF 防禦 OWASP Top 10；③跨區域全球就近導向與容錯移轉。",
+    q: "同時達成「URL 路徑分流、WAF 防禦、跨區域全球導流」三大需求，應採用哪種架構？",
+    opts: [
+      "A. 各區域部署 Azure Load Balancer，搭配 NSG 過濾 SQL 注入，外層掛載 Traffic Manager",
+      "B. 部署 Azure Front Door（啟用 WAF），由 Front Door 負責全球 Anycast 導流、WAF 防禦與 URL 路由",
+      "C. 僅部署 Azure Traffic Manager，各 VM 本機安裝防毒軟體抵禦 Web 攻擊",
+      "D. 放棄雲端負載平衡，在每台 VM 上自行編譯 Nginx 手動過濾攻擊"
+    ],
+    a: 1,
+    exp: "Azure Front Door 是全球邊緣 L7 Anycast 反向代理，集 WAF、URL 路由、CDN 加速與跨區域容錯於一體，完美符合三大需求。A 的 Load Balancer 是 L4，看不懂 URL；NSG 也無法防禦應用層攻擊。C 的 Traffic Manager 只做 DNS 導向，不經手封包，無 WAF 能力。D 缺乏原廠 SLA 與即時威脅特徵庫。正解為 B。"
+  },
+  {
+    type: "單選題",
+    topic: "URL 路徑路由服務選型",
+    scene: "Titan 科技電商平台部署了兩組 VMSS：第一組處理 /images/* 靜態圖片，第二組處理 /checkout/* 金流。需根據 HTTP 請求的 URL 路徑精確分流至不同後端集區。",
+    q: "架構師應推薦哪一項 Azure 服務？",
+    opts: [
+      "A. Azure 負載平衡器（Azure Load Balancer）",
+      "B. Azure 應用程式閘道（Azure Application Gateway）",
+      "C. 網路安全性群組（Network Security Group）",
+      "D. 虛擬網路對等互連（Virtual Network Peering）"
+    ],
+    a: 1,
+    exp: "URL Path-based Routing（路徑型路由）是 Application Gateway（L7 應用層）的招牌特性。Azure Load Balancer 是 L4，只能根據 IP/Port 分流，完全無法讀取 HTTP 請求的 URL 路徑；NSG 只能做 Allow/Deny，無路由轉發能力；VNet Peering 是跨 VNet 互連。正解為 B。"
+  },
+  {
+    type: "單選題",
+    topic: "L4 非 HTTP 流量負載平衡",
+    scene: "Titan 科技車聯網系統中，全球數萬台連網汽車每秒透過自訂 TCP 連接埠 9000 回傳遙測封包，不使用 HTTP 協定，要求微秒級低延遲與百萬級連線吞吐量。",
+    q: "架構師應推薦採用哪一項服務來分發車聯網感測器的 TCP 流量？",
+    opts: [
+      "A. Azure 應用程式閘道（Azure Application Gateway）",
+      "B. Azure 負載平衡器（Azure Load Balancer）",
+      "C. Azure 服務匯流排（Azure Service Bus）",
+      "D. Azure API 管理（Azure API Management）"
+    ],
+    a: 1,
+    exp: "關鍵字：「自訂 TCP 協定、非 HTTP、微秒級低延遲」。Azure Load Balancer 專職 L4（TCP/UDP）封包分流，完全不介入應用層解析，是處理自訂協定的唯一標準解。Application Gateway（A）僅支援 HTTP/HTTPS/WebSocket；Service Bus（C）是非同步傳訊佇列；API Management（D）專為 REST API 治理設計。正解為 B。"
+  },
+  {
+    type: "單選題",
+    topic: "DNS 跨區域流量分發",
+    scene: "Titan 科技在日本東部與美國東部各部署完整 Web 應用。需依用戶地理位置與最佳延遲導流，且方案必須純粹在 DNS 層級完成地址解析，不代理任何實際資料封包。",
+    q: "架構師應推薦哪一項 Azure 服務？",
+    opts: [
+      "A. Azure 流量管理員（Azure Traffic Manager）",
+      "B. Azure 負載平衡器（Azure Load Balancer）",
+      "C. Azure 堡壘主機（Azure Bastion）",
+      "D. Azure 虛擬網路（Azure Virtual Network）"
+    ],
+    a: 0,
+    exp: "關鍵字：「DNS 層級、不代理封包、跨區域分流」—— 這是 Traffic Manager 的教科書式定義。Traffic Manager 僅在 DNS 查詢階段回傳最佳端點 IP，封包本身不經過 Traffic Manager。Azure Load Balancer 是單一區域內 L4 分流；Bastion 是安全遠端管理；VNet 是網路基礎設施。正解為 A。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "Traffic Manager 功能邊界",
+    scene: "提案：「在 Azure 中建立並修改 Azure 流量管理員設定檔（Traffic Manager Profile），以確保 VM1 能夠從公開網際網路透過 HTTP（Port 80）被外部存取。」",
+    q: "此解決方案能否達成讓 VM1 可透過 HTTP 從網際網路被存取的目標？",
+    opts: [
+      "A. Yes（可以達成）",
+      "B. No（無法達成）",
+      "C. 部分可以（需同時配置其他設定）",
+      "D. 資訊不足，需查看 Traffic Manager 路由方法"
+    ],
+    a: 1,
+    exp: "Traffic Manager 只是 DNS 路由工具，本身不能替 VM 開放網路連接埠。若 VM1 沒有 Public IP，或 NSG 未開放 Port 80，單純設定 Traffic Manager 毫無作用。正確做法：為 VM 配置 Public IP 或置於 Azure Public Load Balancer / Application Gateway 後端，並在 NSG 中開放 Inbound Port 80。正解為 B（No）。"
+  },
+  {
+    type: "單選題",
+    topic: "全球影音大檔案邊緣加速",
+    scene: "Titan 科技計劃架設全球化影音串流教學網站，服務全球五大洲數十萬用戶，後端有大量 4K 高畫質影片大檔案。需提供全球用戶最低延遲、最高傳輸流暢度的體驗。",
+    q: "架構師應推薦哪一項 Azure 服務？",
+    opts: [
+      "A. Azure 應用程式閘道（Application Gateway）",
+      "B. Azure 專用通道線路（ExpressRoute Circuit）",
+      "C. Azure 內容傳遞網路（Azure CDN）",
+      "D. Azure 流量管理員（Traffic Manager Profile）"
+    ],
+    a: 2,
+    exp: "關鍵字：「全球使用者、大型影片檔案、最佳播放體驗」。Azure CDN 透過分散全球主要城市的邊緣 POP 節點，將靜態內容快取在距終端用戶最近的位置，大幅降低延遲。Application Gateway（A）是單一區域 L7 代理，無全球邊緣快取；ExpressRoute（B）是地端機房至 Azure 的私有專線；Traffic Manager（D）只做 DNS 導向，無法快取內容。正解為 C。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "Load Balancer L4 限制",
+    scene: "",
+    q: "陳述：Azure Load Balancer 是第 4 層設備，可以根據 HTTP 請求中的 URL 路徑（如 /images 或 /api）進行智慧化路由分流。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（啟用 SKU Standard 後支援）",
+      "D. 資訊不足，需查看 Backend Pool 配置"
+    ],
+    a: 1,
+    exp: "Azure Load Balancer 僅運作於 OSI 第 4 層（傳輸層），只能檢查 TCP/UDP 封包標頭（IP 位址與連接埠），完全無法讀取封包 Payload 中的 HTTP 協定內容，因此無法解析 URL 路徑。URL 路徑路由是第 7 層 Application Gateway 的專屬功能。正解為 B（No）。"
+  },
+  {
+    type: "單選題",
+    topic: "Application Gateway WAF 防禦範圍",
+    scene: "",
+    q: "Azure Application Gateway 整合的 Web Application Firewall（WAF）主要能防禦哪類攻擊？",
+    opts: [
+      "A. DDoS 大量封包洪泛（Volumetric Flood）與網路層封包碎片攻擊",
+      "B. SQL Injection（SQL 注入）、XSS（跨站腳本）等 OWASP Top 10 Web 應用威脅",
+      "C. 零時差作業系統核心漏洞利用（OS Kernel Exploit）",
+      "D. BGP 路由劫持（BGP Hijacking）與 DNS 快取中毒（DNS Poisoning）"
+    ],
+    a: 1,
+    exp: "Application Gateway WAF 基於 OWASP Core Rule Set（CRS），能主動偵測並封鎖 SQL Injection（SQLi）、Cross-Site Scripting（XSS）、遠端程式碼執行（RCE）等 Web 應用層威脅。大量 DDoS 防禦由 Azure DDoS Protection 負責；OS 核心漏洞防護由 Defender for Cloud 負責；BGP/DNS 問題由網路層機制處理。正解為 B。"
+  },
+  {
+    type: "單選題",
+    topic: "複合 SLA 計算（高頻陷阱）",
+    scene: "Titan 科技串聯架構：Application Gateway（原廠 SLA 99.95%）後接 VMSS 跨雙可用性區域（原廠 SLA 99.99%）。",
+    q: "這套串聯應用服務的複合 SLA（Composite SLA）約為多少？",
+    opts: [
+      "A. 高於 99.99%，因為兩層具備多重冗餘互補",
+      "B. 等於 99.99%，以可用性最高的一層為準",
+      "C. 約 99.94%（99.95% × 99.99%），串聯相依組件的複合可用性必然小於各單一組件",
+      "D. 等於 99.95%，以入口閘道的可用性為硬性上限"
+    ],
+    a: 2,
+    exp: "這是 AZ-900 最高頻的 SLA 計算陷阱！串聯（In Series）相依服務的複合可用性必須相乘：99.95% × 99.99% ≈ 99.94%。任何一環故障整體即中斷，因此整體 SLA 永遠小於最低的那個組件。要打破串聯瓶頸，需引入並聯容錯（跨區域並聯部署，由 Front Door 或 Traffic Manager 做全域容錯轉移）。正解為 C。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "Traffic Manager 封包代理",
+    scene: "",
+    q: "陳述：Azure Traffic Manager 在 DNS 解析完成後，後續的實際資料封包流量會經過 Traffic Manager 節點進行中繼轉發處理。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（僅 HTTP 流量會中繼，TCP 不會）",
+      "D. 資訊不足，需查看路由方法設定"
+    ],
+    a: 1,
+    exp: "Traffic Manager 純粹在 DNS 查詢階段運作。當用戶發出 DNS 查詢時，Traffic Manager 回傳最佳目標端點的 IP 位址；一旦 DNS 解析完成，瀏覽器或用戶端直接與目標端點建立連線，封包完全不經過 Traffic Manager。因此它無法做 SSL 卸載、WAF 防禦或 URL 路由。正解為 B（No）。"
+  },
+  {
+    type: "單選題",
+    topic: "Application Gateway SSL 卸載",
+    scene: "",
+    q: "關於 Azure Application Gateway 的 SSL/TLS Termination（憑證卸載）功能，下列哪項描述正確？",
+    opts: [
+      "A. 用戶端與閘道之間使用 HTTPS 加密；閘道解密後可用 HTTP 與後端 VM 通訊，大幅減輕後端 CPU 加解密負擔",
+      "B. 強制端到端（End-to-End）加密，後端 VM 必須自行解密所有 TLS 流量",
+      "C. SSL 卸載僅支援 TLS 1.0 舊版本，不支援 TLS 1.2/1.3",
+      "D. SSL 卸載功能需要額外啟用 Azure DDoS Protection Standard 才能使用"
+    ],
+    a: 0,
+    exp: "SSL/TLS Offloading 的核心價值：用戶端→閘道間使用 HTTPS 加密（安全），閘道→後端可使用 HTTP 明文通訊，將昂貴的加解密計算集中在閘道處理，大幅減輕後端伺服器的 CPU 負擔。這樣後端 VM 可以將運算資源專注在業務邏輯上。正解為 A。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "Front Door vs Traffic Manager 本質差異",
+    scene: "",
+    q: "陳述：Azure Front Door 與 Azure Traffic Manager 一樣，都是純粹的 DNS 路由工具，封包本身不會經過 Front Door 節點處理。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（靜態內容不經過，動態請求會經過）",
+      "D. 資訊不足，需查看 Front Door 路由規則"
+    ],
+    a: 1,
+    exp: "Azure Front Door 與 Traffic Manager 的本質截然不同！Front Door 是全球邊緣網路上的 L7 Anycast 反向代理，封包確實會經過距用戶最近的邊緣 POP 節點處理（SSL 終止、WAF 檢查、URL 路由、CDN 快取）。Traffic Manager 才是純 DNS 工具，不經手封包。正解為 B（No）。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day15.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

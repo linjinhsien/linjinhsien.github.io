@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 28 | AZ-900 特有題型破解</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 28</div>
+  <h1>AZ-900 特有題型破解</h1>
+  <p>拖曳、下拉與熱點陷阱拆解 &mdash; 考場作答流程訓練</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day27.html">← day27.html</a>
+    <a class="nav-link" href="day29.html">day29.html →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "題型策略",
+    topic: "Drag & Drop 作答流程",
+    scene: "Titan 科技的架構師候選人遇到一道 Drag & Drop 配對題，需要將 Azure 服務配對到對應的描述。",
+    q: "遇到 AZ-900 的 Drag & Drop 題型時，正確的作答流程是？",
+    opts: [
+      "先把所有選項拖到看起來最像的位置，再慢慢閱讀題目",
+      "先辨識題型，再讀題幹與限制條件，建立配對關係，最後操作介面",
+      "直接記 ExamTopics 的答案位置，看到相同關鍵字就照排",
+      "所有題型都先猜 Azure 服務名稱，因為題型不影響答案"
+    ],
+    a: 1,
+    exp: "正確流程：先辨題型 → 再抓限制 → 建立關係 → 最後操作。先把操作介面當猜題工具容易因第一個錯誤配對造成後續判斷混亂。舊題庫答案不等於現行官方考綱。題型確實會改變你應該採用的思考方式。"
+  },
+  {
+    type: "題型認識",
+    topic: "Repeated Scenario 不可回頭題組",
+    q: "AZ-900 的「Repeated Scenario（不可回頭連續情境題）」有何特殊性？",
+    opts: [
+      "可以在答題過程中任意返回修改",
+      "全程可標記複查，最後在 Review 畫面統一修改",
+      "一旦按下 Next 確認後，無法返回修改，且不出現在 Review 畫面",
+      "只要完成全卷就可以回頭修改所有題目"
+    ],
+    a: 2,
+    exp: "Repeated Scenario 是 AZ-900 考場頭號殺手：連續 2-3 題相同情境不同解法，按下 Next 後 Previous 按鈕完全鎖死，且在考卷最後的 Review 總結畫面中亦不會出現。每一題必須當下做出斷然決策，切忌指望事後回頭修改。"
+  },
+  {
+    type: "題型認識",
+    topic: "Drag & Drop 選項重複使用",
+    q: "AZ-900 的 Drag & Drop 題目中，哪個警語提示選項可能「重複使用或完全不使用」？",
+    opts: [
+      "\"All answers must be used exactly once\"",
+      "\"An answer choice may be used once, more than once, or not at all\"",
+      "\"Each answer can only be selected once\"",
+      "\"All answer choices must be placed in the correct order\""
+    ],
+    a: 1,
+    exp: "當題目出現 \"An answer choice may be used once, more than once, or not at all\" 時，代表左側選項池中的選項可被重複使用，也可能有選項完全不需要使用。這是 Drag & Drop 題型最容易造成錯誤的陷阱：看到熟悉關鍵字就急著配，卻沒注意選項的使用規則。"
+  },
+  {
+    type: "知識題 - 資源階層",
+    topic: "Azure 資源階層排序",
+    q: "以下哪個 Azure 資源階層順序是正確的（由最高父層到最低子層）？",
+    opts: [
+      "Subscription → Management Group → Resource Group → Resource",
+      "Resource Group → Subscription → Management Group → Resource",
+      "Management Group → Subscription → Resource Group → Resource",
+      "Management Group → Resource Group → Subscription → Resource"
+    ],
+    a: 2,
+    exp: "Azure 資源階層由高至低：Management Group（最高，跨 Subscription 治理）→ Subscription（獨立帳單單位）→ Resource Group（同專案資源容器）→ Resource（實際 VM、硬碟等）。Build List 排序題常考此順序，且特別需要看清題目是「由高至低」還是「由低至高」。"
+  },
+  {
+    type: "知識題 - 共同責任模型",
+    topic: "PaaS 安全責任邊界",
+    scene: "Titan 科技使用 Azure App Service（PaaS）托管 Web 應用。",
+    q: "下列關於安全責任的敘述，哪一項是正確的？",
+    opts: [
+      "使用 PaaS 後，所有安全責任完全由 Microsoft 負責",
+      "客戶仍需對應用程式的資料與存取身分識別負責",
+      "客戶不需要管理應用程式的資料加密",
+      "使用 App Service 後，Guest OS 的更新也由客戶負責"
+    ],
+    a: 1,
+    exp: "在任何雲端服務模式（IaaS / PaaS / SaaS）下，資料與資訊（Data & Information）以及身分與存取（Identity & Access）永遠 100% 屬於客戶自身的責任！PaaS 由 Microsoft 管理 OS 與硬體，但客戶的應用程式資料、存取控制與身分管理仍是客戶責任。"
+  },
+  {
+    type: "知識題 - 關鍵字辨識",
+    topic: "Resource Lock vs Policy",
+    q: "題幹出現「防止資源被誤刪（prevent accidental deletion）」的關鍵字，應優先選擇哪個 Azure 服務？",
+    opts: [
+      "Azure Policy（Deny 效果）",
+      "Azure Tags（DoNotDelete 標籤）",
+      "Resource Locks（CanNotDelete）",
+      "Azure RBAC（移除刪除權限）"
+    ],
+    a: 2,
+    exp: "考場口訣：「防止刪除/唯讀 → Resource Lock」。Resource Lock 的 CanNotDelete 模式可確保即使有足夠 RBAC 權限的使用者也無法刪除資源，除非先移除 Lock。Azure Tags 無任何防刪能力；Azure Policy 是治理規則而非防誤刪工具；RBAC 可限制刪除權限但不如 Lock 強制。"
+  },
+  {
+    type: "知識題 - 服務名稱陷阱",
+    topic: "Entra ID vs Entra Domain Services",
+    scene: "Titan 科技有舊版 Legacy 應用程式，需要透過傳統 LDAP 或 Kerberos 協定進行網域加入（Domain Join）。",
+    q: "應選擇哪項 Azure 身分服務？",
+    opts: [
+      "Microsoft Entra ID（原 Azure AD）",
+      "Microsoft Entra Domain Services",
+      "Azure Active Directory B2C",
+      "Azure Key Vault"
+    ],
+    a: 1,
+    exp: "這是 AZ-900 服務名稱陷阱：Microsoft Entra ID（原 Azure AD）是現代雲端 HTTP/REST 原生身分服務（OAuth 2.0 / OIDC / SAML），不支援傳統 LDAP/Kerberos。要支援傳統網域加入協定，必須選擇 Microsoft Entra Domain Services（受管理的網域服務）。"
+  },
+  {
+    type: "知識題 - SLA 計算",
+    topic: "複合 SLA 計算",
+    scene: "某應用架構前端採用 Web App（SLA 99.9%），後端連接 Azure SQL Database（SLA 99.9%），系統無額外備援機制。",
+    q: "該端對端系統的整體複合 SLA（Composite SLA）約為多少？",
+    opts: [
+      "100%（兩個高可用加成）",
+      "99.9%（取兩者中最低值）",
+      "約 99.8%（兩者相乘：0.999 × 0.999）",
+      "約 99.7%（兩者相加後取平均）"
+    ],
+    a: 2,
+    exp: "多個相依元件串聯時，整體複合 SLA 為各組件相乘：99.9% × 99.9% = 0.999 × 0.999 ≈ 99.8001%。串聯系統的整體可用性必然低於單一組件。要提升複合 SLA，必須引進平行備援（如跨可用性區域多活部署）。"
+  },
+  {
+    type: "題型策略",
+    topic: "Active Screen 計分方式",
+    q: "AZ-900 考場中遇到「Active Screen（三連陳述是非題）」，正確的作答與計分方式是？",
+    opts: [
+      "三句必須全部正確才得分（All-or-Nothing）",
+      "三句為同一整體，答錯一句全扣",
+      "每句獨立計分，答對一句得一分，答錯不倒扣",
+      "只有第一句需要作答，其他自動填入"
+    ],
+    a: 2,
+    exp: "Active Screen 採用 Partial Credit（部分給分）：三句陳述各自獨立計分，答對 2 題得 2 分，答對 1 題得 1 分。答錯絕不倒扣。關鍵提醒：千萬不要留白，即使不確定也要根據關鍵字完成所有選擇。特別注意雙重否定句與絕對化字眼（always/never）。"
+  },
+  {
+    type: "知識題 - 服務模型",
+    topic: "IaaS / PaaS / SaaS 配對",
+    q: "「企業部署應用程式，但不希望自己管理底層 OS 與硬體」最符合哪種雲端服務模型？",
+    opts: [
+      "IaaS（基礎設施即服務）",
+      "PaaS（平台即服務）",
+      "SaaS（軟體即服務）",
+      "FaaS（函式即服務）"
+    ],
+    a: 1,
+    exp: "PaaS 的核心特徵：客戶管理應用程式與資料，底層 OS、硬體由供應商管理。IaaS 客戶需管理 Guest OS；SaaS 客戶直接使用完整應用程式，連應用程式本身都不需要管理。判斷口訣：問「誰負責管理哪一層？」而非背三個英文縮寫。"
+  },
+  {
+    type: "題型策略",
+    topic: "考場關鍵字辨識",
+    q: "AZ-900 題幹出現「強制要求所有資源必須有特定 Tag，且不符合者拒絕建立（enforce / prevent creation）」，應優先想到哪個 Azure 服務？",
+    opts: [
+      "Resource Locks（CanNotDelete）",
+      "Azure Tags（單獨使用）",
+      "Azure Policy（Deny 效果）",
+      "Azure Budgets"
+    ],
+    a: 2,
+    exp: "考場口訣：「防止建立／強制符合規範 → Azure Policy」。看到 enforce、prevent creation、require tag、restrict region 等字眼，第一個要想到的是 Azure Policy。Resource Lock 只防刪除/修改，不管資源建立條件；Tags 本身無強制執行能力；Budgets 是費用追蹤工具。"
+  },
+  {
+    type: "知識題 - 運算服務配對",
+    topic: "Azure 運算服務 Drag & Drop",
+    scene: "Titan 科技需要一個解決方案：以事件驅動方式執行程式碼，盡量降低基礎設施管理負擔，適合短暫執行的工作負載。",
+    q: "在 Drag & Drop 配對題中，「事件驅動 + 降低基礎設施管理」應配對到哪個 Azure 服務？",
+    opts: [
+      "Azure Virtual Machines",
+      "Azure Virtual Machine Scale Sets",
+      "Azure Functions",
+      "Azure Kubernetes Service (AKS)"
+    ],
+    a: 2,
+    exp: "Azure Functions 是事件驅動的 Serverless 運算服務，極致降低底層維運負擔（對應 AWS Lambda）。判斷關鍵：「事件驅動 + least administrative effort + 短暫執行」→ Functions。VM 需管理 OS；VMSS 是多 VM 擴展；AKS 是容器叢集管理，管理負擔更高。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day29.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 20 Quiz – Synapse Analytics &amp; Databricks</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 20</div>
+  <h1>Synapse Analytics &amp; Databricks</h1>
+  <p>資料倉儲・資料湖・Apache Spark・OLTP vs OLAP</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day19.html">← DAY 19</a>
+    <a class="nav-link" href="day21.html">DAY 21 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <span id="scenarioText"></span>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS=[
+  {
+    type:"單選題",topic:"Synapse – 服務更名",scene:"Titan 的舊系統文件中提到要將「Azure SQL Data Warehouse」遷移到現行 Azure 分析服務。",
+    q:"「Azure SQL Data Warehouse」的現行名稱是哪個 Azure 服務？",
+    opts:["A. Azure Synapse Analytics","B. Azure Cosmos DB","C. Azure Queue Storage","D. Azure Virtual Network"],
+    a:0,
+    exp:"Azure SQL Data Warehouse 已更名為 Azure Synapse Analytics（現行名稱）。Microsoft Learn 明確說明：「Dedicated SQL pool (formerly SQL DW) refers to the enterprise data warehousing features available in Azure Synapse Analytics.」Cosmos DB 是 NoSQL 資料庫；Queue Storage 是非同步訊息佇列；Virtual Network 是網路服務。"
+  },
+  {
+    type:"是非題",topic:"Databricks – Apache Spark",scene:"",
+    q:"以下敘述是否正確？「Azure Databricks 是以 Apache Spark 為基礎的分析平台。」",
+    opts:["A. Yes（正確）","B. No（錯誤）","C. 部分正確","D. 資訊不足"],
+    a:0,
+    exp:"敘述完全正確。Azure Databricks 的核心正是受控 Apache Spark 與協作工作區。Microsoft Learn 及 Azure 產品頁面均明確稱其為「Apache Spark-based data and AI platform」。Azure Data Factory 是 ETL/ELT 管線編排（非 Spark 平台）；Azure HDInsight 支援多種開源框架（Spark 只是其中之一，並非其核心定位）。"
+  },
+  {
+    type:"單選題",topic:"Synapse – serverless SQL pool",scene:"Titan 的分析師想按需要用 SQL 查詢存放在 ADLS Gen2 中的資料湖，並不希望預先維護持續運行的專用資料倉儲資源。",
+    q:"Azure Synapse Analytics 中哪個能力最符合此需求？",
+    opts:["A. serverless SQL pool","B. Azure Virtual Machine Scale Sets","C. Azure Key Vault","D. Azure Bastion"],
+    a:0,
+    exp:"serverless SQL pool 依查詢需求讀取資料湖中的檔案，不需要預先佈建 dedicated SQL warehouse，是間歇性查詢或資料湖探索的最佳選擇。VM Scale Sets 是 IaaS 運算擴縮機制；Key Vault 是祕密管理；Azure Bastion 是安全遠端連線服務，均與資料湖 SQL 查詢無關。"
+  },
+  {
+    type:"單選題",topic:"OLAP 巨量資料架構選型",scene:"Titan 要保留 20 TB 的歷史遊戲日誌，存取頻率極低，但每月需以 Power BI 和分析團隊做大範圍彙總分析。",
+    q:"哪個架構方向最合理？",
+    opts:["A. 將所有日誌常駐於 Cosmos DB，讓 OLTP 資料庫直接處理分析","B. 以 ADLS Gen2 保存分析資料，並以 Synapse Analytics 執行資料倉儲或資料湖分析","C. 改用 Azure DNS，因為 DNS 可管理大量記錄","D. 只用 Azure Queue Storage，因為佇列可以做報表彙總"],
+    a:1,
+    exp:"巨量、低頻存取、彙總與 BI 分析是 OLAP 型訊號。ADLS Gen2 作為低成本資料湖儲存，搭配 Synapse Analytics 提供資料倉儲查詢能力，是標準分析架構。Cosmos DB 適合 OLTP 高併發操作；Azure DNS 是名稱解析服務；Queue Storage 是非同步訊息傳遞，均不具備分析查詢能力。"
+  },
+  {
+    type:"單選題",topic:"Databricks – 祕密管理最佳實踐",scene:"Titan 的 Databricks Notebook 必須存取 ADLS Gen2 資料湖與第三方資料來源。",
+    q:"哪項做法最符合防禦性設計原則？",
+    opts:["A. 將高權限存取金鑰直接寫入 Notebook，方便每位工程師複製使用","B. 為工作負載授與所需的最小權限，並以受控身分（Managed Identity）或 Key Vault 管理祕密","C. 將所有分析師加為訂用帳戶 Owner，避免權限問題","D. 將資料湖設為匿名公開讀寫，讓 Spark 更容易讀取"],
+    a:1,
+    exp:"最小權限原則、受控身分與 Key Vault 集中祕密管理能縮小外洩與誤操作的爆炸半徑。硬編碼金鑰容易流入程式碼與執行記錄；過度授予 Owner 權限會擴大攻擊面；公開讀寫完全破壞資料平面邊界。"
+  },
+  {
+    type:"單選題",topic:"Synapse vs Databricks 選型",scene:"Titan 的分析師只需要用 SQL 定期查詢 ADLS Gen2 中已整理的 Parquet 資料；資料工程團隊沒有 Spark Notebook 或機器學習需求。",
+    q:"哪個判斷最精確？",
+    opts:["A. 先評估 Synapse 的 SQL 分析能力；不應只因為是大數據就強制導入 Databricks","B. 一定要使用 Cosmos DB，因為它是所有 Azure 資料服務的共同底座","C. Azure Databricks 是檔案共用服務，Synapse 才是網路服務","D. 必須把資料搬回交易資料庫才能使用 SQL"],
+    a:0,
+    exp:"題幹主要工作是資料湖 SQL 分析，無 Spark、Notebook 或資料工程協作需求。Synapse serverless SQL pool 直接對應此情境。Databricks 不是錯誤服務，但在需求不足時導入會增加工作區、權限與成本複雜度。服務越多，爆炸半徑越大，應以需求驅動選型。"
+  },
+  {
+    type:"單選題",topic:"serverless 成本治理",scene:"Titan 建立 serverless SQL pool 查詢原始資料湖。某份儀表板每五分鐘掃描全部未分割的歷史 Parquet 檔案。",
+    q:"哪項改善最符合成本與效能治理？",
+    opts:["A. 因為是 serverless，所以不必監控掃描量或最佳化資料格式","B. 量測掃描量，將資料整理成適當格式與分割，並評估查詢頻率與設定預算告警","C. 把所有分析師設為訂用帳戶 Owner，讓查詢更快","D. 把存取金鑰貼到報表說明頁，讓每個人直接下載原始資料"],
+    a:1,
+    exp:"serverless 指的是不預先管理專用運算資源，不是資料掃描沒有成本。整理資料格式（如 Parquet + 分割）與治理查詢頻率可大幅降低掃描量與費用。設定預算告警可防止實驗性負載失控。選項 C、D 擴大了權限與祕密外洩風險。"
+  },
+  {
+    type:"單選題",topic:"最小權限 – 資料湖存取",scene:"Titan 的轉換工作只需要將 Silver 資料寫入指定的 ADLS Gen2 路徑，完全不需要讀取所有 HR 原始檔。",
+    q:"哪種設計最符合最小權限原則？",
+    opts:["A. 授與工作負載整個訂用帳戶 Owner 角色","B. 以受控身分授與該工作負載必要的資料路徑與作業（寫入）權限","C. 將 storage account key 硬編碼到所有 Notebook 中","D. 將資料湖設為匿名公開讀寫，方便 Spark 存取"],
+    a:1,
+    exp:"受控身分（Managed Identity）配合範圍化的 RBAC 角色（僅限必要路徑與寫入操作）是最小權限的正確實踐。Owner 角色是過度授權；硬編碼金鑰讓祕密散落於程式碼與記錄；匿名公開讀寫完全破壞資料平面邊界。"
+  },
+  {
+    type:"單選題",topic:"OLTP vs OLAP 工作負載分離",scene:"",
+    q:"為什麼分析工作負載（OLAP）需要獨立於線上交易資料庫（OLTP）運行？",
+    opts:["A. 兩者完全相同，不需要分離，共用同一資料庫可節省成本","B. 因為 OLAP 查詢會掃描大量歷史資料，可能與 OLTP 即時請求爭用資源，導致交易延遲或逾時","C. 因為 Azure 規定 OLTP 與 OLAP 不能使用相同的訂用帳戶","D. 因為 OLAP 只能在 AWS 上執行，無法在 Azure 使用"],
+    a:1,
+    exp:"OLTP 偏好小筆、低延遲的讀寫；OLAP 則掃描大量歷史資料做彙總分析。若兩者共用同一資料庫，月結查詢可能搶走 CPU/IO，導致玩家即時請求逾時甚至誤判成應用程式故障。合理架構是將資料匯入獨立的資料湖，再分別提供 SQL 與 Spark 引擎存取。"
+  },
+  {
+    type:"單選題",topic:"Azure Databricks AWS 對照",scene:"",
+    q:"從 AWS 視角來看，Azure Databricks（受控 Apache Spark 叢集與協作工作區）方向性對應 AWS 的哪個服務？",
+    opts:["A. Amazon RDS","B. Amazon Redshift","C. Amazon EMR","D. Amazon DynamoDB"],
+    a:2,
+    exp:"Amazon EMR（Elastic MapReduce）是 AWS 上的受控 Apache Spark/Hadoop 叢集服務，與 Azure Databricks 同屬 Spark 叢集運算的方向性對照。Amazon RDS 是受管關聯式資料庫；Amazon Redshift 是資料倉儲（對應 Synapse Analytics）；Amazon DynamoDB 是 NoSQL 資料庫（對應 Cosmos DB）。"
+  },
+  {
+    type:"單選題",topic:"資料湖分層 – Bronze/Silver/Gold",scene:"",
+    q:"在 Titan 科技的 ADLS Gen2 資料湖中，Bronze（原始層）的主要用途為何？",
+    opts:["A. 供分析師直接查詢最新 BI 報表","B. 保留從交易、CRM 與事件串流接收的原始資料，供稽核與管線重跑使用","C. 存放已核准、可直接提供給分析師的乾淨資料集","D. 作為 Spark 工作日誌的儲存位置"],
+    a:1,
+    exp:"Bronze 層保留來源的原始資料（不應直接提供給一般報表使用者），是可稽核的事實來源，支援管線重跑。若某次清理邏輯錯誤，只需從 Bronze 重建受影響的 Silver/Gold，而不必覆寫唯一的原始資料。Gold 層才是供 BI/SQL 消費的乾淨資料集。"
+  },
+  {
+    type:"單選題",topic:"Synapse + Databricks 架構角色",scene:"Titan 科技的資料平台同時使用 Azure Databricks、Azure Synapse Analytics 和 ADLS Gen2。",
+    q:"下列哪一組描述最準確地對應三者的角色？",
+    opts:["A. Databricks=Spark 資料工程；Synapse=企業資料倉儲/SQL 分析；ADLS Gen2=共用資料湖底座","B. Databricks=資料倉儲與報表；Synapse=Spark 引擎；ADLS Gen2=訊息佇列","C. Databricks=網路路由服務；Synapse=物件儲存；ADLS Gen2=NoSQL 資料庫","D. 三者功能完全相同，可任意互相替換"],
+    a:0,
+    exp:"正確角色劃分：Databricks 負責 Spark 資料工程與 Notebook 協作（Python/Scala/SQL 大規模轉換）；Synapse 提供企業資料倉儲（dedicated SQL pool）與資料湖 SQL 查詢（serverless SQL pool）；ADLS Gen2 是兩者可共用的低成本資料湖底座。三者相互補充而非互斥替代。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day21.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
