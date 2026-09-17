@@ -67,11 +67,11 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <header>
   <div class="day-badge">DAY 24</div>
   <h1>Zero Trust &amp; Defender for Cloud</h1>
-  <p>零信任架構與資安防禦中心 — AZ-900 練習題庫</p>
-  <div class="nav-links">
-    <a class="nav-link" href="day23.html">← day23.html</a>
-    <a class="nav-link" href="day25.html">day25.html →</a>
-  </div>
+  <p>零信任架構 · 縱深防禦 7 層 · Microsoft Defender for Cloud · JIT VM Access</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day23.html">← Day 23</a>
+    <a class="nav-link" href="day25.html">Day 25 →</a>
+  </nav>
 </header>
 
 <div class="progress-wrap">
@@ -101,108 +101,172 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <script>
 const QUESTIONS = [
   {
-    type: "單選題",
-    topic: "Defender for Cloud — Secure Score",
+    type: "功能識別題",
+    topic: "Defender for Cloud Secure Score",
     scene: "Titan 科技的資安管理員希望評估公司 Azure 訂用帳戶目前的整體資安風險，並希望獲得一份可以量化的指標與改善步驟建議，以逐步提升雲端環境的安全性。",
-    q: "管理員應該在 Microsoft Defender for Cloud 中參考下列哪一項功能？",
-    opts: ["A. Resource Health", "B. Secure Score", "C. Azure Advisor Cost recommendations", "D. Azure Cost Management"],
+    q: "管理員應該在 Microsoft Defender for Cloud 中參考哪一項功能？",
+    opts: [
+      "Resource Health",
+      "Secure Score",
+      "Azure Advisor Cost recommendations",
+      "Azure Cost Management"
+    ],
     a: 1,
-    exp: "Secure Score 是 Microsoft Defender for Cloud 中的核心評分機制，以 0–100% 的百分比量化整體安全體質，並附帶按風險權重排序的 Security Recommendations。Resource Health 反映單一資源運作狀態；C 和 D 屬於成本優化領域。"
+    exp: "Secure Score 是 Defender for Cloud 的核心評分機制，掃描現有資源組態並給出 0–100% 的分數，附帶按風險權重排序的 Security Recommendations（完成建議修正即可提升分數）。Resource Health 僅反映單一資源運作健康；Cost 相關選項屬財務領域，與資安量化無關。"
   },
   {
-    type: "單選題",
-    topic: "縱深防禦 7 層 — 層級分類",
-    scene: "Titan 科技正在規劃雲端防禦架構。",
-    q: "下列哪一項安全措施屬於縱深防禦 7 層模型中的「實體安全 (Physical Security)」層級？",
-    opts: ["A. 限制存取 Azure 資源時必須通過 Entra ID MFA 驗證", "B. 為 Azure VNet 配置 Network Security Group (NSG) 規則", "C. 限制對 Azure 資料中心設施實體建築物的出入門禁控制", "D. 在 Azure Key Vault 中儲存並加密資料庫連線字串"],
+    type: "縱深防禦層次題",
+    topic: "Defense-in-depth 實體層",
+    scene: "Titan 科技正在規劃雲端防禦架構，需要辨別各安全措施屬於縱深防禦 7 層模型的哪一層。",
+    q: "下列哪一項安全措施屬於縱深防禦 7 層模型中的「實體安全（Physical Security）」層級？",
+    opts: [
+      "限制存取 Azure 資源時必須通過 Entra ID MFA 驗證",
+      "為 Azure VNet 配置 Network Security Group (NSG) 規則",
+      "限制對 Azure 資料中心設施實體建築物的出入門禁控制",
+      "在 Azure Key Vault 中儲存並加密資料庫連線字串"
+    ],
     a: 2,
-    exp: "實體安全層指機房建築物門禁與實體保護。(A) 屬身分 (Identity) 層；(B) 屬網路 (Network) 層；(D) 屬應用/資料層。在公有雲中，實體安全完全由微軟負責。"
+    exp: "縱深防禦 7 層對應：MFA（A）→ 身分層；NSG（B）→ 網路層；機房門禁（C）→ 實體安全層；Key Vault（D）→ 應用/資料層。在公有雲中，實體安全層完全由微軟承擔，客戶無需也無法介入。"
   },
   {
-    type: "單選題",
+    type: "Zero Trust 反向辨識題",
     topic: "Zero Trust 三大原則",
     scene: "Titan 科技準備將企業應用全面轉移至 Azure，並要求實施零信任模型。",
-    q: "下列哪一項「不符合」零信任模型的三大指導原則？",
-    opts: ["A. Explicit Verification（顯式驗證）", "B. Use Least Privilege Access（使用最小權限存取）", "C. Default Trust Internal Network（預設信任內部網路）", "D. Assume Breach（假設密碼已被破解）"],
+    q: "下列哪一項不符合零信任模型的三大指導原則？",
+    opts: [
+      "Explicit Verification（顯式驗證）",
+      "Use Least Privilege Access（使用最小權限存取）",
+      "Default Trust Internal Network（預設信任內部網路）",
+      "Assume Breach（假設密碼已被破解）"
+    ],
     a: 2,
-    exp: "零信任三大原則：顯式驗證、最小權限存取、假設密碼已被破解。「預設信任內部網路」是傳統護城河防禦的盲點，正是零信任模型所極力否定與取代的錯誤假設。"
+    exp: "零信任三大原則為：顯式驗證、最小權限存取、假設密碼已被破解。「預設信任內部網路」是傳統護城河防禦的盲點，正是零信任所極力否定的錯誤假設——零信任要求無論內外網，均應始終驗證所有連線。"
   },
   {
-    type: "單選題",
-    topic: "JIT VM Access 功能",
-    scene: "Titan 科技在 Azure 上部署了多台 Virtual Machines。生產環境多台 Linux VM 的 SSH 22 埠開放給全世界，每秒遭受數百次字典暴力破解攻擊。",
-    q: "為了防止攻擊者持續掃描並試圖暴力破解 VM 的 RDP/SSH 連線，資安團隊希望能限制僅在需要時才動態開放連線埠。這項功能稱為什麼？",
-    opts: ["A. Just-In-Time (JIT) VM Access", "B. Azure DDoS Protection", "C. Azure ExpressRoute", "D. Key Vault Secret Management"],
+    type: "功能識別題",
+    topic: "JIT VM Access",
+    scene: "Titan 科技在 Azure 上部署了多台 Virtual Machines。資安團隊希望防止攻擊者持續掃描並試圖暴力破解 VM 的 RDP/SSH 連線，希望能限制僅在需要時才動態開放連線埠。",
+    q: "Defender for Cloud 中的哪項功能可滿足此需求？",
+    opts: [
+      "Just-In-Time (JIT) VM Access",
+      "Azure DDoS Protection",
+      "Azure ExpressRoute",
+      "Key Vault Secret Management"
+    ],
     a: 0,
-    exp: "JIT VM Access 是 Defender for Cloud 的特色功能。平常 NSG 預設拒絕 Port 22/3389 inbound 流量，管理員需要連線時申請，系統動態新增高優先級 Allow 規則，限時（如 3 小時）且限來源 IP，超時自動關閉。"
+    exp: "JIT VM Access 透過 NSG 平時阻擋 22/3389 等管理埠，僅在管理員申請且核准時，動態限時（如 3 小時）、限來源 IP 開啟連線埠，超時自動關閉，大幅縮小暴力破解攻擊面。DDoS Protection 防範流量型攻擊；ExpressRoute 為專線網路；Key Vault 為機密儲存，均非此場景所需。"
   },
   {
-    type: "是非題",
-    topic: "共同責任模型 — 實體安全",
-    scene: "在 Azure 的公有雲架構中，Titan 科技考慮是否需要負責採購、維護並實體安控存放其資料與 VM 的 Azure 資料中心伺服器機架。",
-    q: "在 Azure 公有雲架構中，客戶（Titan 科技）需要負責採購、維護並實體安控存放其資料與 VM 的 Azure 資料中心伺服器機架。此敘述是否正確？",
-    opts: ["A. Yes（正確）", "B. No（錯誤）", "C. 部分正確", "D. 資訊不足"],
+    type: "Yes / No 題",
+    topic: "共同責任模型 實體安全",
+    scene: "判斷以下敘述是否正確：「在 Azure 的公有雲架構中，Titan 科技需要負責採購、維護並實體安控存放其資料與 VM 的 Azure 資料中心伺服器機架。」",
+    q: "上述敘述是否正確？",
+    opts: [
+      "Yes（正確）",
+      "No（錯誤）",
+      "部分正確",
+      "資訊不足"
+    ],
     a: 1,
-    exp: "在公有雲共同責任模型中，資料中心硬體設施、機架與實體電力安控完全由微軟（Microsoft）承擔，客戶無須也無法介入 Azure 資料中心的實體門禁。"
+    exp: "在公有雲共同責任模型中，資料中心硬體設施、機架與實體電力安控完全由微軟承擔，客戶無需也無法介入 Azure 資料中心的實體門禁。這正是公有雲規模經濟的核心優勢之一。"
   },
   {
-    type: "單選題",
-    topic: "CSPM vs CWPP 區別",
-    q: "Microsoft Defender for Cloud 的 CSPM（Cloud Security Posture Management）與 CWPP（Cloud Workload Protection Platform）最主要的功能差異為何？",
-    opts: ["A. CSPM 負責資源備份，CWPP 負責效能監控", "B. CSPM 持續評估雲端資源組態合規性並提供 Secure Score；CWPP 針對 VM、容器、資料庫提供即時進階威脅偵測", "C. CSPM 為付費功能；CWPP 為免費基礎功能", "D. CSPM 只適用 Azure 資源；CWPP 只適用 AWS 資源"],
+    type: "核心概念題",
+    topic: "Zero Trust 核心理念",
+    scene: null,
+    q: "零信任模型（Zero Trust Model）的核心心法是什麼？",
+    opts: [
+      "信任但驗證（Trust But Verify）",
+      "永不信任，始終驗證（Never Trust, Always Verify）",
+      "一旦通過邊界防火牆即可信任所有內部流量",
+      "依使用者職位高低決定信任層級"
+    ],
     a: 1,
-    exp: "CSPM（免費基礎層）持續掃描資源組態合規性並計算 Secure Score；CWPP（付費方案）提供針對伺服器、容器、資料庫等工作負載的即時進階威脅防禦，包含 JIT VM Access 等功能。"
+    exp: "零信任的核心理念是「永不信任，始終驗證（Never Trust, Always Verify）」。它假設系統時刻處於被侵入狀態，不論使用者位於內部或外部網路，均需根據所有可用資料點（身分、裝置合規性、位置等）動態認證，打破「邊界即信任」的傳統假設。"
   },
   {
-    type: "單選題",
-    topic: "Zero Trust — Assume Breach 原則",
-    scene: "Titan 科技的開發團隊誤以為在同一個 VNet 內所有主機就可以互相開放所有 Port，未配置任何內部隔離。",
-    q: "根據零信任模型的「Assume Breach（假設密碼已被破解）」原則，應採取哪項架構措施來降低橫向移動風險？",
-    opts: ["A. 僅在 VNet 邊界部署單一防火牆", "B. 使用 NSG/ASG 實施微區段隔離 (Micro-segmentation)，並強制端到端加密", "C. 關閉所有外部 Log 收集機制以節省成本", "D. 給予所有 VM 相同的 Reader 角色即可"],
+    type: "縱深防禦層次題",
+    topic: "Defense-in-depth 身分層",
+    scene: "Titan 科技正在設計縱深防禦架構，評估各安全控制措施屬於哪個防禦層級。",
+    q: "Entra ID 條件式存取（Conditional Access）與 MFA 多因素驗證屬於縱深防禦的哪一層？",
+    opts: [
+      "實體層（Physical）",
+      "身分層（Identity）",
+      "網路層（Network）",
+      "資料層（Data）"
+    ],
     a: 1,
-    exp: "Assume Breach 原則要求假定攻擊者已滲透，重點是極小化爆炸半徑與阻止橫向移動。NSG/ASG 微區段隔離將不同業務子網與主機嚴密阻隔，配合端到端加密，即使單點被攻破也無法橫向擴散。"
+    exp: "在零信任時代，身分層（Identity）已取代網路周邊，成為新的主要安全防線。Entra ID 條件式存取與 MFA 屬於身分層的核心控制措施。NSG 屬網路層；機房門禁屬實體層；加密屬資料層。"
   },
   {
-    type: "單選題",
-    topic: "縱深防禦 — 身分層地位",
-    q: "在零信任時代的縱深防禦架構中，關於「身分層 (Identity)」的地位，下列何者正確？",
-    opts: ["A. 身分層是最不重要的一層，因為有防火牆保護", "B. 身分層已取代網路周邊，成為現代雲端架構的主要安全防線", "C. 身分層只需要靠密碼保護即可，不需要 MFA", "D. 身分層由微軟完全負責，客戶無需關注"],
+    type: "服務功能辨別題",
+    topic: "Defender for Cloud CSPM vs CWPP",
+    scene: null,
+    q: "Microsoft Defender for Cloud 的免費基礎方案（Free Tier）包含哪項核心功能？",
+    opts: [
+      "只有付費方案才有 Secure Score",
+      "CSPM（雲端安全姿態管理）與 Secure Score，可掃描資源組態並提供安全建議",
+      "JIT VM Access 只在免費方案中提供",
+      "進階威脅偵測（CWPP）功能在免費方案中完整提供"
+    ],
     a: 1,
-    exp: "在零信任時代，身分已取代傳統網路周邊（防火牆）成為新的主要安全防線。透過 Entra ID 的 MFA 與條件式存取，根據使用者身分、裝置狀態、地理位置等多維度動態驗證，才能真正實現「顯式驗證」原則。"
+    exp: "Defender for Cloud 免費基礎層包含 CSPM 與 Secure Score，持續掃描雲端資產組態是否符合業界標準（CIS Benchmark 等）並提供安全建議。JIT VM Access 與進階 CWPP 威脅偵測屬付費增強方案（Defender Plans）。"
   },
   {
-    type: "單選題",
-    topic: "AWS 對照 — 安全態勢管理",
-    q: "在 AWS 中，負責集中評估多帳號安全基準合規狀態並提供安全評分的服務是什麼？這與 Azure 哪個功能最對應？",
-    opts: ["A. AWS CloudTrail ↔ Azure Monitor", "B. AWS Security Hub（安全比分）+ Amazon GuardDuty（威脅偵測）↔ Microsoft Defender for Cloud", "C. AWS Config ↔ Azure Policy", "D. AWS Inspector ↔ Azure Blueprints"],
+    type: "共同責任情境題",
+    topic: "IaaS VM OS 修補責任",
+    scene: "Titan 科技在 Azure 上部署了多台 IaaS 架構的 Virtual Machines（作業系統為 Ubuntu 22.04）。",
+    q: "根據 Azure 共同責任模型，誰負責對這些 VM 的作業系統（Guest OS）進行安全性修補（Security Patching）？",
+    opts: [
+      "微軟（Microsoft）完全負責所有 Guest OS Patching",
+      "Titan 科技（客戶）負責 Guest OS 的修補與安全組態",
+      "微軟負責修補，客戶只需監控結果",
+      "Azure Defender 自動修補，無需客戶介入"
+    ],
     a: 1,
-    exp: "AWS 姿態管理與威脅偵測由 Security Hub 與 GuardDuty 兩大服務分工；Azure 則將這兩大能力整合在單一產品 Microsoft Defender for Cloud 中：CSPM+Secure Score 對標 Security Hub，Defender Plans 對標 GuardDuty。"
+    exp: "在 IaaS 架構中，微軟負責底層實體硬體、Hypervisor 與資料中心設施，但 VM 的 Guest OS 修補、應用程式安全組態與資料保護完全由客戶自行負責。這是共同責任模型中 IaaS 與 PaaS/SaaS 的重要區別。"
   },
   {
-    type: "單選題",
-    topic: "AWS 對照 — 管理連線免開埠",
-    scene: "Titan 科技的系統管理員需要登入私有子網中的 VM 執行維護，但不得開放任何 Inbound 22/3389 埠，且執行個體不得具備 Public IP。",
-    q: "在 AWS 與 Azure 中分別應採用什麼最佳實踐？",
-    opts: ["A. AWS 開放 0.0.0.0/0 Port 22；Azure 開放 Port 3389", "B. AWS Systems Manager Session Manager；Azure Bastion 或 Defender for Cloud JIT VM Access", "C. AWS Route 53；Azure DNS", "D. AWS SQS；Azure Service Bus"],
+    type: "Zero Trust 原則應用題",
+    topic: "Assume Breach 原則",
+    scene: "Titan 科技在實施零信任架構時，採用「假設密碼已被破解（Assume Breach）」原則，改變了架構設計重心。",
+    q: "此原則的核心目標是什麼？",
+    opts: [
+      "假設所有流量都是惡意的，因此完全封鎖所有連線",
+      "最小化爆炸半徑（Blast Radius）並阻止攻擊者橫向移動",
+      "增加更多外圍防火牆層數以防止攻擊者進入",
+      "定期更換所有使用者密碼以防止憑證外洩"
+    ],
     a: 1,
-    exp: "AWS 使用 SSM Session Manager 透過 SSM Agent 從內部向外建立安全通道，無需 Inbound Port。Azure 提供 Azure Bastion（走 TLS 443 連入私網 VM）與 JIT VM Access（動態限時限 IP 開放管理埠）兩種選擇。"
+    exp: "Assume Breach 的核心目標是：假定攻擊者已滲透，架構重點從「防止進入」轉變為「最小化爆炸半徑與阻止橫向移動」。具體手段包括微區段隔離（NSG/ASG）、端到端加密、全鏈路遙測（Defender for Cloud + Sentinel 機器學習異常分析）。"
   },
   {
-    type: "單選題",
-    topic: "Defense-in-depth — 資料層核心地位",
-    q: "在縱深防禦 7 層同心圓模型中，資料層 (Data Layer) 位於最核心，其最重要的安全機制是什麼？為什麼即使其他防線失守，資料層依然能提供保護？",
-    opts: ["A. 透過防火牆阻擋外部連線，使資料永遠安全", "B. 使用 NSG 隔離，確保資料不被存取", "C. 強加密（如 Azure Storage SSE、SQL TDE）與嚴格金鑰控管，使竊取到的資料僅為無意義密文", "D. 定期備份資料至多個地區"],
-    a: 2,
-    exp: "資料層位於縱深防禦同心圓最核心。即便前 6 層防線皆失守，若資料層具備強加密（Azure Storage 靜態加密 SSE、SQL 透明資料加密 TDE）與嚴格金鑰控管（Key Vault），攻擊者竊取到的也僅是無意義的密文。"
-  },
-  {
-    type: "單選題",
-    topic: "Zero Trust — 顯式驗證原則",
-    scene: "Titan 科技的員工在家工作時透過 VPN 連入內網後，傳統系統預設信任其所有內網操作。",
-    q: "根據零信任模型的「顯式驗證 (Verify Explicitly)」原則，即使使用者通過 VPN 連入，系統還應考慮哪些因素進行動態驗證？",
-    opts: ["A. 只需確認使用者名稱與密碼即可完全信任", "B. 綜合評估使用者身分、MFA 狀態、裝置合規性、地理位置異常、登入風險等級等多維度上下文訊號", "C. 只需確認 IP 位址來自內網即可", "D. 由防毒軟體掃描後自動信任"],
+    type: "雙雲對照題",
+    topic: "AWS vs Azure 安全服務對照",
+    scene: null,
+    q: "下列哪一組雙雲服務對照，在「雲端安全姿態管理（CSPM）與安全比分」功能上最為對應？",
+    opts: [
+      "AWS CloudWatch ↔ Azure Monitor",
+      "AWS Security Hub ↔ Azure Defender for Cloud（Secure Score）",
+      "AWS Route 53 ↔ Azure DNS",
+      "AWS GuardDuty ↔ Azure Firewall"
+    ],
     a: 1,
-    exp: "顯式驗證原則要求始終根據所有可用資料點動態認證：使用者身分、MFA 狀態、裝置是否合規、地理位置異常、登入風險等級等。IP 位址可被偽造，僅憑來自內網不足以授予信任，這正是零信任的核心精神。"
+    exp: "雙雲資安對照口訣：資安態勢看分數：AWS Security Hub ↔ Azure Secure Score（Defender for Cloud CSPM）；智慧威脅抓異常：AWS GuardDuty ↔ Azure Defender Plans（CWPP）；管理連線免開埠：AWS Session Manager ↔ Azure JIT VM Access & Bastion。"
+  },
+  {
+    type: "工具選擇題",
+    topic: "Defender for Cloud Security Recommendations",
+    scene: "Titan 科技的 CTO 希望能取得整個 Azure 環境中排序過的安全修補清單，讓團隊能依優先順序逐步改善雲端資安體質。",
+    q: "哪項 Azure 服務最符合此需求？",
+    opts: [
+      "Azure Cost Management + Billing",
+      "Microsoft Defender for Cloud 的 Security Recommendations 與 Secure Score",
+      "Azure Resource Health",
+      "Azure Advisor 的 Performance 建議"
+    ],
+    a: 1,
+    exp: "Microsoft Defender for Cloud 的 Secure Score 搭配 Security Recommendations，提供按風險權重排序的安全修補清單，每項建議並標註完成後可提升的分數幅度，是逐步改善雲端安全體質的最佳工具。Azure Advisor 雖也提供建議，但其安全功能最終指向 Defender for Cloud。"
   }
 ];
 
