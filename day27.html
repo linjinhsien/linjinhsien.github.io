@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 27 | Cost Management &amp; Pricing Calculator</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 27</div>
+  <h1>Cost Management &amp; Pricing Calculator</h1>
+  <p>Azure 成本治理：估算、分析、預警與最佳化</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day26.html">← day26.html</a>
+    <a class="nav-link" href="day28.html">day28.html →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Pricing Calculator",
+    scene: "Titan 科技計畫部署包含 VM、SQL Database 與 Blob Storage 的新系統。CFO 在部署前需要了解每月預估費用。",
+    q: "應使用哪項 Azure 工具來取得部署前的成本估算？",
+    opts: [
+      "Azure Cost Management / Cost Analysis",
+      "Azure Pricing Calculator",
+      "Azure Service Health",
+      "Resource Lock"
+    ],
+    a: 1,
+    exp: "Azure Pricing Calculator 是微軟官方提供的部署前成本估算工具，可依據選定的服務、SKU、Region 與數量進行金額試算。Cost Analysis 用於部署後分析實際帳單；Service Health 處理系統告警；Resource Lock 防止資源刪除，皆無法提供部署前成本估算。"
+  },
+  {
+    type: "單選題",
+    topic: "Cost Management",
+    scene: "Titan 科技已在 Azure 運行數個月，財務團隊需要分析上個月各部門 Resource Group 的實際花費與費用上升趨勢。",
+    q: "應使用哪項 Azure 服務？",
+    opts: [
+      "Azure Pricing Calculator",
+      "Azure Cost Management / Cost Analysis",
+      "Azure Policy",
+      "Microsoft Purview"
+    ],
+    a: 1,
+    exp: "Cost Management 內建的 Cost Analysis 功能可跨 Subscription、Resource Group 與服務維度視覺化呈現實際支出歷史。Pricing Calculator 只能做未來預估，無法讀取過去真實帳單。Azure Policy 負責合規規則；Purview 負責資料資產治理。"
+  },
+  {
+    type: "單選題",
+    topic: "Budgets & Alerts",
+    scene: "Titan 科技財務部設定了每月 Azure 預算上限，要求當實際或預測支出達到門檻 80% 時自動以 Email 通知管理者。",
+    q: "應使用哪項 Azure 功能？",
+    opts: [
+      "Azure Budgets / Cost Alerts",
+      "Resource Lock",
+      "Azure RBAC Role",
+      "Azure Blueprints"
+    ],
+    a: 0,
+    exp: "Azure Budgets 允許管理者定義金額門檻（如 80%、100%），當費用觸發門檻時自動發送通知告警（Cost Alerts）。重要：Budgets 核心是「追蹤與預警」，不會在超支時自動把 VM 硬性關機。Resource Lock 是防刪除/防修改，與預算告警無關。"
+  },
+  {
+    type: "單選題",
+    topic: "CapEx vs OpEx",
+    scene: "Titan 科技決定不預先出資購買實體伺服器與資料中心硬體，而是採用「隨使用量按月支付」的雲端模式。",
+    q: "這最符合哪一種財務支出模型？",
+    opts: [
+      "CapEx（資本支出）",
+      "OpEx（營運支出）",
+      "Depreciation only（僅折舊支出）",
+      "Capital reservation（資本預留）"
+    ],
+    a: 1,
+    exp: "CapEx（Capital Expenditure）是前期對固定資產（如伺服器、機房）的大額投入；OpEx（Operational Expenditure）則是將費用納入日常營運、按用量或服務訂閱隨時間支付。雲端服務主要轉向 OpEx 模式。口訣：CapEx = 先買東西再用；OpEx = 用多少、依方案付多少。"
+  },
+  {
+    type: "單選題",
+    topic: "Reservations",
+    scene: "Titan 科技有一批需連續運行 1 至 3 年的穩定資料庫伺服器，希望透過預先承諾使用期間來取得顯著的單價折扣。",
+    q: "應優先研究哪一種方案？",
+    opts: [
+      "Resource Lock",
+      "Azure Reservations",
+      "Azure Service Health",
+      "Microsoft Purview"
+    ],
+    a: 1,
+    exp: "針對可預測、長期運行的工作負載（如 VM、SQL Database），承諾使用 1 年或 3 年即可獲得 Azure Reservations 折扣，相較於按需 Pay-as-you-go 可節省高達 72% 費用。Resource Lock 是防誤刪工具，Service Health 是健康狀態通知，Purview 是資料治理，皆與成本折扣無關。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Hybrid Benefit",
+    scene: "Titan 科技擁有有效的 Windows Server 軟體保證（Software Assurance）授權，計畫在 Azure 部署 Windows VM。",
+    q: "應使用哪個功能來降低 Azure VM 的授權成本？",
+    opts: [
+      "Azure Reservations",
+      "Azure Hybrid Benefit",
+      "Azure Policy",
+      "Azure Budgets"
+    ],
+    a: 1,
+    exp: "Azure Hybrid Benefit 允許符合授權資格的企業，將既有 Windows Server 或 SQL Server 的合格授權價值帶到 Azure，以降低部分授權成本。這與 Reservations 思考角度不同：Reservations 是對特定使用承諾換取優惠；Hybrid Benefit 是利用既有授權降低成本。"
+  },
+  {
+    type: "單選題",
+    topic: "資料傳輸費用",
+    scene: "Titan 科技需要將地端 50TB 備份資料上傳到 Azure Blob Storage。",
+    q: "這次資料傳輸需要支付多少 Azure 網路費用？",
+    opts: [
+      "按 50TB 出站（Egress）費率計費",
+      "按每 GB 入站（Ingress）費率計費",
+      "免費（入站資料傳輸不收費）",
+      "按 API 請求數計費"
+    ],
+    a: 2,
+    exp: "Azure 的入站資料傳輸（Inbound / Ingress，即從外部傳入 Azure）大多免費。只有出站資料傳輸（Egress，即從 Azure 傳出到公網或跨 Region）才按 GB 收費。因此從地端上傳 50TB 到 Azure 是免費的。"
+  },
+  {
+    type: "單選題",
+    topic: "Tags & Azure Policy",
+    scene: "Titan 科技的 IT 規範要求每個 Azure 資源都必須有 `CostCenter` 標籤，未標記的資源建立時應自動被拒絕。",
+    q: "應使用哪個 Azure 服務來強制執行此規則？",
+    opts: [
+      "Resource Lock",
+      "Azure Tags（單獨使用）",
+      "Azure Policy",
+      "Azure Budgets"
+    ],
+    a: 2,
+    exp: "Tags 本身只是中繼資料（Metadata），無法自動強制要求或拒絕未標記的資源。若需強制每個資源必須帶有特定 Tag，應使用 Azure Policy（Deny 效果）。Resource Lock 是防誤刪工具；Budgets 是費用追蹤，皆無法強制 Tag 規則。"
+  },
+  {
+    type: "單選題",
+    topic: "Budget 行為",
+    q: "下列關於 Azure Budget 的敘述，哪一項是正確的？",
+    opts: [
+      "Budget 超過門檻後會自動停止所有相關 VM",
+      "Budget 是追蹤支出並在達到門檻時發出通知的工具",
+      "Budget 可取代 Azure Policy 強制合規規範",
+      "Budget 僅適用於 Subscription 層級，不支援 Resource Group"
+    ],
+    a: 1,
+    exp: "Azure Budget 的核心功能是「追蹤與預警」：設定金額門檻，當費用接近或超過時發送通知。Budget 不是「斷電開關」，不會自動停止資源。若需要自動化處置，需搭配其他自動化工作流程。Budget 也可在 Resource Group 層級設定。"
+  },
+  {
+    type: "單選題",
+    topic: "成本影響要素",
+    scene: "Titan 科技發現同一規格的 VM（D2s_v5）在 East US 和 Japan East 的月費有明顯差異。",
+    q: "這主要反映了哪個 Azure 成本驅動要素？",
+    opts: [
+      "資源類型（Resource Type）的差異",
+      "服務地區（Location / Region）的差異",
+      "使用量與規格（Usage / SKU）的差異",
+      "資料傳輸（Data Transfer）的差異"
+    ],
+    a: 1,
+    exp: "同一規格服務在不同 Region 因當地資料中心維運成本、電力與地價成本差異，可能有 10-30% 的價差。這是「服務地區（Location / Region）」這個成本驅動要素的體現。在合規與低延遲前提下，可選擇成本最佳的地理區域。"
+  },
+  {
+    type: "單選題",
+    topic: "Tags 的限制",
+    scene: "某 IT 管理員想透過為資源套用 `DoNotDelete: Yes` 標籤來防止工程師誤刪重要資源。",
+    q: "下列關於此方法的評估，哪一項是正確的？",
+    opts: [
+      "這是防止誤刪的有效方法，Tag 具有刪除保護功能",
+      "Tags 僅為中繼資料，無任何安全性控制或防刪除能力",
+      "Tags 可以限制使用者的存取權限",
+      "配合 Azure Policy 後，Tags 可以自動阻止刪除操作"
+    ],
+    a: 1,
+    exp: "Tags 僅為 Key-Value 中繼資料（Metadata），主要用於分類與成本分攤，絕無任何安全性控制、權限限制或防刪除能力。防止誤刪必須使用 Resource Locks (CanNotDelete)；限制存取必須使用 Azure RBAC；強制套用標籤必須使用 Azure Policy。"
+  },
+  {
+    type: "單選題",
+    topic: "TCO Calculator 考綱更新",
+    q: "關於 TCO Calculator（總持有成本計算機）在現行 AZ-900 考綱（2026）中的狀態，下列哪一項是正確的？",
+    opts: [
+      "TCO Calculator 是現行 AZ-900 考綱的核心高頻考點",
+      "TCO Calculator 已從現行 AZ-900 考綱移除，現行重點為 Pricing Calculator 與 Cost Management",
+      "TCO Calculator 與 Pricing Calculator 是同一個工具",
+      "TCO Calculator 是 Azure Cost Management 的子功能"
+    ],
+    a: 1,
+    exp: "2026 年 AZ-900 考綱已明確移除 TCO Calculator。現行學習重點為 Azure Pricing Calculator（部署前估算）與 Cost Management（部署後實際成本分析）。舊題庫中的 TCO Calculator 題目不應視為現行考試高權重考點。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day28.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
