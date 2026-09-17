@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 12 Quiz｜NSG &amp; ASG</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 12</div>
+  <h1>NSG &amp; ASG</h1>
+  <p>Network Security Group &amp; Application Security Group — Azure 網路城牆與工作負載分組</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day11.html">&#8592; Day 11</a>
+    <a class="nav-link" href="day13.html">Day 13 &#8594;</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 &#8594;</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "NSG 服務選型",
+    scene: "Titan 科技計劃在 Azure 部署多台虛擬機器。網路安全管理員需要嚴格控制網際網路（Internet）上的裝置能夠存取這些虛擬機器的特定網路連接埠（Ports）。",
+    q: "架構師應推薦使用哪項 Azure 服務？",
+    opts: [
+      "A. 網路安全性群組 (Network Security Group)",
+      "B. Microsoft Entra ID 角色 (原 Azure AD 角色)",
+      "C. Microsoft Entra ID 資源群組",
+      "D. Azure Key Vault"
+    ],
+    a: 0,
+    exp: "NSG 是 Azure 原生的 L3/L4 虛擬防火牆，可依 Priority、方向、五元組（IP/Port/Protocol）過濾流量，直接掛載於 Subnet 或 NIC。Entra ID（B/C）負責身分驗證與授權，完全無法阻擋 TCP/UDP 封包；Key Vault（D）用於儲存金鑰與機密，不處理網路流量。正解：A。"
+  },
+  {
+    type: "Yes / No",
+    topic: "Traffic Manager 與連接埠放行",
+    scene: "Titan 科技的 Azure 環境包含多台虛擬機器。維運團隊需要確保 VM1 能夠透過 HTTP（Port 80）接受來自網際網路的連線存取。",
+    q: "方案：修改 Azure Traffic Manager 的設定檔（Profile）。請問這項方案是否能達成目標？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 1,
+    exp: "Azure Traffic Manager 是基於 DNS 的全域負載平衡器，它只負責將網域名稱解析為不同端點的 IP，完全不經手實際封包，亦無防火牆放行能力。若要開放 HTTP 存取，必須在關聯的 NSG（或 Azure Firewall）中新增允許 Inbound Port 80 的規則。正解：B（No）。"
+  },
+  {
+    type: "單選題",
+    topic: "跨訂用帳戶集中過濾",
+    scene: "Titan 科技環境包含多個 Azure 訂用帳戶（Subscriptions）與十幾個虛擬網路（VNets）。資安長要求架構團隊推薦一項能「跨多個訂用帳戶與多個虛擬網路」提供集中式網路流量過濾與安全原則強制執行的服務。",
+    q: "應選擇哪項服務？",
+    opts: [
+      "A. Azure 防火牆 (Azure Firewall)",
+      "B. 應用程式安全性群組 (Application Security Group)",
+      "C. Azure DDoS 保護 (Azure DDoS Protection)",
+      "D. 網路安全性群組 (Network Security Group)"
+    ],
+    a: 0,
+    exp: "Azure Firewall 是完全受管的雲端狀態式防火牆，透過 Azure Firewall Policy 可集中跨多個訂用帳戶與 VNet 強制執行規則。NSG（D）與 ASG（B）只能作用在單一 VNet 內部，無法跨訂用帳戶集中管理。DDoS Protection（C）專門抵禦 DDoS 攻擊，不提供自訂規則過濾。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "多層架構內部隔離",
+    scene: "Titan 科技計劃在 Azure 上部署多台 Web 伺服器與多台 Database 伺服器。架構師需要推薦一項解決方案，用以嚴格限制「從 Web 伺服器到 Database 伺服器之間允許的網路連線類型與連接埠」。",
+    q: "推薦方案中應包含什麼？",
+    opts: [
+      "A. 網路安全性群組 (Network Security Groups)",
+      "B. Azure 服務匯流排 (Azure Service Bus)",
+      "C. 本地網路閘道 (Local Network Gateway)",
+      "D. 路由篩選器 (Route Filter)"
+    ],
+    a: 0,
+    exp: "透過將 NSG 掛載於 Database Subnet 並搭配 ASG，設定 Inbound 僅允許來自 Web 層的特定資料庫連接埠（如 Port 1433），其餘由預設 DenyAll 規則封鎖。Service Bus（B）是訊息佇列，Local Network Gateway（C）用於 VPN 站台對站台連線，Route Filter（D）用於 ExpressRoute BGP 路由。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "自訂連接埠放行",
+    scene: "在 Azure 中建立虛擬機器後，該虛擬機器的應用程式需要監聽並接受 TCP 連接埠 8080 的連線請求。",
+    q: "架構師必須修改哪項資源的設定？",
+    opts: [
+      "A. 網路安全性群組 (Network Security Group)",
+      "B. 虛擬網路閘道 (Virtual Network Gateway)",
+      "C. 虛擬網路 (Virtual Network)",
+      "D. 路由表 (Route Table)"
+    ],
+    a: 0,
+    exp: "在關聯於該 VM 網卡或子網路的 NSG 中，新增一條 Priority 較小（高優先權）的 Inbound 規則，將 Destination Port 設為 8080、Action 設為 Allow。Virtual Network（C）只管位址空間，Route Table（D）只管下一躍點，Virtual Network Gateway（B）是 VPN 閘道。正解：A。"
+  },
+  {
+    type: "架構決策",
+    topic: "深度防禦最佳實踐",
+    scene: "Titan 科技的電商微服務包含 Web-Subnet、API-Subnet 及 DB-Subnet。實習架構師提交配置：在 Web NIC 開放 0.0.0.0/0:22（SSH）方便排查；所有規則寫進 VM 作業系統內部防火牆；Outbound 全面封死（含 DNS 與套件更新）。",
+    q: "CTO 詢問符合最小權限原則的正確防禦性架構方案為何？",
+    opts: [
+      "A. 在 Web NIC 開放全球 SSH（0.0.0.0/0:22）並使用複雜密碼；所有流量控制交給 VM 內部防火牆；Outbound 全面封鎖",
+      "B. Web Subnet 套用共同基線 NSG，Web NIC 再套用專屬 NSG 形成雙層防線；以 ASG-Web / ASG-API 定義工作負載信任鏈；管理面改走 Azure Bastion；Outbound 保持適度連網",
+      "C. 只在 Web NIC 套用單一 NSG 並宣告其自動保護同 VNet 所有 VM；在 Inbound 額外開放全球臨時連接埠（1024-65535）確保回應封包返回",
+      "D. 將所有 VM 的 Private IP 直接寫進 NSG 規則；使用多個跨不同區域的 VNet 共同加入同一個 ASG 進行集中控管"
+    ],
+    a: 1,
+    exp: "方案 B 為微軟推薦的深度防禦（Defense-in-Depth）最佳實踐：Subnet NSG 建立全區安全底線，NIC NSG 依業務邏輯細分；ASG 取代靜態 IP 防止組態漂移；Azure Bastion 消除公網 SSH/RDP 攻擊面；NSG 天生 Stateful，回應封包自動放行，無需手動開放 Ephemeral Ports。方案 D 違反 ASG 鐵律：同一 ASG 的 NIC 必須在同一 VNet 內，跨 VNet 會直接報錯。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "NSG 優先序（Priority）規則",
+    scene: "",
+    q: "關於 Azure NSG 優先序（Priority）的描述，下列何者正確？",
+    opts: [
+      "A. Priority 數字越大，優先權越高；4096 的規則最先被評估",
+      "B. Priority 數字越小，優先權越高；100 的規則比 200 先被評估",
+      "C. 所有規則同時評估，若有衝突則 Allow 優先於 Deny",
+      "D. 規則依照建立時間排序，最新的規則最先評估"
+    ],
+    a: 1,
+    exp: "Azure NSG 的 Priority 範圍為 100 至 4096，數字越小優先權越高（The lower the number, the higher the priority）。評估引擎由最小數字開始比對，一旦找到第一條相符的規則便立即執行，後續所有規則全數略過。最後由系統預設規則 65500 DenyAll 作為收口。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "ASG 核心限制",
+    scene: "",
+    q: "關於 Application Security Group (ASG) 的使用限制，下列何者為原廠明確規定的硬性邊界？",
+    opts: [
+      "A. 同一個 ASG 可以跨多個 VNet 聚合不同 VNet 的 NIC",
+      "B. 同一個 ASG 的所有 NIC 必須位於同一個 Virtual Network 之內",
+      "C. 每個 ASG 最多只能加入 10 張虛擬網卡（NIC）",
+      "D. ASG 只能用於 Inbound 規則，不能用於 Outbound 規則"
+    ],
+    a: 1,
+    exp: "ASG 的核心限制（必考）：加入同一個 ASG 的所有虛擬網卡（NIC）必須位於「同一個 Virtual Network」之內，ASG 不支援跨 VNet 聚合資源。若嘗試將不同 VNet 的 NIC 加入同一 ASG，ARM 部署時會直接報錯中斷。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "NSG 雙層評估順序",
+    scene: "",
+    q: "在 Azure 中，當外部（Inbound）流量進入套用了 Subnet NSG 與 NIC NSG 的虛擬機器時，NSG 的評估順序為何？",
+    opts: [
+      "A. 先評估 NIC NSG，再評估 Subnet NSG",
+      "B. 先評估 Subnet NSG，再評估 NIC NSG",
+      "C. Subnet NSG 與 NIC NSG 同時平行評估，任一允許即可放行",
+      "D. 只評估 Subnet NSG，NIC NSG 在有 Subnet NSG 時自動停用"
+    ],
+    a: 1,
+    exp: "Inbound 流量：先通過 Subnet NSG，再通過 NIC NSG，任一層 Deny 即丟棄封包。Outbound 流量順序正好相反：先評估 NIC NSG，再評估 Subnet NSG。這與 AWS 的 NACL（Subnet）+ SG（NIC）架構不同，Azure NSG 兩層都是 Stateful。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Stateful 狀態式連線追蹤",
+    scene: "某架構師在 AWS EC2 前配置了 Security Group，Inbound 開放 TCP Port 443（HTTPS），但 Outbound 未放行任何連接埠。結果客戶端發送 HTTPS 請求後，仍能順利收到伺服器的回應封包。",
+    q: "背後的原因為何？",
+    opts: [
+      "A. Security Group 偵測到 Port 443 流量時會自動在 Outbound 動態開啟對應連接埠",
+      "B. Security Group 是狀態式（Stateful）防火牆，底層連線追蹤機制會自動放行已建立連線的回應流量",
+      "C. 封包的回應路徑被自動重導向至 Network ACL 進行處理",
+      "D. 這是平台的短暫 Bug，實際上必須在 Outbound 明確開啟 Ephemeral Ports (1024–65535)"
+    ],
+    a: 1,
+    exp: "AWS Security Group 是 Stateful（狀態式），連線一旦被 Inbound 允許，其雙向回應流量自動暢通，無需在 Outbound 手動開放 Ephemeral Ports。Azure NSG 同樣是 Stateful——無論掛在 Subnet 還是 NIC 皆如此。在 Azure Outbound 手動開放大範圍 Ephemeral Ports 只會替惡意連線建立外洩通道。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "ASG vs SG Reference 角色分組",
+    scene: "某三層式 Web 應用包含數十台 Web 伺服器隨 Auto Scaling Group 動態增減，IP 位址隨時變動。架構師希望「資料庫僅接受來自 Web 伺服器的 Port 3306 連線」，且不希望每次擴縮時手動修改資料庫防火牆規則。",
+    q: "在 AWS 中，應如何設計？",
+    opts: [
+      "A. 在資料庫 Security Group Inbound 規則中，將 Source 指定為 Web 伺服器的 Security Group ID（SG Reference）",
+      "B. 必須將所有 Web 伺服器配置 Elastic IP (EIP)，並將固定 IP 寫進資料庫規則",
+      "C. 在資料庫 Subnet 配置 NACL，將來源設為整個 VPC 的 CIDR 網段",
+      "D. 在 Web 與 Database 之間架設 NAT Gateway 進行 IP 偽裝"
+    ],
+    a: 0,
+    exp: "AWS SG Reference：直接將來源設為 sg-xxxxxx，任何掛載該 Web SG 的 EC2 都能自動獲得存取權，徹底擺脫維護動態 IP 的問題。Azure 對應概念為 ASG：以 ASG-Web → ASG-DB 表達角色信任鏈，VM 擴縮容時只需將新 NIC 加入 ASG，所有規則自動生效。記住 Azure ASG 鐵律：同一 ASG 的 NIC 必須在同一 VNet 內。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "Service Tag 安全邊界",
+    scene: "",
+    q: "在 NSG 規則中使用 Service Tag「Storage」允許 Outbound 流量，下列描述何者正確？",
+    opts: [
+      "A. 允許所有使用者完整存取帳戶內的所有 Azure Storage 資源（含資料讀寫）",
+      "B. 允許網路封包流向 Azure Storage 服務的 IP 位址範圍，但具體帳戶存取仍需靠 IAM 與金鑰把關",
+      "C. 授予所有 VM 對 Storage 帳戶的 RBAC 貢獻者（Contributor）角色",
+      "D. 自動加密所有前往 Azure Storage 的網路流量"
+    ],
+    a: 1,
+    exp: "Service Tag 是由 Microsoft 集中維護的 Azure 服務 IP 位址前綴群組。允許 Storage Service Tag 代表在網路層允許封包流向 Azure Storage 的 IP 範圍，但這屬於「網路連通性」而非「身分授權」。具體能存取哪個 Storage 帳戶、執行哪些操作，仍必須靠 IAM（RBAC）與存取金鑰管控。Service Tag 絕不代表身分驗證。正解：B。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day13.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 &rarr;</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
