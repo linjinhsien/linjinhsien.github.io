@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 Practice Quiz</title>
+  <style>
+    :root {
+      --azure: #0078d4;
+      --azure-dark: #005a9e;
+      --azure-light: #d0e8f8;
+      --correct: #107c10;
+      --correct-bg: #dff6dd;
+      --wrong: #c50f1f;
+      --wrong-bg: #fde7e9;
+      --neutral: #605e5c;
+      --bg: #f3f2f1;
+      --card: #ffffff;
+      --text: #201f1e;
+      --border: #d2d0ce;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--azure);
+      letter-spacing: -0.3px;
+    }
+
+    header p {
+      color: var(--neutral);
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--neutral);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-track {
+      background: var(--border);
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--azure);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 700px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .question-meta {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--azure);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: #faf9f8;
+      cursor: pointer;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--azure);
+      background: var(--azure-light);
+    }
+
+    .option-btn .letter {
+      min-width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.78rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .option-btn:hover:not(:disabled) .letter {
+      border-color: var(--azure);
+      color: var(--azure);
+    }
+
+    .option-btn.correct {
+      border-color: var(--correct);
+      background: var(--correct-bg);
+    }
+
+    .option-btn.correct .letter {
+      background: var(--correct);
+      border-color: var(--correct);
+      color: #fff;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--wrong);
+      background: var(--wrong-bg);
+    }
+
+    .option-btn.wrong .letter {
+      background: var(--wrong);
+      border-color: var(--wrong);
+      color: #fff;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .explanation {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: #f0f6fc;
+      border-left: 4px solid var(--azure);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--text);
+      display: none;
+    }
+
+    .explanation strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--azure-dark);
+    }
+
+    .explanation.visible { display: block; }
+
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--azure);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--azure-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--azure);
+      border: 2px solid var(--azure);
+    }
+
+    .btn-secondary:hover { background: var(--azure-light); }
+
+    /* Results screen */
+    .results {
+      text-align: center;
+      padding: 40px 32px;
+    }
+
+    .score-ring {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .score-ring.pass {
+      background: var(--correct-bg);
+      border: 5px solid var(--correct);
+      color: var(--correct);
+    }
+
+    .score-ring.fail {
+      background: var(--wrong-bg);
+      border: 5px solid var(--wrong);
+      color: var(--wrong);
+    }
+
+    .score-ring .pct {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .score-ring .label {
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+
+    .results h2 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    .results .subtitle {
+      color: var(--neutral);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      min-width: 100px;
+    }
+
+    .stat-box .num {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .stat-box .desc {
+      font-size: 0.78rem;
+      color: var(--neutral);
+      margin-top: 2px;
+    }
+
+    .stat-box.green .num { color: var(--correct); }
+    .stat-box.red .num { color: var(--wrong); }
+
+    .disclaimer {
+      font-size: 0.75rem;
+      color: var(--neutral);
+      margin-top: 16px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 500px) {
+      .card { padding: 20px 16px; }
+      header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>AZ-900 Practice Quiz</h1>
+  <p>Microsoft Azure Fundamentals &mdash; 30 questions covering all exam domains</p>
+</header>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">Question 1 of 30</span>
+    <span id="scoreText">Score: 0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta">Question 1 &bull; Cloud Concepts</div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">Skip</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    topic: "Cloud Concepts",
+    q: "Which cloud service model gives you the MOST control over the underlying infrastructure?",
+    opts: ["Software as a Service (SaaS)", "Platform as a Service (PaaS)", "Infrastructure as a Service (IaaS)", "Function as a Service (FaaS)"],
+    a: 2,
+    exp: "IaaS provides the highest level of control, giving access to virtualized compute, networking, and storage. You manage the OS, middleware, and applications while the provider manages the physical hardware."
+  },
+  {
+    topic: "Cloud Concepts",
+    q: "What is Capital Expenditure (CapEx) in the context of IT infrastructure?",
+    opts: ["Ongoing pay-as-you-go service costs", "Per-user monthly subscription fees", "Upfront spending on physical infrastructure such as servers and data centers", "Cost savings from cloud migration"],
+    a: 2,
+    exp: "CapEx is spending money on physical infrastructure upfront (servers, buildings, data centers). Cloud computing shifts this to Operational Expenditure (OpEx) — ongoing costs based on consumption, which improves cash flow."
+  },
+  {
+    topic: "Cloud Concepts",
+    q: "Which deployment model combines on-premises infrastructure with public cloud resources?",
+    opts: ["Public cloud", "Community cloud", "Hybrid cloud", "Private cloud"],
+    a: 2,
+    exp: "A hybrid cloud combines on-premises (private) infrastructure with public cloud services, allowing data and applications to move between the two environments. This gives businesses flexibility and more deployment options."
+  },
+  {
+    topic: "Cloud Concepts",
+    q: "What does 'economies of scale' mean in cloud computing?",
+    opts: [
+      "Paying only for what you consume",
+      "Cloud providers reduce per-unit costs through large-scale operations and pass those savings to customers",
+      "Automatically scaling resources based on demand",
+      "Distributing data across multiple geographic regions"
+    ],
+    a: 1,
+    exp: "Because cloud providers operate at massive scale, they purchase resources more cheaply and efficiently than any single organization could. They pass those savings on to customers in the form of lower prices."
+  },
+  {
+    topic: "Cloud Concepts",
+    q: "What cloud characteristic refers to the ability to quickly expand or reduce computing resources based on demand?",
+    opts: ["High availability", "Geo-redundancy", "Elasticity", "Durability"],
+    a: 2,
+    exp: "Elasticity is the ability to automatically scale compute resources up or down in response to changing demand. You only use (and pay for) what you need at any given moment."
+  },
+  {
+    topic: "Cloud Concepts",
+    q: "Which of the following is NOT an advantage of cloud computing over traditional on-premises infrastructure?",
+    opts: ["Reduced time to provision resources", "High upfront capital expenditure", "Pay-as-you-go pricing model", "Global scale and availability"],
+    a: 1,
+    exp: "High upfront capital expenditure is a characteristic of traditional on-premises infrastructure, not a benefit of cloud computing. Cloud computing replaces CapEx with OpEx."
+  },
+  {
+    topic: "Cloud Concepts",
+    q: "In the shared responsibility model, what is the customer ALWAYS responsible for regardless of cloud service model?",
+    opts: ["Physical security of data centers", "Operating system patching", "Identity and access management (IAM) and data", "Network infrastructure"],
+    a: 2,
+    exp: "Regardless of the cloud service model (IaaS, PaaS, SaaS), the customer always retains responsibility for identity and access management and the data they put in the cloud. Microsoft is responsible for the physical data center security."
+  },
+  {
+    topic: "Azure Architecture",
+    q: "What is the MAIN benefit of Azure Availability Zones?",
+    opts: ["Reduced monthly costs", "Protection against an entire data center failure within a region", "Faster application deployment", "Increased storage capacity"],
+    a: 1,
+    exp: "Availability Zones are physically separate data centers within an Azure region, each with independent power, cooling, and networking. Deploying across zones protects applications from single data center failures."
+  },
+  {
+    topic: "Azure Architecture",
+    q: "What is an Azure Resource Group?",
+    opts: ["A billing unit for Azure services", "A virtual network segment", "A type of Azure subscription", "A logical container that holds related Azure resources and shares their lifecycle"],
+    a: 3,
+    exp: "A Resource Group is a container that holds related resources for an Azure solution. All resources in a group share the same lifecycle — they can be deployed, updated, and deleted together. It also allows applying policies and access control."
+  },
+  {
+    topic: "Azure Architecture",
+    q: "Which of the following best describes Azure Regions?",
+    opts: ["Individual physical data centers", "Paired availability zones", "Geographic areas containing one or more data centers connected by a low-latency network", "Virtual network segments in Azure"],
+    a: 2,
+    exp: "An Azure Region is a geographic area containing at least one (usually multiple) data centers connected by a low-latency network. Azure has 60+ regions globally. You choose a region to deploy resources close to your users or to meet data residency requirements."
+  },
+  {
+    topic: "Azure Architecture",
+    q: "What feature allows you to manage multiple Azure subscriptions with unified policies and access control?",
+    opts: ["Resource Groups", "Management Groups", "Azure Policy", "Azure Blueprints"],
+    a: 1,
+    exp: "Management Groups provide a governance scope above subscriptions. You can organize subscriptions into a hierarchy and apply Azure policies and RBAC assignments at the management group level, which cascade down to all subscriptions within."
+  },
+  {
+    topic: "Azure Compute",
+    q: "Which Azure service allows developers to host web applications without managing the underlying virtual machines?",
+    opts: ["Azure Virtual Machines", "Azure Kubernetes Service (AKS)", "Azure App Service", "Azure Batch"],
+    a: 2,
+    exp: "Azure App Service is a PaaS offering for hosting web apps, REST APIs, and mobile back ends. Microsoft manages the underlying infrastructure, OS patching, and scaling, so developers only focus on their application code."
+  },
+  {
+    topic: "Azure Compute",
+    q: "Which of the following is a serverless compute option in Azure where you pay only for execution time?",
+    opts: ["Azure Virtual Machines", "Azure Kubernetes Service", "Azure Batch", "Azure Functions"],
+    a: 3,
+    exp: "Azure Functions is a serverless compute service that runs event-triggered code without you provisioning or managing any infrastructure. You are billed only for the number of executions and the time each execution runs."
+  },
+  {
+    topic: "Azure Compute",
+    q: "What Azure service would you use to run containerized applications without managing any underlying infrastructure?",
+    opts: ["Azure Virtual Machines", "Azure Container Instances (ACI)", "Azure Blob Storage", "Azure ExpressRoute"],
+    a: 1,
+    exp: "Azure Container Instances (ACI) is the fastest and simplest way to run a container in Azure without managing virtual machines. It provides per-second billing and is ideal for scenarios requiring quick startup without complex orchestration."
+  },
+  {
+    topic: "Azure Storage",
+    q: "Which Azure storage service is optimized for storing massive amounts of unstructured data such as images, videos, and documents?",
+    opts: ["Azure SQL Database", "Azure Queue Storage", "Azure Blob Storage", "Azure File Storage"],
+    a: 2,
+    exp: "Azure Blob Storage (Binary Large Object) is Microsoft's object storage solution optimized for massive amounts of unstructured data. It is commonly used for images, documents, video files, backups, and data for analysis."
+  },
+  {
+    topic: "Azure Storage",
+    q: "Which Azure Storage redundancy option replicates data synchronously across three Availability Zones in the primary region?",
+    opts: ["Locally Redundant Storage (LRS)", "Zone-Redundant Storage (ZRS)", "Geo-Redundant Storage (GRS)", "Read-Access Geo-Redundant Storage (RA-GRS)"],
+    a: 1,
+    exp: "ZRS replicates storage data synchronously across three Azure Availability Zones in the primary region. It provides high availability and protection against zone-level failures, but does not protect against a complete regional outage."
+  },
+  {
+    topic: "Azure Networking",
+    q: "Which Azure service provides a dedicated private connection between your on-premises network and Azure, bypassing the public internet?",
+    opts: ["Azure Load Balancer", "Azure VPN Gateway", "Azure ExpressRoute", "Azure Traffic Manager"],
+    a: 2,
+    exp: "Azure ExpressRoute provides a private, dedicated connection from your on-premises network to Azure through a connectivity provider. It bypasses the public internet for greater reliability, faster speeds, lower latency, and higher security."
+  },
+  {
+    topic: "Azure Networking",
+    q: "What Azure service distributes incoming network traffic across multiple backend resources to maximize availability?",
+    opts: ["Azure Application Gateway", "Azure Load Balancer", "Azure Firewall", "Azure Traffic Manager"],
+    a: 1,
+    exp: "Azure Load Balancer operates at Layer 4 (TCP/UDP) and distributes inbound traffic across healthy backend instances (VMs or containers) based on configured rules, maximizing availability and scalability of applications."
+  },
+  {
+    topic: "Azure Databases",
+    q: "Which Azure service provides a globally distributed, multi-model NoSQL database with single-digit millisecond latency?",
+    opts: ["Azure SQL Database", "Azure Table Storage", "Azure Cosmos DB", "Azure Database for PostgreSQL"],
+    a: 2,
+    exp: "Azure Cosmos DB is Microsoft's globally distributed, multi-model database service. It supports multiple APIs (SQL, MongoDB, Cassandra, Gremlin, Table) and provides guaranteed low latency (<10ms) at the 99th percentile with global distribution built in."
+  },
+  {
+    topic: "Azure Databases",
+    q: "Your company wants to migrate an on-premises SQL Server database to Azure with minimal application changes. Which service is most appropriate?",
+    opts: ["Azure Cosmos DB", "Azure SQL Database", "Azure Table Storage", "Azure Blob Storage"],
+    a: 1,
+    exp: "Azure SQL Database is a fully managed relational database service (PaaS) based on the latest stable SQL Server engine. It provides high compatibility with SQL Server, so on-premises SQL workloads can be migrated with minimal changes."
+  },
+  {
+    topic: "Identity & Security",
+    q: "Which Azure service provides cloud-based identity and access management, handling authentication for Azure and Microsoft 365?",
+    opts: ["Azure Key Vault", "Microsoft Entra ID (formerly Azure Active Directory)", "Azure Firewall", "Azure Policy"],
+    a: 1,
+    exp: "Microsoft Entra ID (formerly Azure Active Directory) is Microsoft's cloud-based identity and access management service. It handles authentication, single sign-on (SSO), multi-factor authentication (MFA), and authorization for Azure resources and Microsoft 365."
+  },
+  {
+    topic: "Identity & Security",
+    q: "What is the purpose of Azure Role-Based Access Control (RBAC)?",
+    opts: ["Encrypting data at rest", "Monitoring application performance", "Controlling who has access to Azure resources and what actions they can perform", "Managing subscription billing"],
+    a: 2,
+    exp: "Azure RBAC allows you to grant fine-grained access to Azure resources. You assign roles (Owner, Contributor, Reader, or custom roles) to users, groups, or service principals at a specific scope (subscription, resource group, or resource)."
+  },
+  {
+    topic: "Identity & Security",
+    q: "What Azure feature prevents accidental deletion or modification of a resource?",
+    opts: ["Azure Policy", "Resource Lock", "Azure RBAC", "Azure Blueprints"],
+    a: 1,
+    exp: "Resource Locks protect Azure resources from accidental changes or deletion. A 'Delete' lock prevents deletion while allowing modifications. A 'ReadOnly' lock prevents both modifications and deletion. Locks apply to all users regardless of their RBAC permissions."
+  },
+  {
+    topic: "Identity & Security",
+    q: "Which Azure service provides unified security posture management and threat protection across Azure workloads?",
+    opts: ["Azure Monitor", "Microsoft Sentinel", "Microsoft Defender for Cloud", "Azure Key Vault"],
+    a: 2,
+    exp: "Microsoft Defender for Cloud (formerly Azure Security Center) provides unified security management and advanced threat protection. It continuously assesses your security posture, provides a Secure Score, and offers actionable security recommendations."
+  },
+  {
+    topic: "Azure Management",
+    q: "Which Azure tool provides personalized best-practice recommendations for cost, security, reliability, and performance?",
+    opts: ["Azure Monitor", "Azure Cost Management", "Azure Advisor", "Microsoft Defender for Cloud"],
+    a: 2,
+    exp: "Azure Advisor analyzes your resource configurations and usage and provides actionable, personalized recommendations across five pillars: Cost, Security, Reliability, Operational Excellence, and Performance. It's like a free personalized cloud consultant."
+  },
+  {
+    topic: "Azure Management",
+    q: "What is the purpose of Azure Policy?",
+    opts: ["Manage user identities and access", "Enforce organizational standards and assess compliance across Azure resources at scale", "Monitor application performance metrics", "Configure virtual network routing"],
+    a: 1,
+    exp: "Azure Policy helps enforce organizational rules on resources. For example, you can enforce that all VMs must use a specific SKU, or that all resources must have a required tag. Policies evaluate existing resources and can prevent non-compliant resource creation."
+  },
+  {
+    topic: "Azure Management",
+    q: "What is the purpose of resource tags in Azure?",
+    opts: ["Control access to resources using RBAC", "Encrypt resource data at rest", "Define ARM deployment templates", "Organize and categorize resources for management, billing, and automation"],
+    a: 3,
+    exp: "Tags are name-value pairs you apply to Azure resources to logically organize them. Common uses include cost allocation by department/project, environment identification (dev/test/prod), owner tracking, and automation. Tags appear in billing reports."
+  },
+  {
+    topic: "Azure Management",
+    q: "Which tool helps you estimate the total cost of ownership when comparing on-premises infrastructure to Azure?",
+    opts: ["Azure Pricing Calculator", "Azure Advisor", "Azure Total Cost of Ownership (TCO) Calculator", "Azure Cost Management"],
+    a: 2,
+    exp: "The Azure TCO Calculator helps you estimate the cost savings of migrating workloads from on-premises to Azure. You input your current on-premises configuration and the tool computes the projected 5-year cost comparison including hardware, software, labor, and facilities."
+  },
+  {
+    topic: "Azure Management",
+    q: "Which Azure service helps you monitor your applications and infrastructure, collecting metrics, logs, and alerts from across your Azure resources?",
+    opts: ["Azure Advisor", "Azure Monitor", "Azure Security Center", "Azure Service Health"],
+    a: 1,
+    exp: "Azure Monitor collects, analyzes, and acts on telemetry from Azure resources and on-premises environments. It includes Log Analytics for log queries, Application Insights for app performance, and Alerts/Action Groups to notify teams when issues occur."
+  },
+  {
+    topic: "Compliance & SLA",
+    q: "What does the Azure Service Level Agreement (SLA) define?",
+    opts: ["Data encryption standards and key management", "Regulatory compliance certifications", "The minimum uptime percentage Microsoft guarantees for a service", "Maximum data transfer limits per subscription"],
+    a: 2,
+    exp: "An SLA defines Microsoft's uptime and connectivity commitments for each Azure service. For example, Azure VMs with two or more instances across Availability Zones have a 99.99% uptime SLA. If Microsoft misses the SLA, customers may be eligible for service credits."
+  },
+  {
+    topic: "Cloud Service Models",
+    q: "Microsoft 365 (Office 365) — Word, Excel, Teams — is an example of which cloud service model?",
+    opts: ["Infrastructure as a Service (IaaS)", "Platform as a Service (PaaS)", "Software as a Service (SaaS)", "Database as a Service (DBaaS)"],
+    a: 2,
+    exp: "Microsoft 365 is SaaS. Microsoft manages everything: the infrastructure, platform, and the software itself. Users simply access the applications through a web browser or a thin client. No installation or maintenance of the software is required."
+  }
+];
+
+let current = 0;
+let score = 0;
+let skipped = 0;
+let answered = new Array(QUESTIONS.length).fill(null);
+let shuffled = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  shuffled = shuffle(QUESTIONS.map((_, i) => i));
+  current = 0;
+  score = 0;
+  skipped = 0;
+  answered = new Array(QUESTIONS.length).fill(null);
+  document.getElementById('progressWrap').style.display = '';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const total = QUESTIONS.length;
+  const qi = shuffled[current];
+  const q = QUESTIONS[qi];
+
+  document.getElementById('progressText').textContent = `Question ${current + 1} of ${total}`;
+  document.getElementById('scoreText').textContent = `Score: ${score}`;
+  document.getElementById('progressFill').style.width = `${(current / total) * 100}%`;
+  document.getElementById('questionMeta').innerHTML = `Question ${current + 1} &bull; ${q.topic}`;
+  document.getElementById('questionText').textContent = q.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    container.appendChild(btn);
+  });
+
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('skipBtn').style.display = '';
+}
+
+function selectAnswer(idx) {
+  const qi = shuffled[current];
+  const q = QUESTIONS[qi];
+  const buttons = document.querySelectorAll('.option-btn');
+
+  buttons.forEach(btn => btn.disabled = true);
+
+  const isCorrect = idx === q.a;
+  if (isCorrect) score++;
+  answered[current] = idx;
+
+  buttons[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) buttons[q.a].classList.add('correct');
+
+  const exp = document.getElementById('explanation');
+  exp.innerHTML = `<strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</strong>${q.exp}`;
+  exp.className = 'explanation visible';
+
+  document.getElementById('nextBtn').style.display = '';
+  document.getElementById('skipBtn').style.display = 'none';
+  document.getElementById('scoreText').textContent = `Score: ${score}`;
+}
+
+function skipQuestion() {
+  skipped++;
+  answered[current] = -1;
+  nextQuestion();
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= QUESTIONS.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  const total = QUESTIONS.length;
+  const pct = Math.round((score / total) * 100);
+  const pass = pct >= 70;
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = `Complete`;
+  document.getElementById('scoreText').textContent = `Score: ${score}`;
+
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="results">
+      <div class="score-ring ${pass ? 'pass' : 'fail'}">
+        <span class="pct">${pct}%</span>
+        <span class="label">${pass ? 'PASS' : 'FAIL'}</span>
+      </div>
+      <h2>${pass ? 'Well done!' : 'Keep studying!'}</h2>
+      <p class="subtitle">${pass ? 'You have a strong grasp of Azure Fundamentals.' : 'Review the Azure Fundamentals learning path and try again.'}</p>
+      <div class="stats">
+        <div class="stat-box green">
+          <div class="num">${score}</div>
+          <div class="desc">Correct</div>
+        </div>
+        <div class="stat-box red">
+          <div class="num">${total - score - skipped}</div>
+          <div class="desc">Incorrect</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">${skipped}</div>
+          <div class="desc">Skipped</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">${total}</div>
+          <div class="desc">Total</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()">Try Again</button>
+      <p class="disclaimer">AZ-900 passing score is ~700/1000 (≈70%). Questions are randomized each attempt. This quiz is for practice purposes only.</p>
+    </div>
+  `;
+}
+
+startQuiz();
+</script>
+</body>
+</html>
