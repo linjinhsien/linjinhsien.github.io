@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 21 Quiz – Phase 3 階段總複習</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:#b8860b;color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 21</div>
+  <h1>階段總複習②</h1>
+  <p>Phase 3 運算・網路・儲存・資料服務 15 題情境刷題</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day20.html">← day20.html</a>
+    <a class="nav-link" href="day22.html">day22.html →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 15</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <span id="scenarioText"></span>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type:"服務選型",topic:"App Service Plan 層級",
+    scene:"Titan 科技要在 Azure 上架設一個公開 Web 應用，需求：自訂網域 miami.titan.com、部署到兩個執行個體、支援 SSL、12 GB 儲存空間、成本最小化。",
+    q:"應選擇哪個 App Service Plan 層級？",
+    opts:["Standard","Basic","Free","Shared"],
+    a:0,
+    exp:"Basic 的儲存上限為 10 GB，不足 12 GB 需求，這是最強干擾項；Free 不支援自訂網域與 SSL；Shared 不支援 SSL。Standard 提供 50 GB 儲存、最多 10 個自動擴展執行個體、支援自訂網域與 SSL，是滿足所有需求的最低層級。"
+  },
+  {
+    type:"觀念判斷",topic:"Azure 成本影響因素",
+    scene:null,
+    q:"下列哪一項「不」影響 Azure 資源的成本？",
+    opts:["出站資料量（Outbound egress）","入站資料量（Ingress）","服務層級（Free / Basic / Standard / Premium）","Azure 部署區域（Region）"],
+    a:1,
+    exp:"Azure 對入站資料（ingress）不收費，只有出站資料（egress）、服務層級與部署區域會影響成本。這是「加州旅館原則」——進來免費，出去收費。資料的內容類型（影片或文字）同樣不影響成本，按容量計費。"
+  },
+  {
+    type:"工具選型",topic:"Azure 監控工具",
+    scene:"Titan 科技的 Web 應用在 Azure 上運行，需要量測網頁在使用者瀏覽器中的載入時間。",
+    q:"應使用什麼工具？",
+    opts:["Azure Monitor 警示（Alerts）","Application Insights（Azure Monitor 的 APM 子功能）","Log Analytics","Azure Network Watcher"],
+    a:1,
+    exp:"Application Insights 是 Azure Monitor 的 APM 子功能，可在瀏覽器端注入追蹤碼，收集頁面載入時間、例外與相依性呼叫等前後端效能數據。Monitor Alerts 是通知機制；Log Analytics 是查詢引擎，不直接收集前端效能；Network Watcher 監控 IaaS 網路健康。"
+  },
+  {
+    type:"成本最佳化",topic:"Blob 存取層",
+    scene:"Titan 科技要長期保留法遵所需的歷史紀錄，平時幾乎不存取，但一旦需要取回可以接受數小時等待。",
+    q:"哪個 Blob 存取層級最省成本？",
+    opts:["Hot（熱）層","Cool（冷）層","Cold（極冷）層","Archive（封存）層"],
+    a:3,
+    exp:"Archive 層儲存成本最低，適合幾乎不存取且可接受數小時 rehydrate（取回）延遲的場景。Archive 有 180 天最低保留期限；Hot 儲存成本最高適合頻繁存取；Cool 適合至少 30 天偶爾存取；Cold 適合至少 90 天罕見存取。"
+  },
+  {
+    type:"服務選型",topic:"SQL Server 遷移最大相容性",
+    scene:"Titan 科技既有系統大量依賴 SQL Server Agent 排程、跨資料庫查詢與 CLR 整合，搬遷至 Azure 時希望程式碼改動最少。",
+    q:"應選哪個服務？",
+    opts:["Azure SQL Database","Azure SQL Managed Instance","Azure Cosmos DB","Azure Table Storage"],
+    a:1,
+    exp:"SQL Managed Instance 保留 SQL Server Agent、跨資料庫查詢、CLR 等傳統功能，近乎 100% 相容 SQL Server。SQL Database 適合雲原生新開發但不支援這些傳統功能；Cosmos DB 是 NoSQL 資料庫；Table Storage 是簡單 key-value。"
+  },
+  {
+    type:"服務選型",topic:"非結構化物件儲存",
+    scene:"Titan 科技要儲存數百萬張玩家上傳的遊戲截圖，每張 2–5 MB，需透過 REST API 大量讀取。",
+    q:"最適合的儲存服務是？",
+    opts:["Azure Blob Storage","Azure Files","Azure Managed Disks","Azure Queue Storage"],
+    a:0,
+    exp:"Blob Storage 專為非結構化物件（圖片、影片、日誌）設計，支援 REST API 大量讀取。Azure Files 主打 SMB/NFS 網路磁碟共用；Managed Disks 綁定單一 VM；Queue Storage 單一訊息最大 64 KB，無法儲存 2–5 MB 的截圖。"
+  },
+  {
+    type:"觀念判斷",topic:"未受管理磁碟的底層格式",
+    scene:"Titan 科技有一批舊 VM 使用 unmanaged data disks（未受管理磁碟）。",
+    q:"這些未受管理的磁碟以什麼形式儲存在 Azure 中？",
+    opts:["Page Blobs（在 Blob Storage 容器中）","Azure Files 的 SMB 共用","Azure Queue Storage 訊息","Azure Table Storage 實體"],
+    a:0,
+    exp:"未受管理磁碟以 VHD 格式儲存為 Page Blob（頁面 Blob）。Page Blob 支援隨機讀寫，適合磁碟映像檔。現行最佳實踐應升級為 Managed Disks，由 Azure 自動託管 Storage Account，避免 IOPS 瓶頸。"
+  },
+  {
+    type:"服務選型",topic:"全球分散式低延遲資料庫",
+    scene:"Titan 科技的手遊需要在亞洲、歐洲與北美同時提供個位數毫秒的讀取延遲，且資料模型可能隨版本調整（文件型、key-value、圖形）。",
+    q:"最適合的資料庫服務是？",
+    opts:["Azure SQL Database","Azure Cosmos DB","Azure Table Storage","Azure Synapse Analytics"],
+    a:1,
+    exp:"Cosmos DB 提供全球分散式個位數毫秒延遲，支援多種 API 模型（Document、Key-Value、Graph 等）與五種一致性層級。SQL Database 是單區域關聯式 OLTP；Table Storage 無全球多寫能力；Synapse 是 OLAP 分析引擎，非操作型資料庫。"
+  },
+  {
+    type:"服務選型",topic:"離線大量資料搬遷",
+    scene:"Titan 科技要將地端 80 TB 歷史遊戲錄影遷移至 Azure Blob Storage，網路頻寬有限，線上上傳預估需要數個月。",
+    q:"最適合的遷移方式是？",
+    opts:["AzCopy CLI","Azure Storage Explorer","Azure Data Box","Azure VPN Gateway"],
+    a:2,
+    exp:"Azure Data Box 是實體裝置離線資料搬遷服務（對標 AWS Snowball），適合數十 TB 以上且頻寬有限的場景。AzCopy 與 Storage Explorer 都是線上工具，受頻寬上限限制；VPN Gateway 建立加密通道但同樣受限於網路頻寬。"
+  },
+  {
+    type:"服務選型",topic:"SMB 共用檔案系統",
+    scene:"Titan 科技有五台 Windows VM 需要共用同一組設定檔，使用 SMB 協定掛載為網路磁碟機。",
+    q:"最適合的儲存服務是？",
+    opts:["Azure Blob Storage","Azure Files","Azure Managed Disks","Azure Queue Storage"],
+    a:1,
+    exp:"Azure Files 提供 SMB/NFS 網路磁碟機共用，支援多台 VM 同時掛載，是傳統地端 NAS 的雲端替代方案。Blob Storage 走 REST API，無原生 SMB；Managed Disks 是一對一 VM 專屬磁碟；Queue Storage 是非同步訊息佇列。"
+  },
+  {
+    type:"服務選型",topic:"不管 OS 的 Web API 部署",
+    scene:"Titan 科技的後端團隊要部署自行撰寫的 Node.js Web API，不想管理 VM 的 OS 修補、防毒或執行環境更新。",
+    q:"最佳服務是？",
+    opts:["Azure Virtual Machines","Azure App Service","Azure Kubernetes Service（AKS）","Azure Data Box"],
+    a:1,
+    exp:"App Service 是 PaaS 服務，Microsoft 自動管理 OS 與執行環境的 Auto-patching，團隊只需專注程式碼。VM 是 IaaS 需自管 OS；AKS 需管理 Pod、Ingress 與 K8s 叢集升級，複雜度高；Data Box 是資料搬遷裝置，非運算服務。"
+  },
+  {
+    type:"場景推理",topic:"NSG 規則優先順序",
+    scene:"NSG 有兩條入站規則：規則 100 允許來自 10.0.0.0/24 的 TCP 443；規則 200 拒絕所有入站流量。",
+    q:"來自 10.0.0.5 的 HTTPS 請求會被如何處理？",
+    opts:["拒絕，因為規則 200 拒絕所有流量","允許，因為規則 100 的優先序數字較低、先匹配","取決於 Azure Region 設定","無法判斷，需要 Azure Advisor 分析"],
+    a:1,
+    exp:"NSG 規則數字越小優先權越高，第一個匹配的規則即生效並停止往下比對。10.0.0.5 屬於 10.0.0.0/24，規則 100 先匹配並允許 TCP 443，規則 200 不會被執行。NSG 求值邏輯全域統一，與 Region 無關。"
+  },
+  {
+    type:"服務選型",topic:"混合雲私有連線",
+    scene:"Titan 科技每天要在地端機房與 Azure 之間傳輸大量敏感資料，需要穩定、低延遲且不走公用網際網路的私有連線。",
+    q:"應優先選擇？",
+    opts:["Azure VPN Gateway（Site-to-Site）","Azure ExpressRoute","Azure CDN","Azure DNS"],
+    a:1,
+    exp:"ExpressRoute 透過電信業者提供實體私有專線，不走公用網際網路，提供穩定大頻寬低延遲（對標 AWS Direct Connect）。VPN Gateway 雖加密但仍走公網，延遲波動大；CDN 用於靜態內容分發加速；DNS 是名稱解析服務。"
+  },
+  {
+    type:"服務選型",topic:"SQL BI 分析 vs Spark 資料工程",
+    scene:"Titan 科技的分析師只需要用 SQL 查詢資料湖中已整理的 Parquet 資料來產出 BI 報表，沒有 Spark、Notebook 或機器學習的需求。",
+    q:"最精確的選型判斷是？",
+    opts:["先評估 Synapse SQL；不應只因大數據就強制導入 Databricks","必須用 Cosmos DB，因為它是所有資料服務的共同底座","Databricks 是 Blob 儲存服務，Synapse 是網路服務","必須把資料搬回 SQL Database 才能使用 SQL"],
+    a:0,
+    exp:"Synapse Serverless SQL Pool 可直接查詢資料湖的 Parquet 檔案，無需 Spark 或預先載入。Databricks 以 Apache Spark 為核心，適合複雜資料工程與 ML；純 SQL BI 報表需求不需引入 Databricks 的額外複雜度與成本。"
+  },
+  {
+    type:"服務選型",topic:"儲存備援與跨區域讀取",
+    scene:"Titan 科技的財務資料必須在主要區域故障時仍能立即從次要區域讀取，且在正常狀態下也希望提供次要區域唯讀端點。",
+    q:"應選擇哪種備援選項？",
+    opts:["LRS（本地備援儲存）","ZRS（區域備援儲存）","GRS（異地備援儲存）","RA-GRS（讀取存取異地備援儲存）"],
+    a:3,
+    exp:"RA-GRS 在 GRS 基礎上額外提供次要區域的唯讀端點，正常狀態即可從次要區域讀取。GRS 雖複製到配對區域，但次要端點預設不可讀，需要 Failover 後才開放。LRS 與 ZRS 不提供跨區域保護，無法抵禦整區域故障。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day22.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

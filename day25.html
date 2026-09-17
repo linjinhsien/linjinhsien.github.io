@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 25 Quiz - Azure Key Vault &amp; Sentinel</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 25</div>
+  <h1>Azure Key Vault &amp; Sentinel</h1>
+  <p>AZ-900 考題練習｜金鑰機密管理與 SIEM 縱深防禦</p>
+  <div class="nav-links">
+    <a class="nav-link" href="day24.html">← day24.html</a>
+    <a class="nav-link" href="day26.html">day26.html →</a>
+  </div>
+</header>
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 13</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題</button>
+  </div>
+</div>
+<script>
+const QUESTIONS=[
+  {type:"單選題",topic:"Azure Key Vault 應用場景",scene:"",q:"Titan 科技計畫部署新服務，需要存取外部支付 Gateway 的 API Key 與加密憑證，希望避免將 API Key 儲存在設定檔中，並能集中控管憑證的存取權限與自動續訂，應使用哪項 Azure 服務？",opts:["Azure Key Vault","Microsoft Defender for Cloud","Azure Advisor","Azure Application Gateway"],a:0,exp:"Azure Key Vault 是唯一專門用於集中管理 Secrets（API Key）、Keys（金鑰）與 Certificates（TLS 憑證）的雲端服務，並支援自動續訂與存取控管。Defender for Cloud 負責資源安全姿態評估；Advisor 提供最佳化建議；Application Gateway 是 L7 負載平衡器，三者皆無法取代 Key Vault 的機密管理功能。"},
+  {type:"單選題",topic:"Microsoft Sentinel SIEM/SOAR",scene:"",q:"資安團隊需要收集 Azure 訂用帳戶、AWS 帳號以及 Palo Alto 防火牆的安全日誌，利用 AI 機器學習分析跨系統進階威脅，並在偵測到勒索軟體行為時自動執行腳本阻擋攻擊，應選擇哪項服務？",opts:["Azure Key Vault","Microsoft Defender for Cloud","Microsoft Sentinel","Azure Service Health"],a:2,exp:"Microsoft Sentinel 是雲端原生的 SIEM（跨系統日誌收集與 AI 威脅分析）與 SOAR（自動化事故回應 Playbooks）平台，支援多雲與地端 Data Connectors。Defender for Cloud 著重於資源姿態評估（CSPM/CWPP）；Key Vault 管理機密；Service Health 提供 Azure 服務健康狀態通知，三者皆無法取代 Sentinel 的全域 SIEM/SOAR 功能。"},
+  {type:"單選題",topic:"Defender for Cloud Secure Score",scene:"",q:"IT 主管在 Azure 入口網站中看到名為 Secure Score（安全比分）的百分比指標，並希望透過完成系統建議的改善事項（如開啟 VM 雙重認證、關閉不必要的對外埠）來提升此分數，此 Secure Score 功能由哪個 Azure 服務提供？",opts:["Microsoft Defender for Cloud","Azure Cost Management","Azure Key Vault","Azure Policy"],a:0,exp:"Secure Score 是 Microsoft Defender for Cloud（CSPM）的核心量化指標，持續審查資源安全狀況並計算分數。分數越高代表雲端資源配置越符合微軟資安最佳實踐。Cost Management 管理費用；Key Vault 管理機密；Azure Policy 管理合規規則，三者均不提供 Secure Score 功能。"},
+  {type:"判斷組合題",topic:"Key Vault 機密存取與保護機制",scene:"",q:"判斷以下關於 Azure Key Vault 的三項描述：① Key Vault 可用來安全儲存密碼與資料庫連線字串。② 存取 Key Vault 時，應用程式必須將 Key Vault 的主密碼明碼寫在程式碼中。③ Key Vault 支援 Soft Delete 功能，能防止機密被誤刪後無法復原。",opts:["① 是、② 是、③ 否","① 是、② 否、③ 是","① 否、② 否、③ 是","① 否、② 是、③ 否"],a:1,exp:"① 正確：Key Vault Secrets 專門用於儲存密碼、API Key 與連線字串（最大 25KB）。② 錯誤：應用程式應搭配 Entra ID Managed Identity（受控識別）無密碼認證存取 Key Vault，程式碼中零明碼！③ 正確：Soft Delete 是現代 Key Vault 強制預設啟用的功能，保留期預設 90 天，被刪除的物件可在保留期內還原。"},
+  {type:"服務配對題",topic:"Defender for Cloud vs Microsoft Sentinel",scene:"",q:"Titan 科技需要配對正確服務：[ 聲明 1 ] 提供雲端資源資安建議並計算 Secure Score 的平台；[ 聲明 2 ] 具備 SIEM 與 SOAR 功能，可進行跨雲與地端日誌威脅分析及自動化回應的平台。",opts:["聲明 1：Microsoft Sentinel；聲明 2：Microsoft Defender for Cloud","聲明 1：Microsoft Defender for Cloud；聲明 2：Microsoft Sentinel","聲明 1：Azure Key Vault；聲明 2：Microsoft Defender for Cloud","聲明 1：Azure Policy；聲明 2：Azure Key Vault"],a:1,exp:"Defender for Cloud（CSPM/CWPP）負責資源安全姿態評估與 Secure Score；Microsoft Sentinel（SIEM/SOAR）負責全域企業日誌收集、AI 關聯分析與 Logic Apps 自動化劇本回應。兩者各司其職，不可混淆。"},
+  {type:"單選題",topic:"Key Vault 物件類型",scene:"",q:"在 Azure Key Vault 中，應使用哪種物件類型來儲存資料庫連線字串和第三方服務 API Key？",opts:["Keys（金鑰）","Secrets（機密）","Certificates（憑證）","Policies（原則）"],a:1,exp:"Secrets（機密）是 Key Vault 中儲存字串型態敏感資料的物件類型，適用於資料庫連線字串、API Key、Redis 存取密碼等（最大 25KB）。Keys 用於密碼學加密解密運算；Certificates 用於 TLS/SSL 憑證管理；Policies 並非 Key Vault 物件類型。"},
+  {type:"單選題",topic:"HSM 安全標準",scene:"",q:"Azure Key Vault Premium 與 Managed HSM 使用專用單租戶硬體模組，符合哪個 FIPS 安全標準等級？",opts:["FIPS 140-2 Level 1","FIPS 140-2 Level 2","FIPS 140-2 Level 3","FIPS 140-3 Level 2"],a:2,exp:"Azure Key Vault Premium/Managed HSM 使用專用硬體模組，符合 FIPS 140-2 Level 3（甚至 FIPS 140-3 Level 3）標準，金鑰在 HSM 內部硬體生成，即便微軟工程師也無法提取明碼。標準級（Standard）Key Vault 使用共用硬體，符合 FIPS 140-2 Level 2。HSM 適用於金融、醫療等高度監管合規情境。"},
+  {type:"單選題",topic:"Key Vault Soft Delete 保留期",scene:"",q:"Azure Key Vault 的 Soft Delete 預設保留期（Retention Period）為多少天？",opts:["7 天","30 天","90 天","365 天"],a:2,exp:"Soft Delete 預設保留期為 90 天（可自訂 7 到 90 天）。現代 Azure Key Vault 已強制預設啟用 Soft Delete 且不可停用。在保留期內，被刪除的 Key Vault 或其物件處於可還原狀態，有效防止誤刪造成的機密遺失。"},
+  {type:"情境題",topic:"Key Vault + Sentinel 架構決策",scene:"Titan 科技將核心支付系統微服務化。資安審計發現兩大問題：① 生產環境 SQL 資料庫密碼明文寫死在 App Service 的 web.config 與 GitHub 程式碼庫中；② 企業擁有多個 Azure 訂用帳戶與地端機房，VM 遭受攻擊時，維運團隊需數小時手動比對各系統 Log，無法快速聯動封鎖攻擊源 IP。",q:"下列哪項架構方案最符合「程式碼零明文憑證」且「能自動化跨系統安全事件回應」的需求？",opts:["使用 Defender for Cloud 儲存資料庫密碼，並以 Azure Monitor 執行 SIEM 警報與自動封鎖","使用 Azure Key Vault + Entra ID Managed Identity 實現無密碼存取，並部署 Microsoft Sentinel 進行跨雲 SIEM 與 Logic Apps 自動化 SOAR 回應","使用 Azure Policy 強制加密程式碼中的密碼，並用 Azure Advisor 進行日誌分析與警報","使用 NSG 儲存資料庫憑證，並用 Application Gateway 收集跨系統資安日誌"],a:1,exp:"正確架構：Key Vault 集中安全管理 Secrets/Keys/Certificates，配合 Managed Identity 達成程式碼零明文憑證；Microsoft Sentinel 是雲端原生 SIEM/SOAR，負責跨雲與地端 Log 關聯分析與 Logic Apps 自動化事故回應。Defender for Cloud 無法儲存機密；Azure Monitor 缺乏 SIEM/SOAR 能力；Azure Policy 是合規規則工具而非密碼加密工具；NSG 是 L4 網路過濾，Application Gateway 是 L7 負載平衡，兩者均不適用此場景。"},
+  {type:"單選題",topic:"Sentinel SOAR 自動化劇本",scene:"",q:"Microsoft Sentinel 的 SOAR 自動化劇本（Playbooks）是基於哪個 Azure 服務構建的？",opts:["Azure Functions","Azure Logic Apps","Azure Automation Runbooks","Azure DevOps Pipelines"],a:1,exp:"Microsoft Sentinel 的 Playbooks 是基於 Azure Logic Apps 構建的。當 Sentinel 偵測到可疑暴力破解攻擊時，Logic Apps Playbook 可自動在 Entra ID 封鎖可疑帳號、在 NSG/Azure Firewall 新增 IP 阻擋規則，或在 Teams/Slack 資安頻道發送事件告警通知，實現自動化 SOAR 回應。"},
+  {type:"單選題",topic:"Key Vault Purge Protection",scene:"",q:"關於 Azure Key Vault 的 Purge Protection（清除保護）功能，下列何者正確？",opts:["Purge Protection 是預設啟用的，無需手動開啟","Purge Protection 啟用後可以隨時由訂用帳戶擁有者關閉","Purge Protection 一旦啟用便無法關閉，防止在 Soft Delete 保留期內強制銷毀 Key Vault","Purge Protection 只保護 Keys，不保護 Secrets 和 Certificates"],a:2,exp:"Purge Protection 一旦啟用便無法關閉（這是其安全設計的核心）。它能防止任何角色（包括訂用帳戶擁有者或勒索軟體攻擊者）在 Soft Delete 保留期內強制徹底銷毀 Key Vault 及其中的 Secrets/Keys/Certificates。Purge Protection 是選用功能，但生產環境強烈建議啟用。"},
+  {type:"單選題",topic:"Sentinel 資料收集機制",scene:"",q:"Microsoft Sentinel 使用哪種機制來收集來自 Azure、AWS、地端防火牆等各種來源的安全日誌？",opts:["Azure Active Directory 連線設定","Data Connectors（資料連接器）","API Management 閘道器","VPN Gateway 站對站連線"],a:1,exp:"Microsoft Sentinel 使用 Data Connectors（資料連接器）收集多雲與地端日誌，內建數百種連接器，可一鍵導入 Azure 服務（Entra ID、Defender for Cloud、Key Vault）、Microsoft 365（Office 365、Teams）、AWS CloudTrail/GuardDuty、GCP 稽核日誌、Palo Alto/Cisco 地端設備等來源。"},
+  {type:"單選題",topic:"AWS 雙雲機密管理對照",scene:"",q:"Azure Key Vault 的 Secrets 功能（儲存密碼、API Key 並支援自動輪替）與下列哪項 AWS 服務最接近？",opts:["AWS CloudHSM","AWS KMS（Key Management Service）","AWS Secrets Manager","AWS Certificate Manager（ACM）"],a:2,exp:"AWS Secrets Manager 負責儲存資料庫密碼、API Key 等機密字串並支援自動輪替，對應 Azure Key Vault 的 Secrets 功能。AWS KMS 對應 Key Vault 的 Keys（加密金鑰管理）；AWS Certificate Manager（ACM）對應 Key Vault 的 Certificates（TLS 憑證管理）；AWS CloudHSM 對應 Azure Managed HSM（專用硬體安全模組）。"}
+];
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day26.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
