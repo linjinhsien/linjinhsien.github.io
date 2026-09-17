@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 Day 29｜50 題模擬實戰</title>
+  <style>
+    :root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#ffffff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+    header{width:100%;max-width:760px;margin-bottom:8px;text-align:center;}
+    header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-0.3px;}
+    .day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:0.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;letter-spacing:0.5px;}
+    header p{color:var(--neutral);margin-top:4px;font-size:0.9rem;}
+    .nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+    .nav-link{display:inline-block;font-size:0.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+    .nav-link:hover{background:var(--azure-light);}
+    .progress-wrap{width:100%;max-width:760px;margin-bottom:20px;margin-top:16px;}
+    .progress-label{display:flex;justify-content:space-between;font-size:0.82rem;color:var(--neutral);margin-bottom:6px;}
+    .progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+    .progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width 0.3s ease;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:760px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    .question-meta{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--azure);font-weight:600;margin-bottom:6px;}
+    .qtype-badge{display:inline-block;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--azure-light);color:var(--azure-dark);margin-bottom:10px;}
+    .scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:18px;font-size:0.95rem;line-height:1.65;}
+    .scenario-box .scene-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--azure-dark);margin-bottom:6px;}
+    .question-text{font-size:1.05rem;line-height:1.6;margin-bottom:20px;font-weight:600;}
+    .options{display:flex;flex-direction:column;gap:10px;}
+    .option-btn{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:0.95rem;line-height:1.5;text-align:left;transition:border-color 0.15s,background 0.15s;width:100%;}
+    .option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+    .option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0;margin-top:1px;transition:background 0.15s,border-color 0.15s,color 0.15s;}
+    .option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+    .option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+    .option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+    .option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+    .option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+    .option-btn:disabled{cursor:default;}
+    .explanation{margin-top:20px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:0.9rem;line-height:1.6;display:none;}
+    .explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+    .explanation.visible{display:block;}
+    .actions{margin-top:24px;display:flex;justify-content:flex-end;gap:12px;}
+    .btn{padding:10px 22px;border-radius:var(--radius);font-size:0.92rem;font-weight:600;cursor:pointer;border:none;transition:background 0.15s,transform 0.1s;}
+    .btn:active{transform:scale(0.97);}
+    .btn-primary{background:var(--azure);color:#fff;}
+    .btn-primary:hover{background:var(--azure-dark);}
+    .btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+    .btn-secondary:hover{background:var(--azure-light);}
+    .results{text-align:center;padding:40px 32px;}
+    .score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+    .score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+    .score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+    .score-ring .pct{font-size:2rem;line-height:1;}
+    .score-ring .label{font-size:0.75rem;margin-top:2px;}
+    .results h2{font-size:1.4rem;margin-bottom:8px;}
+    .results .subtitle{color:var(--neutral);font-size:0.9rem;margin-bottom:24px;}
+    .stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+    .stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+    .stat-box .num{font-size:1.5rem;font-weight:700;}
+    .stat-box .desc{font-size:0.78rem;color:var(--neutral);margin-top:2px;}
+    .stat-box.green .num{color:var(--correct);}
+    .stat-box.red .num{color:var(--wrong);}
+    .disclaimer{font-size:0.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+    @media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="day-badge">DAY 29</div>
+  <h1>Random Processing 模擬戰（一）</h1>
+  <p>50 題情境實戰 × 10 種題型隨機破局｜Domain 1+2+3 混合</p>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">← 標準練習題</a>
+    <a class="nav-link" href="scenario.html">情境題（50 題）</a>
+    <a class="nav-link" href="day30.html">Day 30 →</a>
+  </div>
+</header>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 50</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {type:"Case Study",topic:"CapEx vs OpEx",scene:"Contoso 的 IT 總監計劃將 100 台地端伺服器遷移至 Azure。遷移後，公司不再需要每 4-5 年採購新伺服器，改為按月依用量付費。",q:"遷移至 Azure 後，「避免一次性硬體採購、改為每月按用量支付」這種財務模式的轉變屬於？",opts:["CapEx（資本支出）模式——前期大量投資","OpEx（營運支出）模式——如水電費的日常支出","CapEx 與 OpEx 各佔一半","固定授權費用，與使用量無關"],a:1,exp:"雲端的隨用隨付讓企業免除前期硬體採購（CapEx），轉化為如同水電費般的日常營運支出（OpEx）。Azure Migrate 是協助地端伺服器遷移的官方工具，提供自動探索與相依性分析。"},
+  {type:"Multiple Choice",topic:"Azure Functions",scene:"Tailwind Traders 需要一個事件驅動的訂單通知系統：每當客戶下單時觸發一段短暫的處理邏輯（執行數秒），無訂單時系統閒置。IT 部門希望最少管理負擔、無請求時零運算費用。",q:"哪個 Azure 服務最符合「事件驅動、最少管理、無事件時零費用」的需求？",opts:["Azure Virtual Machines（IaaS，需自行維護 OS）","Azure Functions（Serverless，事件驅動）","Azure App Service 專屬方案（常駐計費）","Azure Kubernetes Service（需管理叢集）"],a:1,exp:"Azure Functions 在 Consumption Plan 下，微軟完全負責基礎架構維護，計費精確到毫秒與執行次數，完全無事件觸發時費用為 0，是典型的 FaaS（函式即服務）架構。"},
+  {type:"Drag & Drop",topic:"Azure Blob Archive 存取層",scene:"Fabrikam 的法務部門需要保存 7 年的合約文件。這些文件被存取的機率極低，但必要時可接受數小時的等待解凍時間。公司希望最小化儲存費用。",q:"哪個 Azure Blob Storage 存取層最適合「封存 7 年、極低存取頻率、可接受數小時解凍、追求最低儲存單價」的場景？",opts:["Hot 存取層（頻繁存取，高儲存單價，低交易費）","Cool 存取層（不常存取，中等儲存單價）","Archive 存取層（極少存取，最低儲存單價，需數小時解凍）","Azure Managed Disks（VM 專屬磁碟）"],a:2,exp:"Archive 存取層具有最低的儲存容量單價，但資料處於離線狀態，讀取前需透過「解凍（Rehydration）」轉為 Hot/Cool，耗時數小時。最適合保存後幾乎不需要存取的封存資料。"},
+  {type:"Hot Area Drop-down",topic:"Azure ExpressRoute",scene:"一家金融機構的地端資料中心需要與 Azure 建立高頻寬連線。安全要求嚴格：流量必須完全不走公開網際網路，需要一條實體上專屬的私有連線，頻寬最高 100 Gbps。",q:"哪個 Azure 網路方案能提供「實體專線、完全不走網際網路、最高 100 Gbps」的地端至 Azure 連線？",opts:["Azure ExpressRoute（實體專屬私線）","Site-to-Site VPN（加密 IPsec 隧道，走公網）","Point-to-Site VPN（個人筆電撥入）","Azure Front Door（全球 CDN/L7 加速）"],a:0,exp:"Azure ExpressRoute 透過電信合作夥伴建立地端機房到 Azure 的實體私有連線，流量完全不走公開網際網路，提供可預測的頻寬（50 Mbps 到 100 Gbps）與低延遲，滿足金融、政府等最高安全合規需求。"},
+  {type:"Build List & Reorder",topic:"Azure Policy 生命週期",scene:"IT 治理團隊要實施 Azure Policy，確保公司所有訂閱的資源只能部署在台灣北部和東南亞兩個區域。",q:"Azure Policy 的標準生命週期步驟，正確的執行順序為何？（1=指派 Assignment 2=建立定義 Definition 3=選定範圍 Scope 4=評估合規性 Evaluation）",opts:["2→3→1→4（定義→範圍→指派→評估）","1→3→2→4（指派→範圍→定義→評估）","4→2→1→3（評估→定義→指派→範圍）","3→1→4→2（範圍→指派→評估→定義）"],a:0,exp:"Azure Policy 生命週期：① 先建立原則定義（Definition，描述規範內容）→ ② 決定實施範圍（Scope，如 Management Group 或 Subscription）→ ③ 建立指派（Assignment，綁定定義至範圍）→ ④ 引擎自動評估合規性（Evaluation，顯示於合規儀表板）。"},
+  {type:"Repeated Scenario",topic:"VM Scale-up ≠ 高可用性",scene:"Northwind Traders 電商網站部署在單一 Azure VM（D4s_v3）上，每年年末促銷期流量增加 10 倍。IT 部門希望能在不停機的情況下自動應對流量高峰，且盡量減少人為干預。",q:"方案一：在促銷前，手動將 VM 升級為更大規格（Scale-up / 垂直擴展）。此方案能否達成「零停機、自動彈性、最少人為干預」的目標？",opts:["Yes","No","只在部分情況下有效","需要搭配其他服務才行"],a:1,exp:"Scale-up（垂直調整規格）通常需要重新開機，會造成短暫服務中斷。且此操作為手動執行，需要人員介入，違反「自動彈性」與「最少人為干預」的要求。"},
+  {type:"Repeated Scenario",topic:"VMSS 自動擴展",scene:"Northwind Traders 電商網站部署在單一 Azure VM（D4s_v3）上，每年年末促銷期流量增加 10 倍。IT 部門希望能在不停機的情況下自動應對流量高峰，且盡量減少人為干預。",q:"方案二：部署 VM Scale Sets（VMSS），設定依 CPU 使用率自動增減 VM 數量（Scale-out / 水平擴展）。此方案能否達成「零停機、自動彈性、最少人為干預」的目標？",opts:["Yes","No","僅在特定地區有效","需要手動觸發擴展"],a:0,exp:"Azure VM Scale Sets（VMSS）搭配 Autoscale 規則，可在 CPU 使用率超過閾值時自動新增 VM，流量降低時自動移除，完全無需人工干預。搭配 Load Balancer 確保高可用性，是應對流量峰值的標準方案。"},
+  {type:"Repeated Scenario",topic:"備份快照 ≠ 彈性擴展",scene:"Northwind Traders 電商網站部署在單一 Azure VM（D4s_v3）上，每年年末促銷期流量增加 10 倍。IT 部門希望能在不停機的情況下自動應對流量高峰，且盡量減少人為干預。",q:"方案三：每日對 VM 進行備份快照，在流量高峰時從快照還原多台 VM 擴展容量。此方案能否達成「零停機、自動彈性、最少人為干預」的目標？",opts:["Yes","No","快照可自動還原為多台 VM","備份本身就是高可用性解決方案"],a:1,exp:"備份（Backup）與快照（Snapshot）是災害復原與資料保護工具，完全無法提供流量自動擴展能力。從快照還原需要手動操作，耗時較長，且無法在流量突增的當下即時反應。"},
+  {type:"Multiple Response",topic:"Resource Lock + Azure Policy",scene:"Contoso 的 IT 治理團隊面臨兩個痛點：(1) 工程師曾誤刪生產 SQL Database 導致資料遺失；(2) 部分開發者在未授權的 Azure 區域建立資源，違反資料主權規定。",q:"選擇「一個組合」同時解決以上兩個問題的方案：",opts:["Resource Lock (CanNotDelete) 防誤刪 + Azure Policy (Allowed Locations) 限制區域","Microsoft Defender for Cloud + Network Security Group","Azure Monitor 警示 + Azure Advisor 建議","Azure RBAC 唯讀角色 + VNet Service Endpoint"],a:0,exp:"Resource Lock CanNotDelete 阻止任何人（包含 Owner）刪除鎖定的資源；Azure Policy（Allowed Locations 效果）在建立資源時強制驗證部署區域，不合規則立即拒絕。這兩個工具組合正是 Domain 3 治理三角的核心。"},
+  {type:"Active Screen",topic:"Tags 不自動繼承",scene:"Lamna Healthcare 對 Production-RG 資源群組套用了 Tag（Department=Finance）。群組內有多台 VM 和 Storage Account。",q:"陳述①：「套用在 Resource Group 上的 Tag，其下屬的所有 VM 和 Storage 會自動繼承此 Tag。」此陳述是否正確？",opts:["Yes，子資源自動繼承父群組的 Tag","No，Tag 不具備自動繼承性，需透過 Azure Policy 強制覆寫","只有 VM 會繼承，Storage 不會","需在訂閱層級啟用「繼承設定」才有效"],a:1,exp:"Tags 不具備自動向下繼承性（Tags do NOT inherit）！套用在 Resource Group 上的標籤，其下屬資源（VM、Storage 等）並不會自動取得該標籤。若要強制繼承，需透過 Azure Policy 的「Modify」效果自動補標籤。"},
+  {type:"Multiple Choice",topic:"Network Security Group",scene:"Wide World Importers 的 Azure VNet 中有兩個子網路：Subnet A（應用程式層）和 Subnet B（資料庫層）。安全要求：只允許 Subnet A 存取 Subnet B 的 SQL Server Port 1433，完全封鎖來自網際網路的直接存取。",q:"哪個 Azure 服務可以在子網路層級設定 IP / 通訊協定 / 傳輸埠過濾規則，實現此網路區隔需求？",opts:["Network Security Group (NSG)","Azure Firewall（企業級網路防火牆）","Azure DDoS Protection Standard","Azure Application Gateway with WAF"],a:0,exp:"NSG 包含輸入（Inbound）與輸出（Outbound）安全性規則，可關聯至子網路或 NIC。將 NSG 套用至 Subnet B，設定「僅允許來源 10.0.0.0/24（Subnet A）的 TCP 1433 流量，拒絕所有其他輸入」，即可完美隔離資料庫層。"},
+  {type:"Multiple Choice",topic:"Azure Kubernetes Service",scene:"Adventure Works 的新微服務架構包含 20+ 個容器化服務，團隊使用原生 Kubernetes YAML 定義所有部署和服務配置。他們需要 Azure 託管 Master Nodes，並要求 Worker Nodes 能根據負載自動擴展。",q:"哪個 Azure 服務最適合「原生 K8s API/YAML、Azure 託管 Master Nodes、Worker Nodes 自動擴展」？",opts:["Azure Kubernetes Service (AKS)","Azure Container Instances (ACI)（單一容器，無 K8s 管理）","在 Azure VM 上自建 K8s 叢集（需自管 Master）","Azure App Service for Containers"],a:0,exp:"AKS 是 Azure 全託管的 Kubernetes 服務，微軟負責 Master Nodes（Control Plane）的維護與升級，用戶只管 Worker Nodes（Agent Nodes）。支援原生 Kubernetes API、kubectl 和 YAML，並提供 Cluster Autoscaler 和 HPA 自動擴展。"},
+  {type:"Multiple Choice",topic:"Availability Zones",scene:"Relecloud 的關鍵業務應用部署在 Azure 台灣北部區域。他們最擔心的風險是：單一資料中心因火災、斷電或設備故障而完全停機，但同時要求應用程式在同一區域內保持極低延遲。",q:"哪種部署架構能防範「單一實體資料中心完全故障」，同時保持同一 Azure Region 內的極低延遲？",opts:["跨 Availability Zones（可用性區域）部署——同 Region 內物理隔離的獨立資料中心","Availability Set——同一資料中心內不同機櫃","Azure Site Recovery——跨區域災害復原","多訂閱部署——僅做邏輯隔離"],a:0,exp:"Availability Zones 是同一 Azure Region 內物理上彼此獨立的資料中心，各自擁有獨立電力、冷卻和網路。一個 Zone 損毀時，其他 Zone 立即接管，VM 間延遲 < 2ms。相比之下，Availability Set 的故障域仍在同一資料中心。"},
+  {type:"Drag & Drop",topic:"IaaS 客戶責任",scene:"Fabrikam 將一套舊版 ERP 系統（需要特定 Windows Server 版本）遷移至 Azure Virtual Machines（IaaS）。",q:"依責任共擔模型，使用 IaaS 時「客戶」需要自行管理哪些項目？",opts:["實體伺服器、機架、機房設施（Azure 負責）","Guest OS 安全補丁、中介軟體、應用程式和資料（客戶負責）","Azure 全球骨幹網路和超大規模資料中心（Azure 負責）","虛擬化層（Hypervisor）——Azure 負責"],a:1,exp:"IaaS 責任分界：Azure 負責實體層（伺服器、機架、電力、冷卻、網路）和虛擬化層（Hypervisor）；客戶負責 Guest OS（安裝、打補丁）、中介軟體、執行環境、應用程式和資料。這是 IaaS 與 PaaS 的核心差異。"},
+  {type:"Hot Area Drop-down",topic:"Conditional Access 條件式存取",scene:"Contoso 的 IT 安全部門要實施零信任策略：當偵測到使用者從不尋常的地理位置（如中國 IP）或高風險裝置嘗試登入時，自動要求完成 MFA 驗證或直接封鎖存取，無需人工干預。",q:"哪個 Azure/Entra 功能採用「If-Then」訊號引擎，依使用者地理位置、IP 風險或裝置狀態自動套用 MFA 或封鎖存取？",opts:["Microsoft Entra Conditional Access（條件式存取）","Azure RBAC（角色型存取控制）","Azure Policy（資源合規原則）","Microsoft Defender for Identity"],a:0,exp:"Conditional Access 是 Microsoft Entra（Azure AD）的 If-Then 政策引擎：If（訊號：使用者、位置、裝置、應用程式、風險）Then（控制：允許、要求 MFA、封鎖）。這是零信任架構中「明確驗證（Verify Explicitly）」原則的核心工具。"},
+  {type:"Build List & Reorder",topic:"成本管理生命週期",scene:"Northwind Traders 正在規劃將工作負載上移至 Azure，需要建立完整的費用控管流程。",q:"以下 Azure 成本管理工具應在哪個階段使用？選出正確的使用時序（1=建立 Budget 設警示 2=Pricing Calculator 估算月費 3=Azure Advisor 閒置資源建議 4=Cost Analysis 追蹤實際帳單）",opts:["2→1→4→3（上雲規劃估算→部署初期預算→運作期分析→持續優化）","1→2→3→4（預算→估算→分析→優化）","4→3→2→1（分析→優化→估算→預算）","3→1→4→2（優化→預算→分析→估算）"],a:0,exp:"Azure 成本管理生命週期：① Pricing Calculator 在部署前估算費用 → ② 部署後設定 Budget 和警示閾值 → ③ 上線後用 Cost Analysis 追蹤實際帳單 → ④ Azure Advisor 持續建議閒置資源優化。"},
+  {type:"Multiple Response",topic:"Azure Bastion + Point-to-Site VPN",scene:"Tailwind Traders 的安全政策禁止在 Azure VM 上附掛 Public IP，也不允許將 SSH Port 22 或 RDP Port 3389 對網際網路開放。但工程師需要能從外部安全地管理這些 VM。",q:"選擇「一個組合」讓工程師不暴露 VM Public IP 和 SSH/RDP 至網際網路，仍能安全管理 VM：",opts:["Azure Bastion（透過 Portal HTTPS 瀏覽器連線私網 VM）+ Point-to-Site VPN（工程師筆電建立加密通道進入 VNet）","直接開放 Port 22/3389 並搭配強密碼","Azure Load Balancer + NAT 規則轉發","為每台 VM 設定 SSH/RDP Proxy 伺服器"],a:0,exp:"Azure Bastion 讓工程師透過 Azure Portal 瀏覽器以 HTTPS（Port 443）連接私網 VM，無需 VM Public IP。P2S VPN 讓工程師的筆電建立加密通道進入 VNet，以內部 Private IP 直接管理伺服器。兩者都完全避免 SSH/RDP 暴露於網際網路。"},
+  {type:"Case Study",topic:"Azure Policy Deny 效果",scene:"Contoso 集團需要在多個訂閱上統一實施治理政策：(1) 跨 5 個業務單元的 10 個訂閱需要統一套用安全基準；(2) 不符合規定的資源應在建立當下立即被阻擋，而非事後標記。",q:"Q18B：當 Azure Policy 需要「在建立資源當下立即阻擋不合規操作」時，應使用哪種 Policy Effect？",opts:["Audit（稽核）效果——僅在報告中標記為不合規，但允許建立","Deny（拒絕）效果——在部署時立即阻擋，資源無法建立","Append（附加）效果——自動補充資源屬性","DeployIfNotExists——自動部署缺失的配置"],a:1,exp:"Deny 效果會在 Azure Resource Manager 接收到部署請求時立即回傳 403 Forbidden，阻止不合規資源的建立。相較之下，Audit 只記錄不合規狀態而不阻止操作——適合觀察期，不適合強制期。"},
+  {type:"Active Screen",topic:"Preview 無 SLA",scene:"IT 管理員正在評估是否在生產環境使用一個目前仍處於「公開預覽（Public Preview）」狀態的 Azure 服務。",q:"陳述③：「Azure 預覽版（Preview）服務與正式發行版（GA）享有相同等級的 SLA 財務保證。」此陳述是否正確？",opts:["Yes，所有 Azure 服務都有 SLA","No，預覽版通常不提供任何正式 SLA 保證","只有付費預覽版才有 SLA","預覽版有 SLA 但比 GA 版低 10%"],a:1,exp:"Azure 預覽版（Preview）服務——包含 Public Preview 和 Private Preview——通常不提供任何正式 SLA 保證，也不承擔因服務中斷造成的財務賠償責任。因此不建議將預覽版服務用於生產環境的關鍵工作負載。"},
+  {type:"Multiple Choice",topic:"Azure SQL Managed Instance",scene:"Lamna Healthcare 需要將地端 SQL Server 遷移至 Azure。他們的應用程式使用了 SQL Server Agent 作業和跨資料庫查詢（cross-database queries），這些是 Instance-level 的功能。同時希望免除 OS 維護（PaaS）。",q:"哪個 Azure 資料庫服務能同時滿足「PaaS 免維護 OS」且「支援 SQL Server Agent 與跨資料庫查詢」？",opts:["Azure SQL Managed Instance（接近 100% SQL Server 相容，PaaS）","Azure SQL Database（僅 Database 層級，不支援 SQL Agent）","SQL Server on Azure VM（IaaS，需自管 OS）","Azure Database for PostgreSQL"],a:0,exp:"Azure SQL Managed Instance 是接近完整 SQL Server 引擎的 PaaS 服務，支援 Instance-level 功能如 SQL Server Agent、跨資料庫查詢、CLR、Service Broker 等。Azure SQL Database 雖然也是 PaaS，但屬於資料庫層級，缺少這些 Instance 級功能。"},
+  {type:"Repeated Scenario",topic:"ReadOnly Lock 阻止寫入",scene:"Lamna Healthcare 的研究部門將大量醫療影像儲存於 Azure Storage Account（每日持續上傳新影像）。IT 管理員評估三種保護方案，目標是「防止誤刪，同時允許持續上傳和修改檔案」。",q:"方案一：對 Storage Account 套用 ReadOnly 鎖定（Resource Lock: ReadOnly）。此方案是否能在「允許持續上傳新影像」的同時「防止誤刪」？",opts:["Yes，ReadOnly 僅阻止刪除","No，ReadOnly 會阻止所有寫入和修改操作，無法上傳新影像","ReadOnly 只影響刪除，不影響上傳","ReadOnly 需搭配 RBAC 才能有效防止誤刪"],a:1,exp:"ReadOnly 鎖定會阻止所有寫入操作（包含上傳、修改、更新），不只是刪除。套用此鎖後，使用者將無法上傳新影像，破壞了業務需求。正確選擇是 CanNotDelete 鎖定。"},
+  {type:"Repeated Scenario",topic:"CanNotDelete Lock",scene:"Lamna Healthcare 的研究部門將大量醫療影像儲存於 Azure Storage Account（每日持續上傳新影像）。IT 管理員評估三種保護方案，目標是「防止誤刪，同時允許持續上傳和修改檔案」。",q:"方案二：對 Storage Account 套用 CanNotDelete 鎖定（Resource Lock: CanNotDelete）。此方案是否能在「允許持續上傳新影像」的同時「防止誤刪」？",opts:["Yes，CanNotDelete 允許讀寫但嚴格禁止刪除","No，CanNotDelete 同時禁止寫入","CanNotDelete 只對 VM 有效","CanNotDelete 需要額外設定才能允許寫入"],a:0,exp:"CanNotDelete 鎖定：授權使用者依然可以讀取、上傳和修改資源內容；嚴格禁止任何人（包含 Owner）刪除該資源，直到手動移除鎖定為止。完全達成「防誤刪但允許正常業務操作」的目標。"},
+  {type:"Repeated Scenario",topic:"Reader 角色無法寫入",scene:"Lamna Healthcare 的研究部門將大量醫療影像儲存於 Azure Storage Account（每日持續上傳新影像）。IT 管理員評估三種保護方案，目標是「防止誤刪，同時允許持續上傳和修改檔案」。",q:"方案三：將所有使用者角色降級為 Reader（唯讀角色）。此方案是否能在「允許持續上傳新影像」的同時「防止誤刪」？",opts:["Yes，Reader 允許讀取和上傳，但禁止刪除","No，Reader 角色不允許任何寫入操作，無法上傳影像","Reader 可以上傳但無法刪除","Reader 權限可以例外地允許上傳"],a:1,exp:"Reader 角色只允許查看資源，不允許任何建立、修改或刪除操作。將用戶降為 Reader 後，他們將無法上傳或修改任何影像，導致業務中斷。防誤刪應使用 Resource Lock，而非降低 RBAC 角色。"},
+  {type:"Multiple Choice",topic:"Geo-redundant Storage (GRS)",scene:"Adventure Works 的財務報告系統將資料儲存於 Azure Storage。監管機構要求：即使發生大規模地理區域性災難（如地震、洪水影響整個城市），資料也必須在「數百英里外的另一個區域」可恢復。",q:"哪種 Azure 儲存體備援選項能在「數百英里外的配對區域」保留副本，防範大規模地理性災難？",opts:["Locally Redundant Storage (LRS)——同一資料中心 3 份","Zone-Redundant Storage (ZRS)——同區域 3 個 Zone","Geo-Redundant Storage (GRS)——主要區域 LRS + 配對區域 LRS","Premium SSD——高效能本地儲存"],a:2,exp:"GRS 在主要區域（如東南亞）寫入 3 份複本（LRS），並透過非同步複寫傳至數百英里外的配對區域（如東亞）再寫入 3 份，總計 6 份，提供 16 個 9 的持久性。若整個主要區域發生災難，GRS 可從配對區域恢復資料。"},
+  {type:"Multiple Choice",topic:"Activity Log 稽核",scene:"Wide World Importers 的某個生產 VM 在昨晚被意外刪除，造成 4 小時的服務中斷。IT 主管需要調查：「是誰在什麼時候刪除了 VM，以及操作者的 IP 位址和使用的工具」。",q:"哪個 Azure 資源記錄了控制平面（Control Plane）的所有建立、更新、刪除操作，可查詢操作者、時間和來源 IP？",opts:["Azure Monitor Metrics（CPU、記憶體等效能計量）","Activity Log（活動記錄，保存 Azure ARM 操作軌跡 90 天）","Azure Diagnostic Settings（應用程式診斷日誌）","Access control (IAM) 角色指派頁面"],a:1,exp:"Activity Log 記錄所有針對 Azure Resource Manager（ARM）發出的控制平面操作，包含資源的建立、更新和刪除（CRUD）。每筆記錄包含操作者的 UPN、操作時間、來源 IP 和使用的 Client（Portal/CLI/PowerShell），預設保存 90 天。"},
+  {type:"Drag & Drop",topic:"ExpressRoute 地端連線",scene:"一家銀行評估三種將分支機構和總行連接至 Azure 的方案。",q:"哪個方案適合「銀行總行」的需求——需要完全不走公開網際網路的實體私有專線，確保最高安全性和可預測的低延遲？",opts:["Point-to-Site (P2S) VPN——個人筆電或遠端工作者撥入","Site-to-Site (S2S) VPN——分支辦公室透過公網加密通道連線","Azure ExpressRoute——總行透過電信業者建立實體私線","Azure Virtual WAN——多分支自動化連接"],a:2,exp:"ExpressRoute 透過電信合作夥伴建立地端資料中心到 Azure 的實體私有連線：① P2S VPN 適合個人筆電遠端撥入；② S2S VPN 適合分支辦公室（走加密 IPsec 但仍透過公網）；③ ExpressRoute 是銀行總行或需要高頻寬、低延遲、完全不走公網的企業首選。"},
+  {type:"Build List & Reorder",topic:"RBAC 三大元素",scene:"Fabrikam 需要授權 Alice 只能啟動和停止特定 Resource Group 內的 VM，不允許其他操作。",q:"Azure RBAC 角色指派（Role Assignment）由三大核心元素組成。哪個組合最正確描述了這三個必要元素？",opts:["Security Principal（Who/誰）+ Role Definition（What/做什麼）+ Scope（Where/在哪裡）","Username + Password + MFA 設定","Resource Group + Policy + Lock 組合","Subscription + Tag + Budget 設定"],a:0,exp:"Azure RBAC 角色指派三要素：① Who（Security Principal）= 授權給誰（使用者、群組、服務主體或受控識別）；② What（Role Definition）= 允許做什麼（如 Virtual Machine Contributor）；③ Where（Scope）= 在哪個層級生效（Management Group / Subscription / Resource Group / Resource）。"},
+  {type:"Multiple Response",topic:"Elasticity + Agility",scene:"企業正在評估是否採用雲端運算來支援業務成長。",q:"下列哪個選項最準確地描述了雲端的「Elasticity（彈性）」和「Agility（敏捷性）」兩個核心優勢？",opts:["Elasticity=運算規模隨負載自動增減；Agility=快速取得資源、迅速部署測試（A+B）","雲端保證 100% 不中斷運行（C，錯誤）","雲端完全消除所有 CapEx（D，錯誤）","雲端讓客戶免除所有安全責任（E，錯誤）"],a:0,exp:"Elasticity（彈性）：運算資源可根據即時負載自動擴展（Scale-out）或收縮（Scale-in），如 VMSS 和 App Service 自動縮放。Agility（敏捷性）：可在幾分鐘內取得所需資源並進行部署，快速試驗新想法，加速創新週期。這兩者是雲端相較地端基礎架構的最大優勢。"},
+  {type:"Active Screen",topic:"刪除 RG 連帶刪除所有資源",scene:"IT 工程師正在清理測試環境，計劃刪除一個名為「Test-RG」的 Resource Group。",q:"陳述③：「刪除 Resource Group（資源群組）會連帶刪除其中所有資源，包含 VM、Storage 和資料庫。」此陳述是否正確？",opts:["Yes，刪除 RG 是破壞性操作，會連帶刪除所有子資源","No，刪除 RG 只移除容器本身，子資源不受影響","需要逐一確認每個子資源才能刪除","只有未鎖定的資源才會被刪除"],a:0,exp:"刪除 Resource Group 是重度破壞性操作，底下的所有資源（VM、Storage Account、SQL Database 等）會連帶被一併刪除且無法還原（除非有備份）。執行前應確認 Resource Group 內容，並考慮是否有 CanNotDelete 鎖定保護關鍵資源。"},
+  {type:"Multiple Choice",topic:"Key Vault + Managed Identity",scene:"Contoso 的 App Service 應用程式需要連接 Azure SQL Database，連接字串包含敏感憑證。安全稽核要求：程式碼或設定檔中不得出現任何明碼密碼或金鑰，且不允許在程式碼中管理服務帳戶憑證。",q:"哪個方案在不在程式碼中存放任何明碼憑證的情況下，安全存取 SQL 連接字串？",opts:["將連接字串存入 Azure Key Vault，App Service 啟用 Managed Identity 自動取得存取權杖","將連接字串寫入 appsettings.json 並加密後存入 Git Repository","存入 Azure Blob Storage 並設定 SAS Token 存取","使用 Azure AD 服務帳戶，密碼存入環境變數"],a:0,exp:"Managed Identity 讓 App Service 自動向 Microsoft Entra ID 取得識別權杖，程式碼中無需維護任何憑證。Azure Key Vault 安全存放連接字串並設定 Managed Identity 存取原則，實現「零秘密程式碼（Zero-secret code）」的最佳實踐。"},
+  {type:"Case Study",topic:"PIM Just-in-Time 存取",scene:"Wide World Importers 有多個需要敏感存取的 IT 情境：(A) 外部顧問需要用自己公司的 Azure AD 帳號存取客戶的 Azure 資源；(B) Azure 管理員平時不需要 Owner 權限，但偶爾緊急維護需要臨時提升，且需要完整審批記錄。",q:"Q31B：「管理員平時無 Owner 權限，緊急時臨時申請限時特權、需要申請和審批流程、所有操作留存完整記錄」。哪個功能最適合？",opts:["Privileged Identity Management (PIM) / Just-in-Time (JIT) 存取","永久指派 Owner 角色（違反最少權限原則）","自訂 Azure RBAC 角色（無審批流程）","Microsoft Entra B2B 來賓邀請（外部帳號協作）"],a:0,exp:"PIM（特殊權限識別管理）實現 Just-in-Time 存取：使用者平時沒有高權限角色，需要時發起申請→審批人批准→角色在限定時間內生效→時間到自動移除。所有申請、審批和操作都留有完整的稽核記錄，符合最少權限原則。"},
+  {type:"Hot Area Drop-down",topic:"Azure Service Health",scene:"Relecloud 的 SRE 團隊需要監控兩類不同的狀況：(1) 自家 Azure VM 的 CPU 和記憶體使用率；(2) Azure 平台官方的服務中斷事件和排程維護通知，需要個人化（針對自己使用的服務和區域）。",q:"哪個服務提供「Azure 官方服務中斷事件、排程維護公告」，並能針對個人訂閱資源設定個人化警示通知？",opts:["Azure Service Health（訂閱層級個人化服務狀態）","Azure Monitor（自有資源計量與日誌）","Azure Status（全球公開狀態頁，無個人化）","Azure Advisor（最佳化建議，非健康狀態）"],a:0,exp:"Azure Service Health 提供三層資訊：① Service Issues（正在影響您服務的中斷事件）、② Planned Maintenance（排程維護通知）、③ Health Advisories（服務退場或需採取動作的公告）——全部根據您的訂閱和使用服務進行個人化篩選，並可設定 Action Group 通知。"},
+  {type:"Multiple Choice",topic:"IaaS 舊系統搬遷",scene:"Northwind Traders 有一套舊版工廠控制軟體（Lift-and-shift 遷移），需要特定版本的 Windows Server、自訂核心驅動程式和完整的 root/Administrator 控制權，並且使用了硬體加密鎖（Dongle）模擬器。",q:"哪個 Azure 服務能提供完整 OS 控制、自訂核心驅動和完整管理員權限，適合此類 Lift-and-shift 遷移？",opts:["Azure Virtual Machines (IaaS)——完整 OS 控制","Azure App Service (PaaS)——微軟鎖定底層環境","Azure Container Instances——Docker 容器環境","Azure Functions (Serverless)——無狀態函式執行"],a:0,exp:"IaaS（Azure Virtual Machines）讓客戶完整控制 Guest OS，可安裝任何軟體、自訂核心模組和驅動程式，保留完整管理員權限——這是 PaaS 或 Serverless 無法提供的能力，是舊系統 Lift-and-shift 的唯一選擇。"},
+  {type:"Repeated Scenario",topic:"增加美國 VM 不改善亞洲延遲",scene:"Contoso 電商平台的所有後端資源都部署在 Azure 美國東部（East US）。來自亞洲和歐洲的用戶反映頁面載入時間超過 300ms，嚴重影響使用者體驗。架構師評估三個改善方案。",q:"方案一：在美國東部加開 20 台 VM 做水平擴展。此方案是否能改善亞洲和歐洲用戶的高延遲問題？",opts:["Yes，更多 VM 能提升效能","No，VM 仍在美國，無法縮短跨洋網路延遲","部分有效，可降低約 50% 延遲","需要搭配 Load Balancer 才能有效"],a:1,exp:"增加美國東部的 VM 數量只能提升美國區域的吞吐量，對亞洲或歐洲用戶與美國資料中心之間的跨洋物理距離毫無影響。網路延遲主要取決於地理距離，解決方案需要在靠近用戶的區域部署資源或使用 CDN。"},
+  {type:"Repeated Scenario",topic:"Azure CDN 改善全球延遲",scene:"Contoso 電商平台的所有後端資源都部署在 Azure 美國東部（East US）。來自亞洲和歐洲的用戶反映頁面載入時間超過 300ms，嚴重影響使用者體驗。架構師評估三個改善方案。",q:"方案二：部署 Azure CDN，將靜態資產（圖片、CSS、JS）快取至全球各地的 POP（Point of Presence）邊緣節點。此方案是否能改善亞洲和歐洲用戶的延遲問題？",opts:["Yes，用戶從最近的 POP 節點取得靜態資源，大幅降低延遲","No，CDN 只加速動態 API 呼叫","CDN 只適用於影片串流","CDN 需要在每個地區建立獨立訂閱"],a:0,exp:"Azure CDN 在全球部署邊緣 POP 節點，將靜態內容快取至離用戶最近的節點。亞洲用戶直接從東南亞或東亞 POP 獲取靜態資源，大幅降低首次載入時間。雖然動態 API 仍需回源，但靜態資源（通常佔頁面大部分）的延遲可從 300ms 降至 20-50ms。"},
+  {type:"Repeated Scenario",topic:"內部 LB 無法改善全球延遲",scene:"Contoso 電商平台的所有後端資源都部署在 Azure 美國東部（East US）。來自亞洲和歐洲的用戶反映頁面載入時間超過 300ms，嚴重影響使用者體驗。架構師評估三個改善方案。",q:"方案三：部署 Azure 內部負載平衡器（Internal Load Balancer），將流量分散至 VNet 內多台 VM。此方案是否能改善亞洲和歐洲用戶的延遲問題？",opts:["Yes，負載平衡可提升全球效能","No，內部 LB 只在 VNet 內部分散流量，無法影響跨洋延遲","部分有效，可降低伺服器回應時間","需要搭配 TrafficManager 才有效"],a:1,exp:"內部 Load Balancer（ILB）僅處理 VNet 內部的 Layer 4 TCP/UDP 流量派送，對外部用戶完全透明——它只分散「已到達 Azure VNet 的流量」，對亞洲和歐洲用戶的跨洋連線延遲毫無影響。"},
+  {type:"Drag & Drop",topic:"Azure Dedicated Host",scene:"一家製藥公司因合規要求，其工作負載必須在物理上完全隔離的伺服器上執行，不允許與其他租戶共用同一台實體機器。同時也需要在同一台主機上部署多台 VM，充分利用硬體資源。",q:"哪個 Azure 服務提供「物理上專屬隔離的伺服器硬體」，確保整台實體機只服務單一租戶？",opts:["Azure App Service（PaaS，多租戶共用底層）","Azure Functions（Serverless，完全共享）","Azure Dedicated Host（專屬實體主機，單一租戶）","Azure VM Scale Sets（多台 VM 但共用實體層）"],a:2,exp:"Azure Dedicated Host 讓企業租用整台 Azure 實體伺服器，只有該企業的 VM 可在此主機上運行，完全隔離於其他 Azure 租戶。符合某些高度敏感的合規要求（如 HIPAA、FedRAMP）。同一主機上可部署多台不同 SKU 的 VM。"},
+  {type:"Multiple Choice",topic:"Private Endpoint",scene:"Fabrikam 的 Azure SQL Database 目前有公用端點（Public Endpoint），安全掃描顯示存在潛在風險。架構師希望讓 Azure SQL 在 VNet 內透過私有 IP 存取，確保流量完全不走公開網際網路，且能從地端透過 ExpressRoute 直接存取。",q:"哪個 Azure 功能為 PaaS 服務（如 Azure SQL）建立 VNet 內的私有 IP 端點，讓流量完全不走公開網際網路？",opts:["Azure Private Endpoint（Private Link）——為 PaaS 服務分配 VNet 私有 IP","Service Endpoint——縮短 PaaS 存取路徑但仍使用公用端點","Azure Firewall——網路層防火牆過濾","NSG 規則——阻擋特定 IP 存取公用端點"],a:0,exp:"Private Endpoint 透過虛擬網路介面（NIC）將 Azure PaaS 服務「拉入」使用者的 VNet，分配一個私有 IP 地址。從 VNet 內或透過 ExpressRoute 存取時，流量完全走 Azure 骨幹私網，公用端點可完全停用。Service Endpoint 雖縮短路徑但 PaaS 仍有公用端點。"},
+  {type:"Build List & Reorder",topic:"零信任三大原則",scene:"IT 安全架構師正在設計符合 Zero Trust 安全模型的架構。",q:"零信任（Zero Trust）安全架構的三大核心原則，以下哪個排列最準確？（1=假定已遭破壞 Assume breach 2=明確驗證 Verify explicitly 3=使用最少權限存取 Use least privilege）",opts:["2→3→1（明確驗證→最少權限→假定已遭破壞）","1→2→3（假定已遭破壞→明確驗證→最少權限）","3→1→2（最少權限→假定已遭破壞→明確驗證）","1→3→2（假定→最少權限→驗證）"],a:0,exp:"零信任三大原則標準定義：① Verify explicitly（明確驗證）——始終基於所有可用的資料點進行身分驗證和授權；② Use least privilege access（使用最少權限）——JIT/JEA、風險型自適應政策；③ Assume breach（假定已遭破壞）——最小化爆炸半徑，假設已有攻擊者在內網。"},
+  {type:"Multiple Response",topic:"Reserved Instances + Savings Plan",scene:"Northwind Traders 有一批生產 VM 全年 24 小時穩定運行，預計至少 3 年不會下線。財務部門要求最大化 Azure 費用節省。",q:"對於「長期穩定、可預期的生產工作負載」，哪個選項最準確描述兩種可節省最高費用的承諾型購買選項（選 2）？",opts:["1 年/3 年期 Reserved Instances（預先承諾特定 VM SKU，節省 40-72%）+ Azure Savings Plan for Compute（更靈活的承諾，節省 15-65%）","Azure Spot VMs（利用閒置容量，隨時可能被中斷，不適合生產）+ Dev/Test 訂閱（僅限非生產）","Pay-as-you-go + Azure Advisor 成本建議（有幫助但節省有限）","Enterprise Agreement + Free Account（採購方式，非使用承諾）"],a:0,exp:"Reserved Instances（RI）：預先承諾 1 年或 3 年使用特定 VM SKU 和區域，相較 PAYG 節省 40%（1 年）至 72%（3 年）。Azure Savings Plan for Compute：更靈活，承諾每小時固定金額，可跨 VM 大小和區域使用。兩者都適合穩定可預期的長期工作負載。"},
+  {type:"Active Screen",topic:"Hot 存取層非最低儲存成本",scene:"IT 架構師在設計 Azure Blob Storage 策略，需要了解各存取層的成本特性。",q:"陳述①：「Hot（熱）存取層的儲存容量單價是所有 Blob Storage 存取層中最低的。」此陳述是否正確？",opts:["Yes，Hot 是最常用的，所以最便宜","No，Archive 存取層的儲存容量單價最低，Hot 是最高的；但 Hot 的讀寫交易費最低","Hot 和 Cool 的儲存單價相同","Hot 是最新的存取層所以最便宜"],a:1,exp:"各 Blob 存取層的儲存單價關係（由高至低）：Hot > Cool > Cold > Archive。Hot 的儲存容量單價最高，但讀寫交易費最低，適合頻繁存取的資料。Archive 儲存單價最低，但需數小時解凍才能讀取。"},
+  {type:"Multiple Choice",topic:"SaaS 服務模型",scene:"Relecloud 的員工每天使用 Microsoft 365（Teams 開會、Exchange 收發郵件、SharePoint 文件管理）。IT 部門不需要管理任何伺服器、作業系統或應用程式代碼。",q:"Microsoft 365（Teams、Exchange、SharePoint）屬於哪種雲端服務模型？",opts:["Software as a Service (SaaS)——完全由服務商管理，客戶只使用功能","Platform as a Service (PaaS)——客戶負責應用程式","Infrastructure as a Service (IaaS)——客戶負責 OS 和應用程式","Function as a Service (FaaS)——事件驅動函式執行"],a:0,exp:"SaaS（軟體即服務）：服務商（Microsoft）管理全部——硬體、OS、應用程式、資料庫、維護、更新——客戶只需透過瀏覽器或客戶端使用功能。Microsoft 365、Salesforce、Google Workspace 都是典型 SaaS。客戶最高的責任層級是管理自己的使用者帳號和存取權限。"},
+  {type:"Multiple Choice",topic:"Microsoft Sentinel SIEM",scene:"Adventure Works 是一家跨國企業，需要跨 Azure、AWS 和地端環境大規模收集安全日誌，利用機器學習自動關聯和偵測複雜的進階持續威脅（APT），並在發現威脅時自動執行回應動作（如封鎖帳號）。",q:"哪個 Azure 服務是雲端原生的 SIEM（安全資訊和事件管理）+ SOAR（安全協調自動化回應），適合跨雲大規模威脅偵測？",opts:["Microsoft Sentinel（雲端原生 SIEM/SOAR，AI 威脅分析）","Microsoft Defender for Cloud（CSPM 安全態勢管理，CWPP 工作負載保護）","Azure Monitor（基礎架構計量與日誌收集）","Azure Security Center（舊稱，現已整合為 Defender for Cloud）"],a:0,exp:"Microsoft Sentinel 是 Azure 的雲端原生 SIEM/SOAR：可連接 100+ 資料來源（Azure、AWS、GCP、Office 365、地端 SIEM）；使用 ML/AI 進行跨來源的關聯分析識別複雜威脅；透過 Playbook（Logic Apps）自動化回應，如自動封鎖可疑帳號或隔離受感染 VM。"},
+  {type:"Case Study",topic:"Azure Cosmos DB",scene:"一家全球線上遊戲公司需要一個資料庫服務來儲存玩家資料。需求：(A) 全球分佈式 NoSQL，玩家資料需毫秒級讀寫響應，SLA 99.999%；(B) 整合巨量遊戲行為資料的分析與企業報表（PB 級數據倉儲）。",q:"Q44A：「全球分佈式 NoSQL 資料庫、毫秒級延遲、99.999% SLA」的需求應選哪個服務？",opts:["Azure Cosmos DB（全球分佈式多模型 NoSQL）","Azure SQL Database（關聯式，非全球分佈式 NoSQL）","Azure Table Storage（NoSQL 但功能有限）","Azure Cache for Redis（快取層，非主要資料庫）"],a:0,exp:"Azure Cosmos DB 是微軟的全球分佈式多模型 NoSQL 資料庫：支援 SQL API、MongoDB、Cassandra、Gremlin、Table 等多種 API；全球 30+ 區域一鍵複寫；SLA 保證 99.999% 可用性（5 個 9）；讀寫延遲 < 10ms（P99）；按需自動縮放。"},
+  {type:"Hot Area Drop-down",topic:"Azure CLI",scene:"Northwind Traders 的 DevOps 工程師需要在 CI/CD pipeline 中使用 Bash 腳本自動化 Azure 資源部署。工具需要跨平台（在 Windows、macOS 和 Linux CI 代理上都能運行），且使用 `az` 命令前綴。",q:"哪個 Azure 管理工具採用 `az` 命令前綴、支援跨平台（Windows/macOS/Linux）、可在 Bash 腳本中使用？",opts:["Azure CLI（`az` 前綴，Bash 腳本友好，跨平台）","Azure PowerShell（`Az` PowerShell 模組，PowerShell 語法）","Azure Resource Manager 範本（JSON/Bicep 宣告式，非命令列）","Azure Cloud Shell（僅限 Azure Portal 瀏覽器內使用）"],a:0,exp:"Azure CLI（命令列介面）使用 `az` 命令前綴，支援 Windows、macOS 和 Linux 安裝，可在 Bash 腳本中自然使用，是 CI/CD 和 DevOps 自動化的首選。Azure PowerShell 使用 PowerShell 語法（`New-AzVM`），適合 Windows 或 PowerShell 環境的用戶。"},
+  {type:"Drag & Drop",topic:"Resource Lock CanNotDelete",scene:"治理團隊需要為三種不同的業務需求選擇合適的 Azure 治理工具。",q:"「需要鎖定生產資料庫，使其無法被任何人（包含 Owner）刪除，直到手動解鎖為止」。應使用哪個工具？",opts:["Azure Policy（合規規範，限制資源屬性和部署條件）","Azure RBAC（角色型存取控制，管理人員權限）","Resource Lock CanNotDelete（防刪除鎖，保護資源生命週期）","Azure Blueprints（環境藍圖和治理套件）"],a:2,exp:"治理黃金三角：① Azure Policy = 合規條件約束（如限制 VM SKU、強制 Tag）；② Azure RBAC = 人員權限管理（Who can do What Where）；③ Resource Lock CanNotDelete = 防手滑防惡意刪除（Lock 優先於 RBAC，即使 Owner 也無法在不先解鎖的情況下刪除）。"},
+  {type:"Build List & Reorder",topic:"Azure 治理階層結構",scene:"企業需要建立 Azure 治理架構，了解不同層級的繼承和範圍關係。",q:"Azure 治理階層結構從最高層（最廣範圍）到最低層（最細粒度）的正確順序是？",opts:["Management Groups → Subscriptions → Resource Groups → Resources","Subscriptions → Management Groups → Resource Groups → Resources","Resources → Resource Groups → Subscriptions → Management Groups","Resource Groups → Subscriptions → Management Groups → Resources"],a:0,exp:"Azure 四層治理階層（由上而下）：Management Groups（管理群組，最高層，可跨多個訂閱統一治理）→ Subscriptions（訂閱，帳單和存取控制邊界）→ Resource Groups（資源群組，邏輯容器）→ Resources（資源，最細粒度，如 VM、Storage）。上層的 Policy 和 RBAC 指派會向下繼承。"},
+  {type:"Multiple Response",topic:"公有雲 vs 私有雲",scene:"IT 顧問正在向客戶說明不同雲端部署模型的核心特性。",q:"關於公有雲與私有雲，以下哪個選項最準確描述了兩個正確陳述？",opts:["A+B：公有雲硬體由 CSP 擁有、多租戶共享實體層；私有雲基礎架構專屬單一企業（Single-tenant）","C：私有雲通常不需要前期 CapEx 採購專屬伺服器（錯誤，私有雲需要 CapEx）","D：公有雲無法與地端建立混合雲架構（錯誤，ExpressRoute/VPN 輕易實現混合雲）","E：公有雲安全性必然低於私有雲（錯誤，大型 CSP 投入遠超一般企業）"],a:0,exp:"公有雲特性：硬體由 CSP（Microsoft、AWS、Google）擁有和維護，多個租戶共享實體基礎架構（邏輯隔離）。私有雲特性：基礎架構（伺服器、儲存、網路）專屬單一企業，可部署在自建機房或由托管商管理，通常需要大量前期 CapEx 投資。"},
+  {type:"Active Screen",topic:"Azure Government 隔離性",scene:"美國聯邦政府機構 IT 官員正在評估 Azure Government 雲端服務。",q:"陳述②：「Azure Government 為美國政府機構提供實體和邏輯上與商業 Azure 隔離的雲端環境，資料中心和基礎架構完全分離。」此陳述是否正確？",opts:["Yes，Azure Government 具有實體與邏輯雙重隔離，資料中心完全獨立","No，Azure Government 與商業 Azure 共享實體資料中心，僅邏輯隔離","僅限 Azure Government Secret 才有實體隔離","僅限 Top Secret 級別才有完整隔離"],a:0,exp:"Azure Government 是物理上與商業 Azure 隔離的獨立雲端執行個體，有專屬的資料中心（僅位於美國境內）、獨立的網路基礎架構，且只對美國政府機構及其授權合作夥伴開放。符合 FedRAMP High、DoD IL2/IL4/IL5 等嚴格合規要求。"},
+  {type:"Multiple Choice",topic:"Azure Application Gateway + WAF",scene:"Contoso 的電商網站需要一個進階的流量管理解決方案，同時具備：(1) Layer 7 智慧路由——依 URL 路徑（/api/* 到後端 A，/images/* 到後端 B）；(2) SSL/TLS 卸載；(3) 整合的 WAF 防禦 OWASP Top 10（如 SQL 注入、XSS）。",q:"哪個 Azure 服務結合了 Layer 7 URL 路徑路由、SSL 卸載和深度整合 WAF？",opts:["Azure Application Gateway（L7 路由 + SSL 卸載 + WAF）","Azure Load Balancer（僅 L4 TCP/UDP，無 HTTP 感知）","Azure Traffic Manager（DNS 層級全球流量導向，無封包處理）","Azure Front Door（全球 CDN + L7，偏向全球加速而非 WAF 深度整合）"],a:0,exp:"Azure Application Gateway 是區域級的 Layer 7 反向代理和負載平衡器：① URL 路徑型路由（Path-based routing）依請求 URL 分發流量；② SSL Termination 卸載加解密負擔；③ WAF（Web Application Firewall）v2 基於 OWASP CRS 規則防禦 SQL 注入、XSS 等 Web 攻擊。Azure Load Balancer 僅運作於 L4，無法感知 HTTP 內容。"}
+];
+
+let current=0,score=0,skipped=0;
+let answered=new Array(QUESTIONS.length).fill(null);
+let shuffled=[];
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function startQuiz(){
+  shuffled=shuffle(QUESTIONS.map((_,i)=>i));
+  current=0;score=0;skipped=0;
+  answered=new Array(QUESTIONS.length).fill(null);
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const total=QUESTIONS.length;
+  const q=QUESTIONS[shuffled[current]];
+  document.getElementById('progressText').textContent=`題目 ${current+1} / ${total}`;
+  document.getElementById('scoreText').textContent=`得分：${score}`;
+  document.getElementById('progressFill').style.width=`${(current/total)*100}%`;
+  document.getElementById('questionMeta').innerHTML=`題目 ${current+1} &bull; ${q.topic}`;
+  document.getElementById('qtypeBadge').textContent=q.type;
+  const sb=document.getElementById('scenarioBox');
+  if(q.scene){sb.style.display='';document.getElementById('scenarioText').textContent=q.scene;}
+  else{sb.style.display='none';}
+  document.getElementById('questionText').textContent=q.q;
+  const letters=['A','B','C','D'];
+  const container=document.getElementById('optionsContainer');
+  container.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn';
+    btn.innerHTML=`<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick=()=>selectAnswer(i);
+    container.appendChild(btn);
+  });
+  document.getElementById('explanation').className='explanation';
+  document.getElementById('explanation').innerHTML='';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('skipBtn').style.display='';
+}
+
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]];
+  const buttons=document.querySelectorAll('.option-btn');
+  buttons.forEach(btn=>btn.disabled=true);
+  const isCorrect=idx===q.a;
+  if(isCorrect)score++;
+  answered[current]=idx;
+  buttons[idx].classList.add(isCorrect?'correct':'wrong');
+  if(!isCorrect)buttons[q.a].classList.add('correct');
+  const exp=document.getElementById('explanation');
+  exp.innerHTML=`<strong>${isCorrect?'✓ 答對了！':'✗ 答錯了'}</strong>${q.exp}`;
+  exp.className='explanation visible';
+  document.getElementById('nextBtn').style.display='';
+  document.getElementById('skipBtn').style.display='none';
+  document.getElementById('scoreText').textContent=`得分：${score}`;
+}
+
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+
+function nextQuestion(){
+  current++;
+  if(current>=QUESTIONS.length)showResults();
+  else renderQuestion();
+}
+
+function showResults(){
+  const total=QUESTIONS.length;
+  const pct=Math.round((score/total)*100);
+  const pass=pct>=70;
+  document.getElementById('progressFill').style.width='100%';
+  document.getElementById('progressText').textContent='全部完成';
+  document.getElementById('scoreText').textContent=`得分：${score}`;
+  document.getElementById('quizCard').innerHTML=`
+    <div class="results">
+      <div class="score-ring ${pass?'pass':'fail'}">
+        <span class="pct">${pct}%</span>
+        <span class="label">${pass?'通過':'未通過'}</span>
+      </div>
+      <h2>${pass?'太棒了！Day 29 完成！':'繼續加油，再練一次吧！'}</h2>
+      <p class="subtitle">${pass?'Domain 1+2+3 混合實戰通過，前往 Day 30 繼續挑戰！':'建議回顧答錯的題目，鞏固各 Domain 核心概念。'}</p>
+      <div class="stats">
+        <div class="stat-box green"><div class="num">${score}</div><div class="desc">答對</div></div>
+        <div class="stat-box red"><div class="num">${total-score-skipped}</div><div class="desc">答錯</div></div>
+        <div class="stat-box"><div class="num">${skipped}</div><div class="desc">略過</div></div>
+        <div class="stat-box"><div class="num">${total}</div><div class="desc">總題數</div></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startQuiz()">再練一次</button>
+        <a class="btn btn-secondary" href="day30.html" style="text-decoration:none;">前往 Day 30 →</a>
+      </div>
+      <p class="disclaimer">AZ-900 及格分數約 700/1000（約 70%）。題目每次隨機排序。本題庫依據 ithome_az900_day29.md 原始題目轉換，僅供練習參考。</p>
+    </div>
+  `;
+}
+
+startQuiz();
+</script>
+</body>
+</html>
