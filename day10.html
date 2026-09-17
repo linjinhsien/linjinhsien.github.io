@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-900 Day 10 Quiz｜ACI & AKS 容器</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 10</div>
+  <h1>ACI &amp; AKS 容器</h1>
+  <p>Azure Container Instances、Azure Kubernetes Service、ACR 與容器選型</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day9.html">&#8592; Day 9</a>
+    <a class="nav-link" href="day11.html">Day 11 &#8594;</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <span class="qtype-badge" id="qtypeBadge"></span>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "ACI 選型",
+    scene: "Titan 科技要在 Azure 執行一個短期批次容器，不需要 Kubernetes API，也不想佈建或管理 VM。",
+    q: "哪個 Azure 服務最符合此需求？",
+    opts: [
+      "A. Azure Container Instances",
+      "B. Azure Virtual Machines",
+      "C. Azure Kubernetes Service (AKS)",
+      "D. Azure App Service"
+    ],
+    a: 0,
+    exp: "ACI 是「無伺服器容器」服務，可在不管理 VM 的情況下快速執行容器，適合短期、批次或 burst 工作負載。VM 需自行管理 OS；AKS 是 Kubernetes 編排服務，對此需求過重；App Service 是 PaaS Web 平台，不是本題指定的容器執行抽象。ExamTopics tally：A (94%)。"
+  },
+  {
+    type: "單選題",
+    topic: "AKS 選型",
+    scene: "Titan 要部署多個微服務，要求服務發現、滾動更新、自我修復與 pod 排程，並希望 Azure 代管 Kubernetes 控制平面。",
+    q: "應選用哪個 Azure 服務？",
+    opts: [
+      "A. Azure Container Instances (ACI)",
+      "B. Azure Kubernetes Service (AKS)",
+      "C. Azure Virtual Machines",
+      "D. Azure Storage"
+    ],
+    a: 1,
+    exp: "「pod、排程、Kubernetes 控制平面、服務發現、滾動更新、自我修復」這些關鍵字直接定位 AKS。ACI 適合快速執行單一容器，不提供完整 Kubernetes 控制平面；VM 與 Storage 更不是容器編排器。ExamTopics tally：B (97%)。"
+  },
+  {
+    type: "單選題",
+    topic: "容器與 VM 責任邊界",
+    scene: "CTO 要求「容器秒級啟動，但團隊不想管理客體 OS」。",
+    q: "哪個陳述最正確？",
+    opts: [
+      "A. 容器一定比 VM 提供更強的硬體隔離",
+      "B. ACI 可在不管理 VM 的情況下執行容器",
+      "C. AKS 只適合單一容器部署",
+      "D. 使用 VM 不需要修補作業系統"
+    ],
+    a: 1,
+    exp: "ACI 將 VM 管理完全交給 Azure，團隊只需關注容器本身。A 把效能與隔離混為一談（VM 以 Hypervisor 提供較強硬體隔離）；C 顛倒了 AKS 的編排用途（AKS 專為多服務編排設計）；D 違反 IaaS 共同責任邊界（VM 的 OS 修補屬使用者責任）。ExamTopics tally：B (96%)。"
+  },
+  {
+    type: "單選題",
+    topic: "容器編排服務",
+    scene: "若需要管理一組容器、協調多個服務並自動調度排程。",
+    q: "哪一類 Azure 服務最適合？",
+    opts: [
+      "A. Azure Kubernetes Service (AKS)",
+      "B. Azure Container Instances (ACI)",
+      "C. Azure Blob Storage",
+      "D. Azure DNS"
+    ],
+    a: 0,
+    exp: "「一組容器、協調、調度」是 orchestrator 關鍵字，直接指向 AKS（受管 Kubernetes）。ACI 適合單純或批次執行，不是完整的 Kubernetes 平台。Blob Storage 是物件儲存，Azure DNS 提供名稱解析，皆與容器編排無關。"
+  },
+  {
+    type: "單選題",
+    topic: "ACI 無伺服器容器",
+    scene: "Titan 只想執行一個隔離容器，不想配置底層 VM，也不需要 Kubernetes 的複雜功能。",
+    q: "哪個選項最精準符合此需求？",
+    opts: [
+      "A. Azure Container Instances (ACI)",
+      "B. Azure Kubernetes Service (AKS)",
+      "C. Virtual Machine Scale Sets",
+      "D. Azure Virtual Desktop"
+    ],
+    a: 0,
+    exp: "ACI 的服務定位正是「快速、簡單地執行容器而不管理 VM」，是無伺服器容器服務。AKS 的編排能力在此反而是額外複雜度；VM Scale Sets 是虛擬機器擴展集；Azure Virtual Desktop 是桌面虛擬化服務，皆不符合需求。"
+  },
+  {
+    type: "情境選型",
+    topic: "ACI vs AKS 綜合選型",
+    scene: "Titan 科技有兩個工作負載：(1) 推薦 API — 平日流量低，每週五晚間突然增加十倍，映像已封裝完成；(2) 結帳平台 — 由十幾個微服務組成，需要服務發現、滾動更新、故障自我修復與不同 node pool。CTO 要求「尖峰不要維護 VM，也不能因為一個壞映像拖垮整個平台」。",
+    q: "請替兩個工作負載選擇最合適的平台組合：",
+    opts: [
+      "A. 兩者都部署在 Azure VM，手動安裝 Docker 並以 cron 增加容器數量",
+      "B. 推薦 API 使用 ACI；微服務平台使用 AKS，映像統一放私有 ACR，以 Managed Identity 拉取固定版本映像",
+      "C. 兩者都使用 ACI，靠多個容器群組手動互相呼叫",
+      "D. 兩者都使用 AKS，並把每個映像都標成 latest 以方便更新"
+    ],
+    a: 1,
+    exp: "B 是正解：推薦 API 是 burst 型、容器邊界清楚，ACI 免管 VM 且按需計費；微服務需要 Kubernetes 的服務發現、滾動更新與自我修復，AKS 才符合。ACR + Managed Identity + 固定版本 tag 避免供應鏈風險。A 把 OS 管理責任拉回 Titan；C 缺乏可靠的服務發現與健康檢查；D 使用 latest tag 會讓部署結果隨時間改變，難以回滾。"
+  },
+  {
+    type: "單選題",
+    topic: "AWS 與 Azure 服務對照",
+    q: "Azure Container Instances (ACI) 最接近 AWS 的哪個服務概念？",
+    opts: [
+      "A. AWS Fargate / Amazon ECS（無伺服器容器執行）",
+      "B. Amazon EKS（受管 Kubernetes 服務）",
+      "C. Amazon ECR（私有容器映像庫）",
+      "D. AWS Lambda（無伺服器函式）"
+    ],
+    a: 0,
+    exp: "ACI 對應 AWS Fargate/ECS 的概念——皆為無伺服器容器執行，免管理 VM/節點。AKS 對應 EKS（受管 Kubernetes）；ACR 對應 ECR（私有映像庫）；Lambda 對應 Azure Functions（無伺服器函式）。注意：ECS 是 AWS 原生編排器，Fargate 是其無伺服器引擎，兩者不完全等同 ACI。"
+  },
+  {
+    type: "單選題",
+    topic: "AKS 控制平面",
+    q: "關於 Azure Kubernetes Service (AKS) 的控制平面，下列何者正確？",
+    opts: [
+      "A. 控制平面由使用者自行管理，Azure 僅提供 worker node",
+      "B. Azure 建立並維護控制平面；Free 層級不收費，Standard/Premium 層級依小時計費",
+      "C. AKS 控制平面在所有定價層均完全免費",
+      "D. 使用者必須手動修補 Kubernetes API Server 的安全漏洞"
+    ],
+    a: 1,
+    exp: "AKS 是受管 Kubernetes：Azure 負責建立、維護控制平面，包含健康監控與維護。Free 層級的控制平面不收費（但無 SLA）；若啟用 Standard 或 Premium 層以取得 Uptime SLA，則控制平面依小時計費。使用者的責任在節點、pod 資源、網路、身分、映像與應用程式可用性。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Container Registry",
+    q: "Azure Container Registry (ACR) 的主要功能是什麼？",
+    opts: [
+      "A. 在不管理 VM 的情況下執行容器",
+      "B. 管理 Kubernetes 叢集的控制平面",
+      "C. 儲存與管理私有容器映像及 OCI artifacts",
+      "D. 為容器提供網路分割與防火牆功能"
+    ],
+    a: 2,
+    exp: "ACR 是 Azure 的私有容器 registry，用於儲存和管理容器映像及 OCI artifacts，對應 AWS 的 Amazon ECR。透過 Managed Identity 與 AcrPull 角色，可以實作最小權限拉取，避免把 registry 密碼硬編碼進 YAML 或映像層。"
+  },
+  {
+    type: "單選題",
+    topic: "映像供應鏈安全",
+    q: "在生產環境部署容器映像時，哪個做法最符合安全最佳實踐？",
+    opts: [
+      "A. 永遠使用 latest tag 以確保部署到最新版本",
+      "B. 使用不可變版本 tag 或 digest，透過 Managed Identity 授予 AcrPull 權限",
+      "C. 將 registry 密碼存入環境變數以便容器讀取",
+      "D. 給予所有 pod 完整的 Azure RBAC 管理員權限以簡化操作"
+    ],
+    a: 1,
+    exp: "最佳實踐：使用 commit digest 或不可變版本 tag（避免相同 tag 對應不同內容）；透過 Managed Identity 授予最小的 AcrPull 權限，不要把密碼存入環境變數或映像層。使用 latest 會讓部署結果隨時間改變，難以回滾與鑑識；若一個被竄改的 latest 被 100 個 pod 拉取，爆炸半徑遠大於單一 VM。"
+  },
+  {
+    type: "單選題",
+    topic: "ACI 與 AKS 核心差異",
+    q: "下列何者最能描述 ACI 與 AKS 的核心差異？",
+    opts: [
+      "A. ACI 支援完整 Kubernetes API，AKS 不支援",
+      "B. ACI 適合快速執行單一容器；AKS 適合需要編排與管理的多容器工作負載",
+      "C. AKS 比 ACI 在所有情境下都更划算",
+      "D. ACI 需要管理 VM，AKS 不需要"
+    ],
+    a: 1,
+    exp: "ACI（Azure Container Instances）是無伺服器容器執行器，適合快速啟動單一容器、短期工作或 burst；AKS（Azure Kubernetes Service）是受管 Kubernetes，提供完整的 pod 排程、服務發現、滾動更新與自我修復能力，適合多服務編排。兩者的選擇應基於「需要幾個容器、是否需要編排」，而非成本比較。"
+  },
+  {
+    type: "單選題",
+    topic: "AKS Virtual Nodes",
+    scene: "Titan 的 AKS 叢集在流量尖峰時需要快速增加容器容量，但不想等待新 VM 節點佈建完成。",
+    q: "Azure 提供哪個機制讓 AKS 在尖峰時秒級擴展容器容量？",
+    opts: [
+      "A. 將 ACI 作為 Virtual Node，讓 AKS 把尖峰 pod 暫放至 ACI",
+      "B. 使用 Azure Blob Storage 暫存多餘的 pod",
+      "C. 自動建立新的 Azure VM 並手動加入 node pool",
+      "D. 透過 Azure DNS 重新路由流量到其他區域"
+    ],
+    a: 0,
+    exp: "AKS Virtual Nodes 技術允許 AKS 把尖峰時多出的 pod 暫時排程到 ACI 容器群組，實現秒級擴展而無需等待新 VM 節點佈建（VM 通常需要數分鐘）。這對應 AWS 的 EKS Fargate Profile 概念。使用仍受工作負載相容性限制。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day11.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
