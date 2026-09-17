@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 6 – Advisor &amp; Service Health</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 6</div>
+  <h1>Advisor &amp; Service Health</h1>
+  <p>Azure Advisor 五大支柱 ｜ Service Health 三層架構 ｜ Monitor &amp; Arc</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day5.html">← Day 5</a>
+    <a class="nav-link" href="index.html">首頁</a>
+    <a class="nav-link" href="day7.html">Day 7 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 14</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境背景</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "情境題",
+    topic: "Azure Advisor + Service Health + Arc",
+    scene: "Titan科技即將迎接黑色星期五，CTO提出三項任務：1) 找出閒置或過度配置的資源並降規以節省成本；2) 當微軟對East US/East Asia排定計畫性維護時，維運團隊必須在1分鐘內透過Webhook/PagerDuty收到告警；3) 地端機房50台資料庫伺服器必須與Azure套用相同合規標準。",
+    q: "哪一個架構方案最符合Azure原生最佳實踐且最具成本效益？",
+    opts: [
+      "A. Azure Pricing Calculator盤點降規 + 手動瀏覽Azure Status更新行事曆 + 自建Prometheus/Grafana監控地端",
+      "B. Azure Advisor Cost建議識別低使用率VM + Azure Service Health Health Alerts串接Webhook + Azure Arc代理納管地端伺服器",
+      "C. Azure Cost Management自動刪除低CPU VM + 逐台Resource Health設定維護通知 + Excel手動比對地端伺服器",
+      "D. PowerShell腳本定時呼叫ARM API查CPU + Activity Log查未來硬體維護排程 + 購買Azure Stack Hub替換地端機房"
+    ],
+    a: 1,
+    exp: "方案B是唯一完整正確的組合：Azure Advisor的Cost面向自動分析低使用率VM並提供降規估算（免費、免開發）；Azure Service Health的Health Alerts支援針對特定訂用帳戶與區域設定Webhook/SMS計畫性維護通知；Azure Arc只需安裝Connected Machine Agent即可將地端機器納入ARM管理並套用Azure Policy，無需搬遷工作負載。方案A的Pricing Calculator無法連線現有帳戶；方案C的Cost Management無法自動刪VM，且Resource Health需逐台手動；方案D的Activity Log記錄「已發生的管理操作」，無法預知未來維護排程。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Advisor 成本優化",
+    scene: null,
+    q: "財務團隊希望獲得一份分析報告，指出目前Azure環境中哪些執行中的資源存在過度配置（Over-provisioned）或閒置狀況，並提供具體可降低每月費用的調整建議。應使用哪一項服務？",
+    opts: [
+      "A. Azure Cost Management + Billing 的 Invoices 頁面",
+      "B. Azure Advisor",
+      "C. Azure Service Health",
+      "D. Azure Pricing Calculator"
+    ],
+    a: 1,
+    exp: "Azure Advisor的Cost標籤頁專門提供主動式成本優化建議，包含找出閒置VM、未掛載磁碟以及購買Reserved Instances的節省估算。Invoices僅顯示過去帳單金額；Service Health專注於平台健康事件；Pricing Calculator是預估「未來新架構費用」的試算工具，無法分析現有資源使用率。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Service Health 計畫性維護",
+    scene: null,
+    q: "維運團隊需要一套自動化通知機制：當微軟預計對Titan資源所在的Azure區域進行底層硬體計畫性維護（Planned Maintenance）時，團隊必須在維護發生前收到Email與簡訊通知，以便提前切換流量。應使用下列哪一項功能？",
+    opts: [
+      "A. 在Azure Status網頁訂閱全域RSS Feed",
+      "B. 在Azure Service Health建立Health Alert",
+      "C. 在Azure Monitor Metrics設定CPU使用率警報",
+      "D. 在Azure Advisor啟用Security警報"
+    ],
+    a: 1,
+    exp: "Azure Service Health提供「計畫性維護（Planned Maintenance）」的專屬視圖，並允許設定Health Alerts，當微軟針對訂用帳戶所屬區域排定硬體更新或停機維護時，自動發送Email、SMS或觸發Webhook。Azure Status僅提供全域重大事件，不含特定租戶的計畫性維護排程；Monitor Metrics監控資源效能數值，無法預知未來維護計畫；Advisor Security針對資安弱點配置，與硬體維護排程無關。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Arc 混合雲治理",
+    scene: null,
+    q: "Titan科技有數百台Linux VM分散在本地VMware機房以及AWS EC2。公司希望將Azure原生的安全評估、Azure Policy與集中監控延伸到這些非Azure伺服器，且不需將工作負載遷移至Azure。應採用哪項解決方案？",
+    opts: [
+      "A. Azure Arc",
+      "B. Azure ExpressRoute",
+      "C. Azure Migrate",
+      "D. Azure Resource Mover"
+    ],
+    a: 0,
+    exp: "Azure Arc專為延伸Azure控制平面而設計，在外部伺服器安裝Connected Machine Agent後，可將地端實體機/VM、AWS EC2、GCP執行個體註冊為Azure管理資源，進而套用Azure Policy、Defender for Cloud與Azure Monitor，且不需搬遷工作負載。ExpressRoute是專屬私有網路連線，不提供伺服器管理；Azure Migrate用於將地端機器「搬遷」至Azure，題幹明確要求不遷移；Resource Mover用於在不同Azure區域之間移動現有Azure資源。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Cost Management 預算告警",
+    scene: null,
+    q: "財務長要求：當某訂用帳戶的「當期實際花費」超過預先設定的金額門檻時，系統要主動寄出Email告警。有工程師主張「用Azure Advisor的建議來設定這個費用門檻告警」。正確的做法應該是？",
+    opts: [
+      "A. Azure Advisor建議即可設定費用門檻告警（工程師說法正確）",
+      "B. 使用Azure Cost Management的預算告警（Budget Alerts）",
+      "C. 透過Access control (IAM) 設定存取限制",
+      "D. 透過Azure Policy合規性（Compliance）規則觸發"
+    ],
+    a: 1,
+    exp: "Azure Advisor只會「建議」你關閉閒置資源以省錢，它不會依「花費金額門檻」觸發告警。依花費或用量達到/超過門檻時主動通知，是Cost Management的Budget Alerts職責。記憶點：Advisor = 給省錢建議；Budget Alerts = 花費超標時報警。IAM管存取權限；Policy管資源合規規則，兩者都與費用門檻告警無關。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Activity Log 稽核",
+    scene: null,
+    q: "資安團隊要調查：「過去14天內，是哪一位使用者把某台生產環境虛擬機器關機的？」有人主張直接打開Azure Monitor就能查到操作者。正確的查詢來源應該是？",
+    opts: [
+      "A. 直接用Azure Monitor的指標（Metrics）頁面查詢",
+      "B. Azure Event Hubs",
+      "C. Azure Activity Log（活動記錄）",
+      "D. Azure Service Health"
+    ],
+    a: 2,
+    exp: "Activity Log是訂用帳戶層級的控制平面稽核日誌，保留90天，可篩選出特定VM在過去14天的關機（deallocate）操作與操作者身分，對應AWS CloudTrail。雖然Activity Log屬於Azure Monitor的一部分，但直接回答「Azure Monitor」太籠統，考題精確指向Activity Log元件。Event Hubs是大規模事件串流擷取服務；Service Health報告的是Azure平台端的事故與維護，不記錄租戶內使用者的操作行為。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Advisor 五大支柱",
+    scene: null,
+    q: "維運主管希望自動找出哪些VM的CPU使用率連續14天低於5%，以及哪些受控磁碟（Managed Disks）處於未連結（Unattached）狀態。應查看Azure Advisor的哪一個面向（支柱）的儀表板？",
+    opts: [
+      "A. Performance（效能）",
+      "B. Operational Excellence（卓越營運）",
+      "C. Cost（成本優化）",
+      "D. Reliability（可靠性）"
+    ],
+    a: 2,
+    exp: "Cost支柱專注於消除浪費，包含：閒置/低使用率VM降規（Right-sizing）、關閉孤兒磁碟（Unattached Disks）、購買Reserved Instances（RI）或Savings Plans。Performance處理效能瓶頸；Reliability處理高可用性與備份；Operational Excellence處理配額與部署治理。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Advisor 五大支柱",
+    scene: null,
+    q: "資安稽核團隊要求檢查Azure資源的最低安全基準。系統管理員在Azure Advisor的某分頁中看到「建議啟用儲存體帳戶傳輸中加密」、「建議關閉直接暴露於Internet的RDP 3389連接埠」等改善措施。這些建議屬於哪個支柱？",
+    opts: [
+      "A. Security（整合Microsoft Defender for Cloud）",
+      "B. Reliability（可靠性）",
+      "C. Operational Excellence（卓越營運）",
+      "D. Cost（成本優化）"
+    ],
+    a: 0,
+    exp: "Security支柱深度整合Microsoft Defender for Cloud的安全評估引擎，主動提示身分驗證弱點（如未啟用MFA）、網路邊界風險（開放Management Ports如RDP 3389/SSH 22）與資料未加密風險（如傳輸中/靜態加密）。Reliability處理架構單點故障；Operational Excellence處理配額與治理；Cost處理費用節省。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Advisor 五大支柱",
+    scene: null,
+    q: "Titan科技在單一Azure Region部署了核心ERP系統的VM，但未設定可用性區域（Availability Zones），且後端的Azure SQL Database尚未配置異地容錯移轉群組（Failover Groups）。Azure Advisor會在哪個分頁發出警示，提醒若發生機房級故障將導致服務中斷？",
+    opts: [
+      "A. Performance（效能）",
+      "B. Reliability（可靠性）",
+      "C. Security（安全性）",
+      "D. Operational Excellence（卓越營運）"
+    ],
+    a: 1,
+    exp: "Reliability支柱（舊版考卷亦稱High Availability）專門檢查架構單點故障（SPOF），例如：未加入可用性區域（AZ）、未設定Azure Backup備份原則、未配置跨區域異地備援（Geo-redundant Backup / Failover Groups）。Performance處理吞吐量與延遲；Security處理安全弱點；Operational Excellence處理服務配額與部署治理。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Advisor 五大支柱",
+    scene: null,
+    q: "某電商查詢API在促銷期間回應時間急遽變慢。架構師檢視Azure Advisor時，系統建議將VM掛載的Standard HDD升級為Premium SSD，並提示資料庫快取（Azure Cache for Redis）命中率過低。這些提升系統吞吐量、降低延遲的建議屬於哪一面向？",
+    opts: [
+      "A. Cost（成本優化）",
+      "B. Operational Excellence（卓越營運）",
+      "C. Reliability（可靠性）",
+      "D. Performance（效能）"
+    ],
+    a: 3,
+    exp: "Performance支柱專注於消除資源瓶頸，包含：儲存體IOPS/吞吐量升級（HDD→SSD）、資料庫索引與查詢最佳化、快取命中率優化、網路路由與Traffic Manager/CDN加速配置。Cost處理費用節省；Reliability處理高可用性；Operational Excellence處理配額與治理。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Advisor 五大支柱",
+    scene: null,
+    q: "開發團隊即將在一週內於單一訂用帳戶中大規模建立200台GPU運算執行個體。Azure Advisor主動跳出警告，指出訂用帳戶的「虛擬機器vCPU核心配額限制（Service Quotas/Limits）」即將用盡，可能導致後續ARM範本部署失敗。此配額預警屬於哪一面向？",
+    opts: [
+      "A. Performance（效能）",
+      "B. Operational Excellence（卓越營運）",
+      "C. Cost（成本優化）",
+      "D. Security（安全性）"
+    ],
+    a: 1,
+    exp: "Operational Excellence支柱專注於提升流程與部署效率，包含：服務配額與限制（Service Limits/Quotas）監控、ARM/Bicep範本最佳實踐驗證、Azure Resource Manager標籤與治理規範。配額用盡會導致部署失敗，屬於「運營卓越」範疇。Performance處理效能瓶頸；Cost處理費用節省；Security處理安全弱點。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Service Health 三層架構",
+    scene: null,
+    q: "一位非Azure用戶想確認「Azure全球骨幹今天是否發生大規模中斷」，不需登入Azure Portal，任何人皆可存取。應查看哪個資源？",
+    opts: [
+      "A. Azure Service Health（需登入，個人化訂用帳戶視圖）",
+      "B. Azure Resource Health（需登入，個別資源診斷）",
+      "C. Azure Status（status.azure.com 公開網頁，無需登入）",
+      "D. Azure Monitor Activity Log（需登入，稽核日誌）"
+    ],
+    a: 2,
+    exp: "Azure Status（status.azure.com）是公開網頁，全球所有人（包含非Azure用戶）皆可無需登入查看全球所有Azure區域與主要服務的大規模重大中斷事件。Service Health需要登入，提供個人化的訂用帳戶相關事件；Resource Health需要登入，查看單一特定資源；Activity Log需登入，記錄管理操作。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Resource Health",
+    scene: null,
+    q: "架構師發現某台特定VM無法連線。需要確認究竟是Azure底層主機硬體故障（Platform Event）所致，還是因作業系統崩潰或使用者自行操作（User-initiated）所致。應使用哪個服務進行精確診斷？",
+    opts: [
+      "A. Azure Status（status.azure.com）",
+      "B. Azure Service Health（訂用帳戶層級）",
+      "C. Azure Resource Health（個別資源診斷）",
+      "D. Azure Advisor Security（安全建議）"
+    ],
+    a: 2,
+    exp: "Azure Resource Health提供下鑽至單一Azure資源實體（如特定VM）的健康診斷視窗，能清晰區分中斷原因是「平台底層事件（Platform Event，Azure的責任）」還是「使用者自行操作（User-initiated，客戶的責任）」，並顯示狀態燈號（Available/Degraded/Unavailable）。Azure Status僅顯示全域大規模中斷；Service Health是訂用帳戶層級；Advisor Security提供安全建議，不做即時資源健康診斷。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Monitor 元件",
+    scene: null,
+    q: "下列哪個Azure Monitor元件等同於AWS CloudTrail，記錄「誰在何時透過Portal/CLI/ARM建立、修改或刪除Azure資源」的控制平面稽核日誌，並保留90天？",
+    opts: [
+      "A. Application Insights（應用程式效能監控）",
+      "B. Log Analytics Workspace（KQL日誌查詢）",
+      "C. Azure Monitor Metrics（即時計量指標）",
+      "D. Activity Log（活動記錄）"
+    ],
+    a: 3,
+    exp: "Activity Log是訂用帳戶層級的控制平面稽核日誌，記錄所有透過Portal/CLI/ARM發起的建立、修改、刪除（CRUD）管理操作，保留90天，對應AWS CloudTrail。Application Insights專注應用程式層APM追蹤；Log Analytics Workspace儲存並分析結構化日誌（KQL查詢）；Metrics是輕量即時時間序列數值（CPU使用率等），用於觸發自動縮放與警報。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day7.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
