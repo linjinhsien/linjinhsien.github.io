@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 9｜App Service &amp; Functions</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 9</div>
+  <h1>App Service &amp; Functions</h1>
+  <p>PaaS 輕騎兵：把伺服器交給平台，事件驅動 Serverless 計算</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day8.html">&#8592; Day 8</a>
+    <a class="nav-link" href="day10.html">Day 10 &#8594;</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 14</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境說明</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "App Service",
+    scene: "Titan 科技要部署一個 ASP.NET Web API，需求是平台負責 OS 修補與 Web hosting，團隊只提交應用程式程式碼，並保留自訂網域與 TLS 的控制權。",
+    q: "哪項 Azure 服務最符合這個需求？",
+    opts: ["A. Azure Virtual Machines", "B. Azure App Service", "C. Azure Functions", "D. Azure Storage"],
+    a: 1,
+    exp: "App Service 是 PaaS，平台負責 OS 修補與 Web hosting runtime，團隊只需部署程式碼。VM 是 IaaS 需要自行管理 OS；Functions 是事件驅動函式，不是本題持續 Web hosting 的主要選擇；Storage 不執行 API 程式。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Functions",
+    scene: "Titan 的促銷系統收到佇列訊息才執行一段不到數分鐘的轉換工作，平時幾乎沒有流量。CTO 希望依執行量付費，且不管理伺服器。",
+    q: "應選哪一項服務？",
+    opts: ["A. Azure Functions Consumption", "B. App Service Plan", "C. Azure VM", "D. Azure Dedicated Host"],
+    a: 0,
+    exp: "Azure Functions Consumption Plan 按執行次數與時間計費，無執行時通常無執行費，適合事件觸發、短任務、低頻工作。App Service Plan 保留固定容量；VM 與 Dedicated Host 都增加基礎設施管理負擔。"
+  },
+  {
+    type: "是非題",
+    topic: "Serverless 概念",
+    scene: "工程師說：「使用 Azure Functions 後，Titan 的應用程式就不再有任何伺服器，所以上線後不需要考慮執行時間、冷啟動或平台限制。」",
+    q: "這個說法是否正確？",
+    opts: ["A. Yes（正確）", "B. No（錯誤）", "C. 部分正確", "D. 資訊不足"],
+    a: 1,
+    exp: "Serverless 是「不必管理伺服器」，不是「伺服器不存在」。平台仍會準備執行環境，Functions 仍可能冷啟動，Consumption 也有執行時間與資源限制；設計者仍需處理重試、冪等與可觀測性。"
+  },
+  {
+    type: "單選題",
+    topic: "Deployment Slots",
+    scene: "Titan 希望先讓新版本在不影響 production 的環境完成 smoke test，確認健康後再把流量切換過去，實現低風險發布。",
+    q: "哪項 App Service 能力最直接符合這個需求？",
+    opts: ["A. Deployment Slots", "B. Availability Set", "C. Resource Group", "D. Azure DNS"],
+    a: 0,
+    exp: "Deployment Slot 提供 staging 與 production 等 live app 環境，可透過 swap 將預熱的 staging 版本切換到 production，降低發布中斷風險。Availability Set 是 VM 的容錯配置；Resource Group 是資源容器；DNS 只負責名稱解析。"
+  },
+  {
+    type: "單選題",
+    topic: "服務模型",
+    scene: "Titan CTO 要求：不管理 OS，只負責部署 Web 程式與資料，其他由雲端供應商負責。",
+    q: "以下哪個服務模型最接近這個需求？",
+    opts: ["A. IaaS（基礎設施即服務）", "B. PaaS（平台即服務）", "C. On-premises（地端自管）", "D. Dedicated Host"],
+    a: 1,
+    exp: "PaaS 將 OS 與平台維護交給供應商，客戶聚焦應用程式與資料。IaaS 仍需管理 OS；Dedicated Host 保留更多基礎設施控制；On-premises 完全不符合雲端代管需求。"
+  },
+  {
+    type: "情境分析題",
+    topic: "架構選型",
+    scene: "Titan 要推出會員中心：公開 API 平日持續服務，需綁定自訂網域與 HTTPS，並由新版本先在 staging 驗證再切換；促銷流程在收到訂單事件後執行，平日幾乎沒有事件，活動期間才瞬間增加。CTO 要求不管理 OS、不把資料庫密碼放在設定檔、閒置時不為促銷流程養伺服器。",
+    q: "哪個方案最符合所有需求？",
+    opts: [
+      "A. 兩者都用 Azure VM，以 cron 手動調整，把連線字串放入映像",
+      "B. API 用 App Service + Deployment Slot；促銷用 Consumption Functions；兩者以 Managed Identity 取得 Key Vault 秘密",
+      "C. 兩者都用 Functions Consumption，且每次執行時建立新資料庫",
+      "D. API 與促銷都在同一 App Service Plan，直接把 staging 設定複製到 production"
+    ],
+    a: 1,
+    exp: "方案 B 讓 App Service 處理持續運行的 Web workload（自訂網域、TLS、部署槽），Consumption Functions 處理 burst 事件工作，Managed Identity + Key Vault 消除硬編碼機密。A 增加 OS 管理與機密洩漏風險；C 每次建立資料庫違反持久化原則；D 混合流量模式並複製 staging 設定會放大 blast radius。"
+  },
+  {
+    type: "單選題",
+    topic: "App Service Plan",
+    scene: null,
+    q: "Azure App Service Plan 主要定義了什麼？",
+    opts: [
+      "A. 只定義應用程式的地理區域",
+      "B. OS、區域、定價層與計算容量，同一 Plan 內的 app 共用這些資源",
+      "C. 每個應用程式可用的資料庫數量",
+      "D. 僅定義應用程式的 runtime 語言版本"
+    ],
+    a: 1,
+    exp: "App Service Plan 是容量與計費邊界，決定 OS、區域、定價層、執行個體大小與數量。同一 Plan 內的多個 app 共用計算資源，因此不同信任層級或流量尖峰的工作負載應分開放在不同 Plan。"
+  },
+  {
+    type: "單選題",
+    topic: "冷啟動",
+    scene: null,
+    q: "Azure Functions 的「冷啟動 (Cold Start)」是指什麼？",
+    opts: [
+      "A. 在寒冷地區執行函式所產生的網路延遲",
+      "B. 函式閒置後重新準備執行環境所增加的初始延遲",
+      "C. 每個月第一次執行的額外計費事件",
+      "D. 記憶體使用率過高時觸發的強制重啟"
+    ],
+    a: 1,
+    exp: "冷啟動是指 Azure Functions 閒置後，當新請求到來時，平台需要重新載入 runtime 環境所造成的初始延遲。延遲時間依語言、相依套件、區域與負載而不同。Premium Plan 可用預熱執行個體降低冷啟動風險。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Functions 方案",
+    scene: "Titan 的即時報價 API 對延遲非常敏感，不能接受冷啟動所帶來的初始延遲，但又希望使用 Azure Functions 而非 App Service。",
+    q: "應選擇哪個 Functions 方案來降低冷啟動風險？",
+    opts: ["A. Consumption Plan", "B. Free Plan", "C. Premium Plan", "D. Shared Plan"],
+    a: 2,
+    exp: "Azure Functions Premium Plan 提供預熱執行個體 (pre-warmed instances)，可降低或消除冷啟動延遲，適合對延遲敏感的工作負載。Consumption Plan 沒有預熱機制；Free 與 Shared Plan 不適用於生產環境高頻需求。"
+  },
+  {
+    type: "單選題",
+    topic: "Managed Identity",
+    scene: "Titan 的 App Service 需要存取 Azure SQL Database，安全規範禁止把連線字串硬編碼在原始碼或 App Settings 中。",
+    q: "應使用哪種方式讓 App Service 安全取得資料庫存取憑證？",
+    opts: [
+      "A. 把連線字串存入原始碼版本控制",
+      "B. 以 Managed Identity 存取 Azure Key Vault，再由 Key Vault 安全儲存機密",
+      "C. 把密碼直接寫入 VM 映像並定期輪替映像",
+      "D. 把環境變數存入 Git Repository 的設定檔"
+    ],
+    a: 1,
+    exp: "Managed Identity 讓 App Service 以平台身分（而非帳號密碼）存取 Azure Key Vault，再由 Key Vault 集中管理秘密與連線字串。這避免了硬編碼憑證、降低洩漏風險，並支援自動輪替。"
+  },
+  {
+    type: "單選題",
+    topic: "Functions 執行限制",
+    scene: null,
+    q: "Azure Functions Consumption Plan 的預設執行時間上限約為多少？",
+    opts: ["A. 30 秒", "B. 約 5 分鐘（預設，可調整至最長 10 分鐘）", "C. 1 小時", "D. 無限制"],
+    a: 1,
+    exp: "Azure Functions Consumption Plan 的預設執行時間上限約 5 分鐘，可調整至最長約 10 分鐘。長時間運行的工作（如長交易、常駐程序）不適合 Consumption Plan，應考慮 App Service、Premium Plan 或 Container Apps。"
+  },
+  {
+    type: "單選題",
+    topic: "AWS 對照",
+    scene: null,
+    q: "在 Azure 與 AWS 的服務對照中，Azure Functions 最接近哪項 AWS 服務？",
+    opts: ["A. Amazon EC2", "B. AWS App Runner", "C. AWS Lambda", "D. Amazon ECS"],
+    a: 2,
+    exp: "Azure Functions 與 AWS Lambda 都是事件驅動的 Serverless 函式計算服務，以 trigger 啟動函式、按用量計費，並且都有冷啟動與執行時間限制。AWS 解決冷啟動可用 Provisioned Concurrency，Azure 則可用 Premium Plan 的預熱執行個體。"
+  },
+  {
+    type: "單選題",
+    topic: "Easy Auth",
+    scene: "Titan 的 App Service Web API 需要整合 Entra ID 登入，希望在平台層攔截未驗證的請求，而不需要在應用程式程式碼中實作完整的 OAuth 流程。",
+    q: "應使用 App Service 的哪項內建功能？",
+    opts: [
+      "A. 自動擴展 (Auto-scaling)",
+      "B. Easy Auth（App Service Authentication / Authorization）",
+      "C. Deployment Slots",
+      "D. Custom Domain"
+    ],
+    a: 1,
+    exp: "Easy Auth（App Service Authentication / Authorization）可在平台層處理 Entra ID 登入與 token 驗證，無需在應用程式中實作完整的驗證邏輯。但這不能取代應用程式內的授權邏輯與輸入驗證。"
+  },
+  {
+    type: "單選題",
+    topic: "Consumption 計費",
+    scene: null,
+    q: "關於 Azure Functions Consumption Plan 的計費，下列哪個說法最正確？",
+    opts: [
+      "A. 完全沒有任何費用，包括儲存體與網路",
+      "B. 按月固定收費，與執行次數無關",
+      "C. 無函式執行時通常無執行費，但儲存體與網路等相依服務仍可能產生費用",
+      "D. 依預先保留的執行個體數量收費"
+    ],
+    a: 2,
+    exp: "Consumption Plan 按執行次數與時間計費，無執行時通常無執行費。但這不等於整個系統零成本：儲存體帳戶（Functions 所需）、網路傳輸與其他相依服務仍可能收費。應以實際工作負載估算整體成本。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day10.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
