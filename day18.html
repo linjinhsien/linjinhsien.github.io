@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 18 Quiz｜Azure SQL Database</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 18</div>
+  <h1>Azure SQL Database</h1>
+  <p>Azure SQL 家族選型：SQL Database、Managed Instance、SQL on VM、TDE 與業務持續性</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day17.html">&#8592; Day 17</a>
+    <a class="nav-link" href="day19.html">Day 19 &#8594;</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 &#8594;</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "PaaS vs IaaS 服務模型辨識",
+    scene: "Titan 要建立新的交易 API，希望平台處理 SQL 引擎的修補、備份與基礎高可用；另一個團隊需要管理 Windows Server 與 SQL Server 的自訂驅動程式。",
+    q: "哪一組配對最合理？",
+    opts: [
+      "兩者都使用 SQL Server on Azure VMs",
+      "前者使用 Azure SQL Database，後者使用 SQL Server on Azure VMs",
+      "前者使用 VM，後者使用 Azure SQL Database",
+      "兩者都使用 Cosmos DB"
+    ],
+    a: 1,
+    exp: "關鍵字「平台處理引擎維運」指向 PaaS，對應 Azure SQL Database；「管理 OS 與自訂驅動」指向 IaaS，對應 SQL Server on Azure VMs。A 讓新 API 承擔不必要的 OS 維運；C 顛倒抽象層；D 把關聯式需求改成 NoSQL。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "配額不足的正式處理管道",
+    scene: "Titan 在新訂用帳戶建立 SQL Managed Instance 時，收到「目前區域的配額不足」訊息。CTO 要求透過正式支援管道提高限制。",
+    q: "應採取哪一項行動？",
+    opts: [
+      "刪除 Resource Group，重新建立同名資源",
+      "建立 Azure Support Request，申請檢視並提高相關配額",
+      "把 SQL Server 改成 Cosmos DB",
+      "在應用程式中重試部署直到成功"
+    ],
+    a: 1,
+    exp: "配額是訂用帳戶與區域層級的服務限制，不是刪除資源或重試就能消除的部署錯誤。建立 Azure Support Request 是讓 Microsoft 檢視需求並申請提高限制的正式管道。A、C、D 都不會改變訂用帳戶配額，因此均不正確。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "SQL Database Serverless 計費邊界",
+    scene: "測試環境使用 Provisioned Azure SQL Database。工程師想仿照 VM 執行 deallocate，期待運算費立即停止。",
+    q: "架構師應如何判斷？",
+    opts: [
+      "所有 Azure SQL Database 都能 deallocate，且所有費用歸零",
+      "Provisioned database 沒有 VM 式 deallocate；若符合條件可評估 Serverless auto-pause，但儲存與其他資源費用仍須檢查",
+      "只能把資料庫移到 Cosmos DB 才能停止計費",
+      "開啟 TDE 後資料庫會自動停止"
+    ],
+    a: 1,
+    exp: "Azure SQL Database Provisioned tier 沒有 VM 式的 deallocate 機制。Serverless compute tier 可以在閒置後自動暫停並降低運算費用，但它只適用於單一資料庫（不含 Elastic Pool 與 Managed Instance），且暫停期間儲存費用仍繼續計算，也有喚醒延遲。不能把「自動暫停」泛化成所有 SQL Database 的能力。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "PaaS 遷移服務組合",
+    scene: "Titan 想把新 Web 應用的關聯式資料庫交給 Azure 維運，同時把舊 SQL Server 工作負載保留較高相容性。",
+    q: "哪一組服務方向正確？",
+    opts: [
+      "新應用用 Azure SQL Database；舊系統評估 SQL Managed Instance",
+      "新應用與舊系統都用 SQL Server on Azure VMs，才能取得 PaaS",
+      "兩者都改用 Cosmos DB",
+      "新應用用 Storage Explorer；舊系統用 AzCopy"
+    ],
+    a: 0,
+    exp: "Azure SQL Database 適合新應用的受控 PaaS 邊界，平台處理修補、備份與基礎高可用；SQL Managed Instance 適合需要執行個體級相容性（SQL Agent、跨 DB 查詢）的遷移。VM 是 IaaS，不是 PaaS；Storage Explorer 與 AzCopy 是儲存體資料平面工具，不能取代關聯式資料庫服務。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "TDE 保護範圍",
+    scene: "Titan 要保護 Azure SQL Database 的資料檔案、備份與交易記錄，並詢問 TDE 是否同時負責網路隔離與登入授權。",
+    q: "哪個判斷正確？",
+    opts: [
+      "TDE 保護靜態資料；網路隔離與登入授權仍要另行設計",
+      "TDE 會自動封鎖所有公網連線，因此不需要 Private Endpoint",
+      "TDE 會取代 Microsoft Entra ID 驗證與 RBAC",
+      "TDE 只加密應用程式送出的欄位，不處理資料庫檔案"
+    ],
+    a: 0,
+    exp: "TDE（透明資料加密）的責任是靜態資料加密，對資料庫檔案、備份與交易記錄進行儲存層加密。它不會自動建立網路邊界（需 Private Endpoint + Deny public network access），也不會取代身分驗證（需 Microsoft Entra ID）或授權（需 RBAC）。B、C 把不同控制面能力混淆；D 把儲存層加密誤寫成欄位加密。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "vCore 計價模型與既有授權",
+    scene: "Titan 手上有大量既有的 SQL Server Enterprise 授權尚未到期，也希望用長期承諾換取運算折扣。",
+    q: "架構師應建議哪一種計價模型？",
+    opts: [
+      "DTU，因為設定介面比較簡單",
+      "vCore，因為只有 vCore 支援 Azure Hybrid Benefit 與 Reserved Capacity 折扣",
+      "兩種模型在授權折抵與長期折扣上完全一樣，選哪個都無所謂",
+      "改用 Hyperscale 的 DTU 版本，一次拿到兩種好處"
+    ],
+    a: 1,
+    exp: "「既有授權折抵」對應 Azure Hybrid Benefit，「長期承諾換折扣」對應 Reserved Capacity，這兩項只在 vCore 購買模型下才有。DTU 模型是固定套餐，無法享受這兩種好處。D 是陷阱：Hyperscale 是 vCore 底下的服務層級，不存在「DTU 版本的 Hyperscale」，混淆了購買模型與服務層級兩個不同維度。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Hyperscale 服務邊界",
+    scene: "Titan 有一個 90 TB 的歷史交易資料庫，想搬進 SQL Managed Instance 並使用 Hyperscale 服務層級，同時拿到「高相容性」與「巨量儲存」兩個好處。",
+    q: "這個計畫可行嗎？",
+    opts: [
+      "可行，Hyperscale 目前對所有 Azure SQL 系列服務一視同仁",
+      "不可行，Hyperscale 目前只提供給 Azure SQL Database，尚未提供給 SQL Managed Instance",
+      "可行，但必須先把購買模型切回 DTU 才能啟用",
+      "不可行，因為 Hyperscale 的儲存上限只有 4 TB，90 TB 根本放不下"
+    ],
+    a: 1,
+    exp: "Hyperscale 服務層級目前只提供給 Azure SQL Database，並不提供給 SQL Managed Instance。「高相容性（MI）」與「Hyperscale 巨量儲存（SQL DB）」目前無法同時兼得。C 的方向反了，Hyperscale 只存在於 vCore 模型。D 混淆了數字：4 TB 是 DTU Premium 層的儲存上限，Hyperscale 最大可達 128 TB。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "業務持續性：Auto-Failover Group vs Active Geo-Replication",
+    scene: "Titan 需要為正式環境的 Azure SQL Database 建立一個「跨區域、可以自動容錯移轉、且容錯移轉後應用程式連線字串不需要更改」的方案。",
+    q: "應該選擇哪一項？",
+    opts: [
+      "Active Geo-Replication，因為它可以把資料複寫到另一個 Region",
+      "Auto-Failover Group，因為它提供穩定的監聽端點並支援自動容錯移轉",
+      "Transparent Data Encryption，因為它能保護資料安全性",
+      "Elastic Pool，因為它可以在多個資料庫之間分散流量"
+    ],
+    a: 1,
+    exp: "題幹兩個關鍵字「自動容錯移轉」與「連線字串不需要更改」，剛好對應 Auto-Failover Group 的兩大特性：自動偵測中斷並切換，且提供不變的讀寫監聽端點。Active Geo-Replication 需要手動觸發容錯移轉，且切換後應用程式可能需要自行改接目標；TDE 是靜態加密；Elastic Pool 是資源共享，兩者與跨區業務持續性無關。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Titan 遷移決策：SQL Agent 與跨 DB 查詢",
+    scene: "Titan 科技要把地端訂單系統搬到 Azure。系統使用 SQL Server Agent 排程、跨資料庫查詢、Database Mail 與多個既有資料庫；CTO 要求：不要大改 code，但要有 PaaS 自動備份與修補，並能用私有網路連線。",
+    q: "最合適的選擇是哪一個？",
+    opts: [
+      "Azure SQL Database（最標準的 PaaS，所有 SQL Server 應用都應直接搬進）",
+      "SQL Managed Instance（以受控執行個體承接多資料庫與較高相容性，保留平台的修補與備份）",
+      "SQL Server on Azure VM（雖然要自己管理 OS，但相容性最高，能滿足 CTO 的 PaaS 維運要求）",
+      "Cosmos DB（把關聯式資料改成 NoSQL，獲得最好的雲端擴展性）"
+    ],
+    a: 1,
+    exp: "題幹關鍵字：SQL Agent、跨資料庫查詢、多個既有資料庫、少改 code、仍要 PaaS。SQL Managed Instance 的管理單位接近傳統 SQL Server 執行個體，在相容性與託管維運之間取得平衡。Azure SQL Database 是 PaaS 但不保證功能相容性，跨 DB 查詢與 SQL Agent 可能不受支援；SQL Server on Azure VM 是 IaaS，不符合 CTO 的 PaaS 維運要求；Cosmos DB 改變了資料模型。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Managed Instance 跨區備援機制",
+    scene: "Titan 選擇了 SQL Managed Instance，CTO 接著問：如果 Azure 區域整個掛掉，訂單資料庫要多快恢復？最多可以接受掉多少資料？",
+    q: "應該選擇哪個跨區保護方案？",
+    opts: [
+      "什麼都不額外設定，出事再用每日備份還原",
+      "幫 Managed Instance 設定 Failover Group，在另一個 Region 建立次要執行個體",
+      "幫 Managed Instance 設定 Active Geo-Replication，複寫到另一個 Region",
+      "放棄 Managed Instance，改用 SQL Server on Azure VM 自己跨區架設 Always On AG"
+    ],
+    a: 1,
+    exp: "Managed Instance 不支援 Active Geo-Replication（那是 Azure SQL Database 單一資料庫的功能）。Managed Instance 要做跨區保護，正確機制是 Failover Group（MI 版本），同樣能提供自動容錯移轉與穩定的監聽端點。每日備份還原 RPO/RTO 遠不足正式環境需求；放棄 MI 回到 VM 等於把 OS 級維運責任背了回來。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Elastic Pool 適用場景",
+    scene: "",
+    q: "下列哪個場景最適合使用 Azure SQL Database Elastic Pool？",
+    opts: [
+      "單一資料庫需要最大 128 TB 的儲存空間",
+      "多個資料庫的尖峰用量時間不同，可以共享一組計算資源以降低整體成本",
+      "需要 SQL Agent 排程與跨資料庫查詢的舊系統遷移",
+      "需要把資料庫整個 OS 層交給客戶自行管理"
+    ],
+    a: 1,
+    exp: "Elastic Pool 讓多個 Azure SQL Database 共享一組計算資源，最適合尖峰時間彼此錯開的多租戶場景，可提高資源利用率並降低成本。128 TB 儲存對應 Hyperscale 服務層；SQL Agent 與跨 DB 查詢對應 SQL Managed Instance；OS 層控制對應 SQL Server on Azure VM。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure SQL 三層選型判斷",
+    scene: "",
+    q: "下列哪個描述最正確地對應 Azure SQL 家族的三層選型原則？",
+    opts: [
+      "Azure SQL Database 適合需要 OS 控制與自訂驅動的工作負載",
+      "SQL Managed Instance 是適合新雲原生應用的最小 PaaS 管理單位",
+      "SQL Database 以資料庫為管理單位（PaaS）；SQL Managed Instance 以執行個體為管理單位（PaaS）；SQL on Azure VM 以 OS+SQL Server 為管理單位（IaaS）",
+      "SQL Server on Azure VM 不需要客戶管理修補與備份，因為 Azure 平台全包"
+    ],
+    a: 2,
+    exp: "Azure SQL 家族三層分別對應不同控制粒度：SQL Database 是資料庫 PaaS（飯店房間），平台處理引擎維運；SQL Managed Instance 是執行個體 PaaS（租一整層公寓），可承接跨 DB 與 SQL Agent；SQL on Azure VM 是 IaaS（買整棟透天厝），客戶負責 OS、修補、備份與高可用設計。越往右控制權越高，維運責任也越重。正解：C。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day19.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 &rarr;</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
