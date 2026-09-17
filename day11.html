@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 11 | VNet &amp; Subnet</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 11</div>
+  <h1>VNet &amp; Subnet</h1>
+  <p>Azure Virtual Network、子網路規劃、IP 位址、端點與 VNet Peering</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day10.html">← Day 10</a>
+    <a class="nav-link" href="day12.html">Day 12 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 13</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Virtual Network (VNet)",
+    scene: "Titan 科技正在規劃雲端網路架構，架構師需要向管理團隊說明 Azure VNet 的核心能力。",
+    q: "在 Azure 中建立 Virtual Network (VNet) 的最主要核心能力是什麼？",
+    opts: [
+      "A. 資源成本深入分析 (Resource cost analysis)",
+      "B. 深度封包檢驗 (Packet inspection)",
+      "C. 全球異地備援 (Geo-redundancy)",
+      "D. 邏輯隔離與網路分段 (Isolation and segmentation)"
+    ],
+    a: 3,
+    exp: "VNet 的本質是租戶在 Azure 雲端上的私有空間，提供邏輯隔離（Isolation）與分段（Segmentation）。封包檢驗（B）是 Azure Firewall 或 NVA 的功能；成本分析（A）是 Cost Management 的職責；VNet 為區域性資源，不自動代表全球備援（C）。正解：D。"
+  },
+  {
+    type: "單選題",
+    topic: "Service Endpoint",
+    scene: "Titan 科技的安全合規官要求：必須防止部署在 Azure VNet 內的 VM 在存取 Azure Storage 時將流量透過公開網際網路路由。",
+    q: "架構師應優先採用哪項功能來達成此目標？",
+    opts: [
+      "A. 網路安全性群組 (Network Security Group)",
+      "B. 公用端點 (Public Endpoint)",
+      "C. Azure VPN 閘道 (VPN Gateway)",
+      "D. 服務端點 (Service Endpoint)"
+    ],
+    a: 3,
+    exp: "Service Endpoint 讓 VNet 至 Azure Storage 的流量自動切換為直接經由 Azure 私有骨幹網路傳輸，不再繞經公網。NSG（A）只能允許或拒絕流量，無法重新引導流量走私有骨幹；若只封鎖 Internet，VM 將連 Storage 也完全無法連線。VPN Gateway（C）用於連接地端網路。正解：D。"
+  },
+  {
+    type: "單選題",
+    topic: "VNet Peering",
+    scene: "Titan 科技在同一個 Azure 區域建立了 VNet-Production 與 VNet-Analytics，兩者需要大量資料交換，要求低延遲、不走公網且不需 VPN 閘道。",
+    q: "應使用何種連線架構？",
+    opts: [
+      "A. 虛擬網路對等互連 (VNet Peering)",
+      "B. 點對站 VPN (Point-to-Site VPN)",
+      "C. ExpressRoute 線路",
+      "D. 公用 IP 位址連線搭配 NAT"
+    ],
+    a: 0,
+    exp: "VNet Peering 直接利用 Azure 高速實體光纖骨幹互聯，免閘道、免加密開銷，為 Azure 內部網路互通之首選。ExpressRoute（C）是連接地端與雲端的專線，不適用此情境。點對站 VPN（B）需付費維護 VPN Gateway。公用 IP（D）流量暴露於公網，違反要求。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "VPN Gateway / GatewaySubnet",
+    scene: "Titan 科技計劃建立 Site-to-Site VPN，將地端機房連接至 Azure VNet 中的 VM。",
+    q: "在建立 Virtual Network Gateway 之前，必須在 Azure VNet 內預先建立哪一個專屬資源？",
+    opts: [
+      "A. 名稱嚴格固定為 GatewaySubnet 的專用子網路",
+      "B. 一個 Application Gateway",
+      "C. 一個名為 VNet-Router 的虛擬機器",
+      "D. 一個 ExpressRoute 線路"
+    ],
+    a: 0,
+    exp: "Azure 強制規定 Virtual Network Gateway 必須且只能部署在名為 GatewaySubnet 的子網路中，子網路名稱不可自訂（如 vpn-subnet 會導致部署失敗）。建議前綴大小至少為 /27，以預留未來雙主動或升級用 IP。Application Gateway（B）是第 7 層應用負載平衡器，與 VPN 無關。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure 資源階層",
+    scene: "Titan 科技決定將所有網路與伺服器資源全面遷移至 Azure。",
+    q: "在架構師能夠開始在 Azure 中建立第一個 VNet 或 VM 之前，組織必須最先建立哪項實體？",
+    opts: [
+      "A. Azure 訂用帳戶 (Subscription)",
+      "B. 虛擬網路 (Virtual Network)",
+      "C. 網路安全性群組 (NSG)",
+      "D. 管理群組 (Management Group)"
+    ],
+    a: 0,
+    exp: "在 Azure 中，所有資源的部署與計費都必須錨定在 Azure Subscription（訂用帳戶）之內。沒有 Subscription，就無法呼叫 ARM API 建立任何資源。Management Group（D）是可選的多帳戶治理容器，並非建立資源的強制前提。VNet（B）與 NSG（C）都是資源，需要 Subscription 才能建立。正解：A。"
+  },
+  {
+    type: "是非題",
+    topic: "Subnet 與 Availability Zone",
+    scene: "一位具有 AWS 背景的架構師主張：在 Azure 中為達到跨可用區高可用，必須為每個 Availability Zone 各建一個獨立的 Subnet（例如 Subnet-Zone1、Subnet-Zone2、Subnet-Zone3）。",
+    q: "此說法是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 1,
+    exp: "此說法錯誤！這是跨雲心智模型混淆的典型錯誤。Azure Subnet 是邏輯分段，不綁定特定 Availability Zone，單一 Subnet 天生就涵蓋 Region 內所有 AZ。要達成跨 AZ 高可用，必須在部署 VM 或 VMSS 時明確指定可用區（Zone 1、2、3），而不是靠建立多個 Subnet 來達成。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "CIDR 與保留 IP",
+    scene: "Titan 科技的架構師正在規劃一個 /29 子網路（共 8 個 IP 位址）來部署小型工作負載。",
+    q: "在 Azure 中，此子網路內實際可供虛擬機器使用的 IP 位址有幾個？",
+    opts: [
+      "A. 8 個",
+      "B. 6 個",
+      "C. 5 個",
+      "D. 3 個"
+    ],
+    a: 3,
+    exp: "Azure 每個 Subnet 固定保留 5 個 IP：.0（網路位址）、.1（預設閘道）、.2（Azure DNS）、.3（內部預留未來用途）、.255（網路廣播位址）。/29 有 8 個位址，8 - 5 = 3 個可用 IP。規劃 AKS 節點集區或 Private Endpoint 時，極小的子網路可能不夠用！正解：D。"
+  },
+  {
+    type: "單選題",
+    topic: "CIDR 與保留 IP",
+    scene: "Titan 科技規劃一個 /24 子網路（理論 256 個 IP）供 AKS 節點集區使用。",
+    q: "扣除 Azure 保留的 IP 位址後，此子網路實際可用的主機 IP 有幾個？",
+    opts: [
+      "A. 256 個",
+      "B. 254 個",
+      "C. 253 個",
+      "D. 251 個"
+    ],
+    a: 3,
+    exp: "Azure 每個 Subnet 固定保留 5 個 IP：.0（網路位址）、.1（預設閘道）、.2（Azure DNS 伺服器）、.3（Azure 內部預留）、.255（廣播位址）。/24 有 256 個位址，256 - 5 = 251 個實際可用 IP。這與 AWS 保留機制完全一致。正解：D。"
+  },
+  {
+    type: "單選題",
+    topic: "Private Endpoint",
+    scene: "Titan 科技部署了 Private Endpoint，讓 VM 透過私有 IP 存取 Azure SQL Database，但測試時發現 VM 連線到了 Azure SQL 的公網 IP 而非私有 IP。",
+    q: "最可能缺少了哪個元件？",
+    opts: [
+      "A. Network Security Group (NSG)",
+      "B. Azure Private DNS Zone",
+      "C. Service Endpoint",
+      "D. VPN Gateway"
+    ],
+    a: 1,
+    exp: "Private Endpoint 必須搭配 Azure Private DNS Zone 進行名稱解析。若未設定 Private DNS Zone，DNS 查詢仍會解析到 PaaS 服務的公網 IP，導致流量走公網而非私有端點。NSG（A）控制流量進出，無法影響 DNS 解析。Service Endpoint（C）是不同的功能。正解：B。"
+  },
+  {
+    type: "是非題",
+    topic: "VNet Peering 非傳遞式",
+    scene: "Titan 科技的 VNet-A 與 VNet-B 建立了 Peering，VNet-B 與 VNet-C 也建立了 Peering，但 VNet-A 與 VNet-C 之間沒有直接 Peering。",
+    q: "在沒有其他額外配置的情況下，VNet-A 中的 VM 能否直接存取 VNet-C 中的資源？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 1,
+    exp: "VNet Peering 是非傳遞式（Non-transitive）的！VNet-A 連接 VNet-B、VNet-B 連接 VNet-C，但流量不會自動透過 VNet-B 轉送到 VNet-C，連線將直接被黑洞丟棄。若需 Hub-and-Spoke 架構，必須在 Hub（VNet-B）配置 Azure Firewall 或 NVA，並在 Spoke 端設定使用者自訂路由（UDR）。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Service Endpoint vs Private Endpoint",
+    scene: "Titan 科技的資安長正在評估 Service Endpoint 與 Private Endpoint 的差異，以決定用哪種方式保護 Azure SQL Database。",
+    q: "相較於 Service Endpoint，Private Endpoint 最主要的安全優勢是什麼？",
+    opts: [
+      "A. 流量經由 Azure 骨幹傳輸不走公網",
+      "B. 可在子網路內分配私有 IP，並可徹底關閉 PaaS 服務的公網存取",
+      "C. 可設定 PaaS 防火牆限制特定 VNet 來源",
+      "D. 完全不需要任何 DNS 設定即可運作"
+    ],
+    a: 1,
+    exp: "Private Endpoint 在 Subnet 內建立一張虛擬網卡並分配私有 IP，可徹底關閉 PaaS 服務的公網存取（Deny Public Access）。而 Service Endpoint 雖讓流量走骨幹（A 是 Service Endpoint 的特性），但 PaaS 服務維持原有的公共 IP，無法完全切斷公網暴露。Private Endpoint 反而需要搭配 Private DNS Zone（D 錯誤）。正解：B。"
+  },
+  {
+    type: "是非題",
+    topic: "VNet Peering Gateway Transit",
+    scene: "Titan 科技的架構師正在比較 Azure VNet Peering 與 AWS VPC Peering 的功能差異，討論閘道共享的可能性。",
+    q: "Azure VNet Peering 支援 Gateway Transit，允許 Spoke VNet 使用 Hub VNet 的 VPN Gateway，無需各自部署獨立閘道。AWS VPC Peering 不支援此功能。此說法是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 0,
+    exp: "正確！Azure VNet Peering 天生支援 Gateway Transit。Spoke VNet 可以宣告「使用遠端虛擬網路閘道」，讓多個 Spoke 共享 Hub VNet 中的單一 VPN Gateway 或 ExpressRoute Gateway，大幅節省閘道授權與建置成本。相比之下，AWS VPC Peering 完全不支援閘道共享（需透過 AWS Transit Gateway 才能實現類似架構）。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "架構設計 / VNet Peering",
+    scene: "Titan 科技的 CTO 聽取架構師提案後眉頭深鎖。提案內容包含：（1）為每個 AZ 各建一個 Subnet 達成高可用；（2）Azure SQL 配置公用 IP 依賴強密碼保護；（3）讓前端 VNet 透過 API VNet 的 Peering 自動存取地端資源。",
+    q: "以下哪個方案才是正確且合規的架構決策？",
+    opts: [
+      "A. 建立統一 VNet 切分不重疊子網路，VMSS 跨 Zone 部署，SQL/Storage 使用 Private Endpoint 關閉公網，跨 VNet 走 Peering 並明確配置路由",
+      "B. 為每個 Azure AZ 各建獨立 Subnet，宣稱 Subnet 是實體故障隔離容器",
+      "C. Azure SQL 與 Storage 全數配置公用 IP，依賴強式密碼與應用層授權保護",
+      "D. 依賴 VNet Peering 的自動傳遞性，讓 VNet-A→B→C 的流量自然流通"
+    ],
+    a: 0,
+    exp: "方案 A 是正確架構：（1）Azure Subnet 不綁 AZ，高可用靠 VM/VMSS 跨 Zone 配置；（2）PaaS 透過 Private Endpoint 取得私有 IP 並關閉公網，符合零信任原則；（3）遵守 Peering 非傳遞式規則，明確配置路由或使用 Gateway Transit。B 混淆了 AWS/Azure 子網路差異；C 嚴重違反資安規範；D 忽視非傳遞式鐵律。正解：A。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day12.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
