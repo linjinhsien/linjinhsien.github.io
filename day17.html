@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 17 Quiz｜Storage Explorer &amp; AzCopy</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 17</div>
+  <h1>Storage Explorer &amp; AzCopy</h1>
+  <p>資料遷徙工具選型：AzCopy、Storage Explorer、Data Box、Azure Migrate &amp; DMS</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day16.html">&#8592; Day 16</a>
+    <a class="nav-link" href="day18.html">Day 18 &#8594;</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 &#8594;</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Data Box 離線傳輸",
+    scene: "Titan 科技有 20 TB 的冷資料需要搬移到 Azure，地端出口頻寬很低，且沒有嚴格的即時切換窗口。",
+    q: "哪個選項最合理？",
+    opts: [
+      "用 Storage Explorer 持續拖曳，直到完成",
+      "評估 Azure Data Box，將資料以離線方式送入 Azure",
+      "用 Azure Database Migration Service 複寫影像檔",
+      "用 Azure Migrate 取代所有資料傳輸"
+    ],
+    a: 1,
+    exp: "題幹關鍵是「大量資料＋網路瓶頸」，Data Box 的服務邊界就是離線大量傳輸。Storage Explorer 適合少量互動管理；Database Migration Service 是資料庫工具；Azure Migrate 是評估/規劃工具，三者都不能解決頻寬瓶頸。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "AzCopy 命令列批次傳輸",
+    scene: "部署管線每晚要把指定目錄的新增與變更檔案同步到 Azure Blob，要求可腳本化、可重試且不依賴桌面操作。",
+    q: "應優先選哪個工具？",
+    opts: [
+      "AzCopy",
+      "Azure Storage Explorer",
+      "Azure Migrate",
+      "Azure Database Migration Service"
+    ],
+    a: 0,
+    exp: "這是資料平面批次傳輸與自動化需求，AzCopy 支援命令列腳本化、可重試、增量同步，適合納入排程。Storage Explorer 是圖形化互動工具；Azure Migrate 是評估規劃工具；DMS 是資料庫遷移服務，服務邊界皆不同。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "工具配對：儲存體管理 vs 資料庫遷移",
+    scene: "管理員需要檢查幾個 Blob、建立 File Share 並在畫面上確認上傳結果；另一個小組要搬遷關聯式資料庫。",
+    q: "哪個配對正確？",
+    opts: [
+      "Storage Explorer 管理 Blob/File；Database Migration Service 處理資料庫遷移",
+      "AzCopy 管理所有 schema；Storage Explorer 執行資料庫複寫",
+      "Azure Migrate 取代資料庫複寫；Data Box 只可搬小檔案",
+      "Storage Explorer 與 Azure Migrate 都是同一種資料庫工具"
+    ],
+    a: 0,
+    exp: "Storage Explorer 是跨平台圖形化工具，適合互動式儲存體管理（Blob、File Share、Queue、Table）；資料庫遷移需要專用的 schema、複寫與切換能力，由 Database Migration Service 負責。其他選項都把工具層級或服務邊界混淆。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "命令列複製到 Azure Blob",
+    scene: "公司要把檔案從地端複製到 Azure Blob，要求使用命令列而非入口網站。",
+    q: "哪個選項最符合需求？",
+    opts: [
+      "AzCopy",
+      "Azure Policy",
+      "Azure Advisor",
+      "Azure Monitor"
+    ],
+    a: 0,
+    exp: "AzCopy 是 Azure 儲存體命令列工具，專門用於 Blob、Files 與 ADLS Gen2 的高效能複製、上傳與下載。Azure Policy 是治理工具；Azure Advisor 是最佳實踐建議工具；Azure Monitor 是監控工具，三者均無法直接取代檔案複製引擎。正解：A。"
+  },
+  {
+    type: "單選題",
+    topic: "資料庫遷移最小停機",
+    scene: "一家公司要將既有關聯式資料庫遷移到 Azure，並盡量降低停機時間。",
+    q: "哪個服務方向最合理？",
+    opts: [
+      "只用 Storage Explorer 複製資料庫檔案",
+      "用 Azure Database Migration Service 規劃資料庫遷移",
+      "用 Azure Migrate 直接取代資料庫的複寫與切換",
+      "用 AzCopy 把每張資料表當成 Blob 搬移"
+    ],
+    a: 1,
+    exp: "Azure Database Migration Service 針對資料庫工作負載提供遷移能力，可依情境支援線上或離線遷移，並處理 schema、複寫、驗證與切換規劃。Storage Explorer 與 AzCopy 是檔案工具，不能保證交易語意；Azure Migrate 是評估規劃工具，不是資料庫複寫的替代品。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Titan 50TB 遷移情境決策",
+    scene: "Titan 科技要把地端 50 TB 的歷史影像搬進 Azure Blob Storage。既有專線只有 200 Mbps，估算完整上傳超過一個月；訂單資料庫必須在週末切換，要求盡量縮短停機。",
+    q: "下列哪個方案最正確？",
+    opts: [
+      "所有資料都用 AzCopy 走網路；資料庫也當成檔案複製，完成後直接改連線字串",
+      "影像資料先用 Azure Data Box 離線匯入；訂單資料庫用 Azure Database Migration Service 規劃遷移，並用 Azure Migrate 盤點依賴",
+      "用 Storage Explorer 手動拖曳 50 TB，並把帳戶金鑰寄給外包廠商以加速作業",
+      "先在 Azure Migrate 建立評估報告，等待它自動把影像與資料庫一起搬到 Blob Storage"
+    ],
+    a: 1,
+    exp: "影像是大量非結構化資料，頻寬不足時 Data Box 能以受控的實體搬運解決問題；資料庫需要 schema、複寫、驗證與切換，應使用 Database Migration Service；Azure Migrate 負責盤點依賴與評估，三者分工清楚。A 忽略頻寬限制且資料庫不能只靠檔案複製；C 違反最小權限；D 把評估工具當成萬用搬運引擎。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Migrate 服務邊界",
+    scene: "",
+    q: "關於 Azure Migrate，下列描述何者正確？",
+    opts: [
+      "Azure Migrate 是命令列工具，可直接批次複製所有 Blob 與 File Share",
+      "Azure Migrate 協助探索、評估與規劃地端伺服器和工作負載的遷移，不等於自動搬完所有檔案與資料庫",
+      "Azure Migrate 可直接取代 Database Migration Service，執行資料庫線上複寫",
+      "Azure Migrate 只能評估 Azure VM，不支援任何遷移作業"
+    ],
+    a: 1,
+    exp: "Azure Migrate 是探索、評估與特定工作負載遷移的控制中心，可提供依賴分析、成本估算與可行性評估。它不是任意檔案複製器，也不是資料庫複寫服務。完成盤點不等於自動搬完所有工作負載。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "AWS ↔ Azure 對照：頻寬受限大量資料",
+    scene: "Titan 科技需將地端機房中 70 TB 的非結構化歷史歸檔影像遷移至雲端。地端對外頻寬僅 100 Mbps，白天需保留給核心業務，要求以最短總耗時且對日常頻寬衝擊最小的方式完成遷移。",
+    q: "架構師應採取哪項方案？（AWS 視角，並說明 Azure 對應服務）",
+    opts: [
+      "撰寫腳本使用 AWS CLI 執行多執行緒並行上傳至 S3",
+      "申請 AWS Snowball Edge 裝置，資料複製至裝置後寄回 AWS 匯入（Azure 對應：Azure Data Box）",
+      "部署 AWS Storage Gateway (Volume Gateway) 並建立持續快照",
+      "建立 AWS Database Migration Service (DMS) 複寫工作"
+    ],
+    a: 1,
+    exp: "70 TB 在 100 Mbps 頻寬下全速上傳需耗時數十天，且嚴重排擠業務頻寬。AWS Snowball Edge（Azure 對應 Azure Data Box）能把傳輸瓶頸轉為實體硬體物流，是最快且不消耗對外頻寬的方案。選項 A 忽略頻寬限制；C 是混合雲快取不是大量遷移首選；D 是資料庫工具，不適用非結構化影像。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "自動化差異同步工具選型",
+    scene: "工程師每天需將地端備份伺服器新增的日誌與報表檔案自動上傳至 Azure Blob，要求腳本自動化、僅上傳新增或修改過的檔案（差異同步），且具備中斷後自動重試機制。",
+    q: "應選擇哪種傳輸工具？",
+    opts: [
+      "在 Azure Portal 中每天手動上傳資料夾",
+      "使用 AzCopy 搭配 azcopy sync 命令納入排程批次作業",
+      "訂購 Azure Data Box 每天寄送實體裝置",
+      "使用 Azure Application Discovery Service 自動抓取檔案"
+    ],
+    a: 1,
+    exp: "AzCopy 的 azcopy sync 命令能自動比對來源與目的地的檔案差異，僅傳輸新增或修改的內容（增量同步），命令列格式可輕易納入 Linux Cron 或 Windows Task Scheduler 排程，並支援斷點續傳。手動入口網站無法自動化；每天 Data Box 實體寄送成本過高；Application Discovery Service 是資產探索工具，不是檔案搬運工具。正解：B。"
+  },
+  {
+    type: "單選題",
+    topic: "SAS 最小權限實踐",
+    scene: "",
+    q: "Titan 工程師需要授予外部廠商暫時讀取某個 Blob 容器的權限，應採取哪種做法最符合最小權限原則？",
+    opts: [
+      "把整個儲存體帳戶金鑰直接寄給廠商，方便作業",
+      "建立僅限指定容器、唯讀權限、有明確到期時間與 IP 限制的 SAS 金鑰，並在作業後撤銷",
+      "給廠商訂用帳戶層級的 Owner 角色，以確保操作順暢",
+      "直接開放儲存體帳戶的匿名存取（Anonymous Public Access）"
+    ],
+    a: 1,
+    exp: "最小權限原則要求限制資源、權限、來源 IP、協定與有效期限。SAS（Shared Access Signature）可精確控制這些條件，作業完成後應立即撤銷或輪替。帳戶金鑰洩漏等同整個帳戶暴露；Owner 角色過度授權；匿名存取完全放棄存取控制，均違反安全最佳實踐。正解：B。"
+  },
+  {
+    type: "Yes / No",
+    topic: "Storage Explorer 大量批次遷移適用性",
+    scene: "Titan 科技計劃用 Azure Storage Explorer 手動拖曳方式將 50 TB 的歷史影像遷移到 Azure Blob Storage，並認為這是最佳方案。",
+    q: "請問這個方案是否為最佳選擇？",
+    opts: [
+      "Yes，Storage Explorer 是專為大量遷移設計的最佳工具",
+      "No，Storage Explorer 適合互動式少量管理，50 TB 長期批次遷移應評估 Data Box 或 AzCopy",
+      "Yes，只要有足夠頻寬，拖曳方式就能正常運作",
+      "資訊不足，無法判斷"
+    ],
+    a: 1,
+    exp: "Storage Explorer 是圖形化工具，適合瀏覽、抽查與少量互動管理，不是 50 TB 長期批次遷移的最佳控制面。對於大量資料遷移，若頻寬不足應考慮 Azure Data Box（離線實體傳輸），若頻寬足夠則應使用 AzCopy 命令列搭配腳本與重試機制。正解：B（No）。"
+  },
+  {
+    type: "單選題",
+    topic: "遷移工具分層快速判斷",
+    scene: "",
+    q: "下列哪個配對，正確描述了各工具的主要用途？",
+    opts: [
+      "Azure Migrate：批次複製 Blob；AzCopy：評估伺服器依賴；Data Box：資料庫線上複寫",
+      "Azure Data Box：大容量離線傳輸；AzCopy：命令列批次網路傳輸；Storage Explorer：圖形化 GUI 管理；Azure DMS：資料庫遷移",
+      "Storage Explorer：自動排程差異同步；Azure Migrate：執行 SQL schema 遷移；Data Box：少量檔案管理",
+      "AzCopy：部署管線治理；Azure DMS：物件儲存體上傳；Azure Migrate：VM 手動拖曳"
+    ],
+    a: 1,
+    exp: "正確的工具分層：Azure Data Box 對應大容量離線傳輸（頻寬不足 / 數十 TB 以上）；AzCopy 對應命令列批次網路傳輸與自動化腳本；Storage Explorer 對應圖形化 GUI 互動管理；Azure DMS 對應關聯式資料庫遷移（schema、複寫、切換）。Azure Migrate 是評估規劃中心。各工具服務邊界不同，不能互相取代。正解：B。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day18.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 &rarr;</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
