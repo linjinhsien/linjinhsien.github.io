@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 8 練習題 — 虛擬機器 VM & VMSS</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 8</div>
+  <h1>虛擬機器 VM &amp; VMSS</h1>
+  <p>IaaS 控制權、擴展維度、SLA 階梯與 VMSS 編制機制</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day7.html">← Day 7</a>
+    <a class="nav-link" href="index.html">首頁</a>
+    <a class="nav-link" href="day9.html">Day 9 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 13</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境背景</div>
+    <span id="scenarioText"></span>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "擴展術語",
+    scene: "Titan 科技的財報結算系統跑在一台 Azure 虛擬機器上。每季結算時，DBA 發現 VM 的記憶體與 CPU 全部滿載，於是把尺寸從 Standard_D2s_v5 調整為 Standard_D16s_v5，讓同一台機器獲得更多記憶體與 vCPU。",
+    q: "請問這個動作對應的正確術語是什麼？",
+    opts: ["A. 敏捷性 (agility)", "B. 垂直擴展 (vertical scaling)", "C. 水平擴展 (horizontal scaling)", "D. 彈性 (elasticity)"],
+    a: 1,
+    exp: "動「規格」是垂直擴展 (Scale Up / Down)——維持執行個體數量不變，增加單一執行個體的 CPU 或記憶體。官方定義：「keeps the same number of resource instances constant but gives them more capacity in terms of memory, CPU speed, disk space」。水平擴展是動台數；Elasticity 強調自動且 Azure Autoscale 不支援垂直擴展；Agility 是雲端效益而非擴展術語。"
+  },
+  {
+    type: "Yes / No",
+    topic: "VMSS 與資料中心容錯",
+    scene: "Titan 科技計畫部署數台 Azure 虛擬機器，需求是：若單一資料中心發生故障，這些 VM 上運行的服務仍須維持可用。有工程師提出解決方案：「把這些虛擬機器部署到一個 Virtual Machine Scale Set 中。」",
+    q: "這個解決方案是否達成目標？",
+    opts: ["A. Yes（達成）", "B. No（未達成）", "C. 部分正確", "D. 資訊不足"],
+    a: 1,
+    exp: "答案是 No。Scale Set 可以被部署成單一 AZ 或 regional，官方原文：「Virtual machines in a scale set can also be deployed into multiple availability zones, a single availability zone, or regionally」。沒有明確指定跨 AZ，就無法保證資料中心級容錯。正確做法是明確設定 zones: ['1','2','3']，才能達成跨資料中心容錯與 99.99% SLA。"
+  },
+  {
+    type: "Yes / No",
+    topic: "99.99% SLA 最小配置",
+    scene: "Titan 科技要把一套關鍵業務應用部署到 Azure 虛擬機器上，部署策略必須保證 99.99% 的可用性，且要求虛擬機器數量與可用性區域數量都盡可能少。提出的解決方案是：「策略中納入 2 台虛擬機器與 2 個可用性區域 (Availability Zones)。」",
+    q: "這個解決方案是否達成目標？",
+    opts: ["A. Yes（達成）", "B. No（未達成）", "C. 部分正確", "D. 資訊不足"],
+    a: 0,
+    exp: "答案是 Yes。官方條件：「guarantee virtual machine connectivity to at least one instance at least 99.99% of the time when you have two or more instances deployed across two or more Availability Zones」。2 台 + 2 個 AZ 正好踩在最小門檻上，同時滿足「達成 99.99%」與「最少配置」兩個條件。注意：2 台都在同一 Availability Set 只能拿到 99.95%；1 台 VM（即使 Premium SSD）只有 99.9%。"
+  },
+  {
+    type: "單選題",
+    topic: "彈性 vs 可擴展性",
+    scene: "Titan 科技有一套帳務結算應用 App1，在每個月的前三週使用量極低，但在每月最後一週使用量暴增。CTO 想知道 Azure 雲端服務的哪一項效益，最能支撐這種使用模式下的成本管理。",
+    q: "哪一項 Azure 雲端效益最符合此需求？",
+    opts: ["A. 高可用性 (high availability)", "B. 高延遲 (high latency)", "C. 彈性 (elasticity)", "D. 負載平衡 (load balancing)"],
+    a: 2,
+    exp: "答案是 C 彈性 (Elasticity)。「週期性短期尖峰 + 成本管理」= Elasticity 的定義：依短期需求自動增加或減少資源，離峰自動縮減以降低成本。Autoscale 官方原文：「When load is low, autoscale reduces the number of resources, which lowers your costs」。High availability 談的是故障不中斷，與省錢無關；load balancing 分配流量但不增減執行個體；high latency 是缺陷不是效益。"
+  },
+  {
+    type: "單選題",
+    topic: "開發測試 VM 管理",
+    scene: "Titan 科技的開發團隊計畫每週建立 50 台自訂虛擬機器，並在同一週內把它們刪除。其中 30 台執行 Windows Server、20 台執行 Ubuntu Linux，每位工程師需要的預裝工具與環境略有不同。CTO 要求在最小化管理工作的前提下支撐這個流程。",
+    q: "應採用哪一項 Azure 服務？",
+    opts: ["A. Azure Reserved Virtual Machine (VM) Instances", "B. Azure Virtual Machine Scale Sets", "C. Azure DevTest Labs", "D. Azure Virtual Desktop"],
+    a: 2,
+    exp: "答案是 C Azure DevTest Labs。官方定義：「enables developers and testers to quickly create and manage Azure virtual machines for development and testing」，具備 self-service model、built-in cost control 與 automation features。VMSS 是為承接流量的同質負載均衡機群設計，不適合異質的開發測試 VM；Reserved Instances 是長期成本承諾機制，不提供佈建自動化；AVD 是虛擬桌面服務。"
+  },
+  {
+    type: "單選題",
+    topic: "Availability Set SLA",
+    scene: null,
+    q: "在 Azure 中，將 2 台以上虛擬機器放入同一個 Availability Set，可獲得多少 SLA 保證？",
+    opts: ["A. 99.9%", "B. 99.95%", "C. 99.99%", "D. 100%"],
+    a: 1,
+    exp: "答案是 B 99.95%。官方原文：「Using two or more VMs in an availability set helps keep applications highly available and meets the 99.95% Azure service-level agreement (SLA)」。單一 VM (Premium SSD) 是 99.9%；跨 2 個以上 Availability Zones 的 2 台以上 VM 才是 99.99%。Availability Set 防的是機櫃層級故障，擋不住資料中心級網路中斷。"
+  },
+  {
+    type: "單選題",
+    topic: "容錯網域定義",
+    scene: null,
+    q: "Azure 的容錯網域 (Fault Domain) 定義為共用哪些基礎設施的一組 VM？",
+    opts: ["A. 相同的可用性區域 (Availability Zone)", "B. 共同電源與網路交換器 (common power source and network switch)", "C. 相同的計畫性維護排程", "D. 相同的地理區域 (Region)"],
+    a: 1,
+    exp: "答案是 B。官方原文：「Fault domains define the group of virtual machines that share a common power source and network switch」。Fault Domain 防的是機櫃跳電或網路交換器故障。Update Domain 才是計畫性維護重啟的分組概念。一個 Availability Set 最多可有 3 個 Fault Domain。"
+  },
+  {
+    type: "單選題",
+    topic: "Autoscale 邏輯規則",
+    scene: null,
+    q: "Azure Monitor Autoscale 在有多條規則時，向外擴展 (scale out) 與向內縮減 (scale in) 分別使用什麼邏輯運算子？",
+    opts: ["A. 向外用 AND，向內用 OR", "B. 向外用 OR，向內用 AND", "C. 向外與向內都用 OR", "D. 向外與向內都用 AND"],
+    a: 1,
+    exp: "答案是 B。官方原文：「Autoscale scales out if any of the rules are met（OR）. Autoscale scales in only if all the rules are met（AND）」。這是刻意的非對稱保守策略：加機器的代價只是錢（OR 觸發），減錯機器的代價是服務中斷（AND 才縮），與 AWS ASG 的保守哲學一致。"
+  },
+  {
+    type: "單選題",
+    topic: "VMSS 協調模式",
+    scene: null,
+    q: "建立 Virtual Machine Scale Set 時，Azure 官方建議選擇哪種協調模式 (Orchestration Mode)？",
+    opts: ["A. Uniform Orchestration", "B. Fixed Orchestration", "C. Flexible Orchestration", "D. Hybrid Orchestration"],
+    a: 2,
+    exp: "答案是 C Flexible Orchestration。官方文件標題直接寫：「Flexible Orchestration is the recommended orchestration mode when deploying scale sets in Azure」。Flexible 支援混合 VM 尺寸、標準 VM API、ARM Tag、RBAC、Azure Backup。Uniform 模式不支援這些功能，且官方標注限制：「lack compatibility with standard Azure IaaS VM API commands, Azure Resource Manager tagging, RBAC, Azure Backup, or Azure Site Recovery」。重要提醒：協調模式建立後不可變更。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Spot VM",
+    scene: null,
+    q: "關於 Azure Spot Virtual Machine，下列哪一項描述是正確的？",
+    opts: ["A. 提供 99.9% SLA，但可能在 2 分鐘通知後被回收", "B. 使用閒置容量換取折扣，無 SLA，30 秒通知後驅逐", "C. 適合所有類型的生產工作負載以降低成本", "D. 一旦部署就不會被 Azure 回收，除非手動刪除"],
+    a: 1,
+    exp: "答案是 B。官方原文：「there's no SLA for these VMs... the Azure infrastructure will evict Azure Spot Virtual Machines with 30-seconds notice」以及「An Azure Spot Virtual Machine offers no high availability guarantees」。AWS EC2 Spot Instances 的通知是 2 分鐘，Azure 則是 30 秒。Spot VM 只適合批次運算、開發測試與可中斷的大型計算工作負載，不適合生產環境。"
+  },
+  {
+    type: "單選題",
+    topic: "VM 尺寸類型選擇",
+    scene: null,
+    q: "Titan 科技要建置深度學習模型訓練環境，需要大量 GPU 資源。應選擇哪一類 Azure VM 尺寸？",
+    opts: ["A. General purpose（一般用途）", "B. Memory optimized（記憶體最佳化）", "C. Compute optimized（計算最佳化）", "D. GPU accelerated（GPU 加速）"],
+    a: 3,
+    exp: "答案是 D GPU accelerated。官方將 VM 尺寸分為六大類型，GPU accelerated 專為圖形渲染、深度學習訓練與推論設計，對應 Azure N 系列（NC/ND/NV），AWS 對照為 P/G 系列。Memory optimized 適合大型記憶體資料庫；Compute optimized 適合批次運算與應用伺服器；General purpose 是平衡的 CPU 與記憶體比例適合中小型應用。"
+  },
+  {
+    type: "單選題",
+    topic: "安全連線至 VM",
+    scene: null,
+    q: "Titan 科技的資安長要求：維運人員要能安全連線到 Azure VM 進行 RDP 管理，但 VM 不得配置對外公有 IP，也不得在網路安全群組開放 3389 連接埠到 Internet。應採用哪項服務？",
+    opts: ["A. Azure VPN Gateway", "B. Azure Bastion", "C. Network Security Group (NSG) 白名單", "D. Azure ExpressRoute"],
+    a: 1,
+    exp: "答案是 B Azure Bastion。官方原文：「Azure Bastion is a fully managed PaaS service that provides secure and seamless RDP/SSH connectivity to your virtual machines directly over TLS... your virtual machines don't need a public IP address, agent, or special client software」。AWS 的等價服務是 Systems Manager Session Manager。VPN Gateway 仍需要特定的網路組態；NSG 白名單方式仍暴露 3389；ExpressRoute 是專線連接服務，不是 VM 管理通道。"
+  },
+  {
+    type: "情境題",
+    topic: "綜合架構設計",
+    scene: "Titan 科技雙十一架構需求：(1) Web 層平日 3 台、高峰 20 台，要自動增減；(2) 必須達到 99.99% VM SLA，用最少機器與區域數；(3) 資料庫叢集必須在同一座資料中心（低延遲），但要防機櫃跳電與計畫性維護全滅；(4) VM 不得有對外 RDP，應用程式不得硬編碼帳密。",
+    q: "下列哪個方案同時滿足全部四項需求，且符合 Azure 原生最佳實踐？",
+    opts: [
+      "A. 單台大規格 VM Scale Up + 放進單一 AZ + 開放 3389 + 連線字串寫 Custom Script",
+      "B. VMSS Flexible 跨 2 個 AZ + Autoscale 3-20 台 + Availability Set（DB 層）+ Bastion + Managed Identity",
+      "C. VMSS 不指定 zones（regional）+ 再加 Availability Set 疊加 + Proximity Placement Group + 全用 Spot VM",
+      "D. 20 台 VM 全放同一 Availability Set + 手動開關機 + 跨 Region Pair 部署 DB + 憑證寫進自訂映像"
+    ],
+    a: 1,
+    exp: "答案是 B。逐需求：(1) VMSS + Autoscale = 自動水平擴展，不中斷服務，Scale Set 本身免費；(2) zones:[1,2] + 最小 3 台 ≥ 2 台 ≥ 2 AZ = 99.99% SLA 最小配置；(3) Availability Set = 同資料中心內分散 FD(電源/網路交換器) / UD(維護重啟)，官方也記載其 VM 間延遲比 AZ 低；(4) Bastion = 免公有 IP 的 RDP/SSH over TLS，Managed Identity = 完全不需管理憑證。方案 C 的 regional VMSS 無法保證資料中心容錯，且 Spot VM 無 SLA 不適合生產。方案 D 的 Availability Set 最多只有 99.95%，手動管理違反彈性需求。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\"day9.html\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
