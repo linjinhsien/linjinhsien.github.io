@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 Day 5｜ARM Templates &amp; Bicep：基礎架構即程式碼 (IaC)</title>
+  <style>
+    :root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+    header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+    header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+    .day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+    header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+    .nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+    .nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+    .nav-link:hover{background:var(--azure-light);}
+    .progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+    .progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+    .progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+    .progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+    .question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+    .qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+    .scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+    .scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+    .question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+    .options{display:flex;flex-direction:column;gap:10px;}
+    .option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+    .option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+    .option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+    .option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+    .option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+    .option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+    .option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+    .option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+    .option-btn:disabled{cursor:default;}
+    .explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+    .explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+    .explanation.visible{display:block;}
+    .actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+    .btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+    .btn:active{transform:scale(.97);}
+    .btn-primary{background:var(--azure);color:#fff;}
+    .btn-primary:hover{background:var(--azure-dark);}
+    .btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+    .btn-secondary:hover{background:var(--azure-light);}
+    .results{text-align:center;padding:40px 32px;}
+    .score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+    .score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+    .score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+    .score-ring .pct{font-size:2rem;line-height:1;}
+    .score-ring .label{font-size:.75rem;margin-top:2px;}
+    .results h2{font-size:1.4rem;margin-bottom:8px;}
+    .results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+    .stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+    .stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+    .stat-box .num{font-size:1.5rem;font-weight:700;}
+    .stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+    .stat-box.green .num{color:var(--correct);}
+    .stat-box.red .num{color:var(--wrong);}
+    .disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+    @media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 5</div>
+  <h1>ARM Templates &amp; Bicep：IaC 的精髓</h1>
+  <p>Infrastructure as Code・宣告式語法・冪等性・部署模式・AWS 雙雲對照</p>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">← 首頁</a>
+    <a class="nav-link" href="day4.html">← Day 4</a>
+    <a class="nav-link" href="day6.html">Day 6 →</a>
+  </div>
+</header>
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    type: "情境單選題",
+    topic: "IaC 部署策略",
+    scene: "Titan 科技需要在全球三個 Azure 區域，分別建立開發（Dev）、測試（Test）與生產（Prod）三套完整環境。每套包含 VNet、Subnet、NSG 與多台 VM。維運主管要求必須有防呆機制、可版本控制並消除人為失誤。",
+    q: "身為首席雲端架構師，你應建議採用哪一種部署策略，以確保三套環境拓撲完全一致並達成冪等性部署？",
+    opts: [
+      "撰寫 50 頁 Word 截圖手冊，要求維運團隊在 Azure Portal 手動對照操作三次",
+      "使用 ARM Templates 或 Bicep 撰寫宣告式 IaC，儲存於 Git 並透過參數檔分別部署 Dev / Test / Prod",
+      "只建立生產環境，開發與測試團隊使用本機 Docker 容器模擬",
+      "撰寫命令式 Bash 腳本逐行呼叫 az vm create，失敗時由工程師手動清理半成品"
+    ],
+    a: 1,
+    exp: "選項 B 正確。ARM Templates / Bicep 實現 IaC 四大核心價值：環境一致性（消除配置漂移）、參數化重用（dev.parameters.json vs prod.parameters.json）、版本控制（Git PR 審查）、冪等性保證（重複執行不產生多餘副本）。手動 ClickOps 易出錯無版控；本機 Docker 無法驗證雲端原生網路設定；命令式 Bash 腳本缺乏冪等性與容錯力。"
+  },
+  {
+    type: "多選題",
+    topic: "ARM Template 格式與能力",
+    scene: "",
+    q: "關於 Azure Resource Manager (ARM) Templates，下列哪個選項包含的兩項陳述都是正確的？",
+    opts: [
+      "ARM 範本使用 XML 格式；且單一範本只能定義一種資源類型",
+      "ARM 範本使用 XML 格式；且可在單一範本定義多種不同類型的資源",
+      "ARM 範本使用 JSON 格式；且單一範本只能定義一種特定類型的資源",
+      "ARM 範本使用 JSON 格式；且可在單一範本同時定義多種不同類型的 Azure 資源"
+    ],
+    a: 3,
+    exp: "正確組合 D：① ARM 範本採用 JSON 格式（非 XML 或 YAML）；② 單一範本的 resources 陣列可同時宣告 VNet、VM、Storage Account 等多種不同類型資源，並透過 dependsOn 管理建立順序。ARM 範本部署透過 HTTPS REST API 傳送，可在任何 OS 或 CI/CD 環境執行，不限於 Windows。"
+  },
+  {
+    type: "情境單選題",
+    topic: "自動化重複部署",
+    scene: "Titan 科技每週需要為不同開發專案快速部署 20 台具有相同規格、相同安全性設定與網路拓撲的虛擬機器。",
+    q: "應建議使用下列哪項解決方案，以達到最高效率、消除人為錯誤並確保每週部署的重複一致性？",
+    opts: [
+      "每次手動在 Azure Portal 中依序建立 20 台虛擬機器",
+      "建立 Azure Management Group（管理群組）來自動產生虛擬機器",
+      "使用 Azure Resource Manager (ARM) Template 定義基礎架構並重複執行自動化部署",
+      "使用 Azure Advisor 執行資源建立排程"
+    ],
+    a: 2,
+    exp: "選項 C 正確。當題目出現「重複部署」、「相同配置」、「消除人為錯誤」、「自動化建立」等關鍵字，標準答案鎖定 ARM Templates 或 Bicep（IaC）。Management Group 是組織與權限容器，本身不建立資源；Azure Advisor 是架構優化建議服務，不是部署工具。手動 Portal 操作無法保證 20 台 VM 的規格完全一致。"
+  },
+  {
+    type: "是非題",
+    topic: "宣告式語法",
+    scene: "",
+    q: "判斷以下陳述是否正確：「ARM Templates 與 Bicep 採用宣告式語法（Declarative syntax），使用者只需定義期望的最終資源狀態，而不需要編寫具體的逐步建立指令。」",
+    opts: [
+      "Yes（正確）",
+      "No（錯誤）",
+      "部分正確，視情況而定",
+      "題目資訊不足"
+    ],
+    a: 0,
+    exp: "Yes，正確。宣告式（Declarative）的核心定義是「定義 What you want（最終期望狀態）」，而非「How to do it（逐步執行指令）」。ARM Templates 與 Bicep 皆屬宣告式語法，與之相對的命令式（Imperative）是 Bash/PowerShell 腳本逐步執行具體指令的方式。"
+  },
+  {
+    type: "是非題",
+    topic: "冪等性（Idempotency）",
+    scene: "",
+    q: "判斷以下陳述是否正確：「由於 ARM Templates 具備冪等性（Idempotency），重複執行同一份未修改的範本，會導致 Azure 建立出第二套重複名稱的虛擬機器並產生雙倍費用。」",
+    opts: [
+      "Yes（正確）",
+      "No（錯誤）",
+      "部分正確，視情況而定",
+      "題目資訊不足"
+    ],
+    a: 1,
+    exp: "No，錯誤。這是對「冪等性（Idempotency）」的經典陷阱！冪等性的核心是「執行一次與執行一百次的效果完全相同」。如果範本中的資源已存在且配置一致，ARM 引擎確認狀態後直接跳過或更新，絕對不會重複建立同名資源或產生雙倍費用。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure Bicep 轉譯機制",
+    scene: "",
+    q: "判斷以下陳述是否正確：「Azure Bicep 檔案在部署到 Azure Resource Manager 之前，會被編譯 / 轉譯為標準的 ARM Template JSON 格式。」",
+    opts: [
+      "Yes（正確）",
+      "No（錯誤）",
+      "部分正確，視情況而定",
+      "題目資訊不足"
+    ],
+    a: 0,
+    exp: "Yes，正確。Bicep 是微軟打造的透明 DSL 抽象層，執行 'bicep build' 或透過 Azure CLI 部署時，底層機制就是將 .bicep 文件轉譯（Transpile）為 ARM Template JSON 格式，再透過 HTTPS API 傳送至 ARM 控制平面。這也是 Bicep 被稱為「透明抽象（Transparent Abstraction）」的原因：與 ARM 規範 100% 精準對齊。"
+  },
+  {
+    type: "單選題",
+    topic: "ARM Template 檔案格式",
+    scene: "",
+    q: "Azure Resource Manager (ARM) Templates 使用哪種標準的檔案格式？",
+    opts: [
+      "XML（可延伸標記語言）",
+      "YAML（人類可讀的序列化語言）",
+      "JSON（JavaScript 物件標記法）",
+      "HCL（HashiCorp 設定語言，Terraform 專用）"
+    ],
+    a: 2,
+    exp: "ARM Templates 嚴格採用 JSON（JavaScript Object Notation）格式。YAML 是 AWS CloudFormation 的選項之一，但 Azure ARM Template 官方標準為 JSON。Bicep 語法更簡潔，但最終也被轉譯為 JSON。HCL 是 Terraform 的專用格式，與 ARM Template 無關。"
+  },
+  {
+    type: "是非題",
+    topic: "Complete 部署模式",
+    scene: "",
+    q: "判斷以下陳述是否正確：「使用 ARM Template 的 Complete（完整）部署模式時，Resource Group 中存在但未寫在範本內的資源，將會被 ARM 引擎自動永久刪除。」",
+    opts: [
+      "Yes（正確）",
+      "No（錯誤）",
+      "部分正確，視情況而定",
+      "題目資訊不足"
+    ],
+    a: 0,
+    exp: "Yes，正確。Complete 完整模式最重要的風險特性：ARM 引擎將整個 Resource Group 強制重置為與範本完全一致的狀態，不在範本中的資源將被永久刪除！相比之下，預設的 Incremental 增量模式只更新範本內定義的資源，不影響既有的其他資源。架構師須在 CI/CD 中嚴格限制 Complete 模式的使用權限。"
+  },
+  {
+    type: "單選題",
+    topic: "宣告式 vs 命令式",
+    scene: "",
+    q: "下列哪項工具或方法屬於「命令式（Imperative）」語法，而非「宣告式（Declarative）」語法？",
+    opts: [
+      "Azure Bicep（.bicep 檔案）",
+      "ARM Template（JSON 範本）",
+      "Bash 腳本（逐步執行 az vm create 等 CLI 指令）",
+      "AWS CloudFormation Template（JSON / YAML）"
+    ],
+    a: 2,
+    exp: "選項 C 正確。命令式語法（Imperative）是逐步執行具體操作指令（How to do it），例如 Bash / PowerShell 腳本逐行呼叫 az vm create。宣告式語法（Declarative）描述期望的最終狀態（What you want），ARM Templates、Bicep、CloudFormation、Terraform 皆屬宣告式。"
+  },
+  {
+    type: "單選題",
+    topic: "What-If 變更預覽",
+    scene: "",
+    q: "在 AWS 中，工程師使用「CloudFormation Change Sets」在正式部署前預覽資源變更清單，避免意外刪除或修改。在 Azure ARM Template 中，對應此功能的操作是什麼？",
+    opts: [
+      "Azure Policy 合規掃描",
+      "Azure Advisor 成本與效能建議",
+      "ARM Template What-If 操作（az deployment group what-if）",
+      "Azure Monitor 警示規則設定"
+    ],
+    a: 2,
+    exp: "選項 C 正確。ARM Template What-If 操作對應 AWS CloudFormation Change Sets，在執行正式部署前透過 'az deployment group what-if' 預測變更。系統會以顏色標示即將建立（Create）、修改（Modify）、忽略（Ignore）或刪除（Delete）的資源，避免災難性誤操作。Azure Policy 是合規治理；Advisor 是優化建議；Monitor 是監控警示，皆非部署預覽工具。"
+  },
+  {
+    type: "單選題",
+    topic: "ARM Template 核心結構",
+    scene: "",
+    q: "下列哪項「不是」ARM Template 的標準核心區塊之一？",
+    opts: [
+      "parameters（參數區塊）：定義範本的外部輸入口，實現一份範本多環境部署",
+      "resources（資源區塊）：定義要在 Azure 建立的實體資源陣列",
+      "outputs（輸出區塊）：部署完成後回傳動態資訊供後續 Pipeline 使用",
+      "middleware（中介軟體區塊）：定義服務間的通訊中介設定"
+    ],
+    a: 3,
+    exp: "ARM Template 五大核心區塊為：① $schema（JSON Schema 版本與 API 規範）、② parameters（外部輸入參數，實現一份範本多環境）、③ variables（內部計算變數）、④ resources（實體資源定義）、⑤ outputs（部署後輸出值，供 CI/CD Pipeline 使用）。「middleware（中介軟體）」不是 ARM Template 的區塊，而是應用架構層的概念。"
+  },
+  {
+    type: "單選題",
+    topic: "IaC 核心價值",
+    scene: "",
+    q: "下列哪項「不是」Infrastructure as Code (IaC) 的核心價值？",
+    opts: [
+      "提升部署重複性（Repeatability）：相同範本可重複部署出一致的環境",
+      "實現版本控制與審計（Version Control）：範本儲存於 Git，所有變更留有審計軌跡",
+      "消除手動配置失誤（Reduce Human Errors）：自動化取代手動 ClickOps",
+      "提升單一虛擬機器的 CPU 運算效能（CPU Performance Optimization）"
+    ],
+    a: 3,
+    exp: "IaC 四大核心價值：可重複性（Repeatability）、環境一致性（Consistency）、版本控制與審計（Git）、自動化消弭人為失誤（Reduce Human Errors）。IaC 是管理與部署基礎架構的方法論，與單一 VM 的 CPU 運算效能無直接關聯；效能優化是 Azure Advisor、VM 規格調整等工具的範疇。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day6.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

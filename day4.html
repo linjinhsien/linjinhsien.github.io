@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 Day 4｜管理工具選型：Portal / CLI / PowerShell / Cloud Shell</title>
+  <style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 4</div>
+  <h1>管理工具選型：Portal / CLI / PowerShell / Cloud Shell</h1>
+  <p>Azure Portal・Azure CLI・Azure PowerShell・Azure Cloud Shell・Azure Mobile App・ARM 統一管理平面</p>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">← 首頁</a>
+    <a class="nav-link" href="day3.html">← Day 3</a>
+    <a class="nav-link" href="day5.html">Day 5 →</a>
+  </div>
+</header>
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    type: "情境決策題",
+    topic: "管理工具選型",
+    scene: "Titan 科技的雲端架構逐步成形。Linux 維運工程師每天在 Ubuntu 跑數十個 Bash 自動化腳本部署微服務；Mac 前端工程師容量不夠，不想裝龐大本機軟體；Windows 自動化管理員累積了數千行以 Cmdlet 物件導向為主的 PowerShell 腳本。CTO 問架構師：「在 CI/CD 跨平台自動化腳本中，你推薦最標準的工具是什麼？微軟工具能同時滿足所有人嗎？」",
+    q: "作為雲端架構師，你應提出哪個方案？",
+    opts: [
+      "A. 要求所有人統一使用 Azure Portal，只有網頁版才能確保介面一致且不挑作業系統",
+      "B. Azure CLI 作為跨平台 CI/CD 標準工具；Mac 工程師用免安裝的 Azure Cloud Shell；Windows 維運人員繼續用 Azure PowerShell（Az 模組）跨平台執行現有腳本",
+      "C. 強制所有人只能使用 Azure PowerShell，因為 Azure 是微軟產品，只有 PowerShell 才能自動化管理",
+      "D. 要求所有成員一律改用 Azure Mobile App 進行日常部署與維運，以達到全行動化管理"
+    ],
+    a: 1,
+    exp: "B 是正解。Azure CLI 跨平台支援 Windows/macOS/Linux，JSON 輸出易解析，是 CI/CD 首選。Cloud Shell 免安裝，只需瀏覽器，滿足 Mac 工程師需求。Azure PowerShell（Az 模組）搭配 PowerShell Core 7+ 可跨平台，相容舊有腳本。A 陷阱：Portal 是純 GUI，無法嵌入 CI/CD 管線。C 陷阱：觀念過時，且 CLI 才是跨平台腳本標準。D 陷阱：Mobile App 定位是緊急維運，不適合大規模建置。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure CLI 跨平台支援",
+    scene: "",
+    q: "Azure CLI 可以安裝在執行 Windows、macOS 和 Linux 的電腦上。（AZ-900 Q42 改編）",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 0,
+    exp: "正確（Yes）。Azure CLI 是以 Python 為基礎打造的跨平台工具，官方提供 Windows（MSI）、macOS（Homebrew）與 Linux（apt/yum）的原生安裝套件，三大作業系統均支援。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure PowerShell 跨平台",
+    scene: "",
+    q: "Azure PowerShell 可以在執行 Linux 和 macOS 的電腦上使用。（AZ-900 Q42 改編）",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 0,
+    exp: "正確（Yes）。這是 AZ-900 的經典陷阱題！自從微軟推出 Az PowerShell 模組並支援 PowerShell Core（7+）後，Azure PowerShell 已可在 Linux 與 macOS 上順暢運行，不再僅限 Windows。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure Portal 跨裝置存取",
+    scene: "",
+    q: "Azure Portal 可以從具有網頁瀏覽器的平板電腦或 Chromebook 存取。（AZ-900 Q42 改編）",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 0,
+    exp: "正確（Yes）。Azure Portal 是基於標準 Web 技術（HTML5/JS）建置的網頁應用，任何具備現代瀏覽器的裝置（包含 iPad、Android 平板、Chromebook）均可直接存取 portal.azure.com。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Cloud Shell",
+    scene: "",
+    q: "你計劃使用 Azure Cloud Shell 管理 Azure 資源。首次使用 Azure Cloud Shell 時，下列何者是必要的？（AZ-900 Q88 改編）",
+    opts: [
+      "A. 在本機電腦安裝 Azure CLI",
+      "B. 一個 Azure 儲存體帳戶（Azure Storage Account）",
+      "C. Azure 中的一台 Windows 虛擬機器",
+      "D. 設定專用的 VPN 閘道"
+    ],
+    a: 1,
+    exp: "正確答案是 B。首次啟動 Azure Cloud Shell 時，系統會提示必須關聯或新建一個 Azure Storage Account（儲存體帳戶）。原因：Cloud Shell 每次啟動都是背後的臨時容器，需透過 Azure Files 掛載磁碟目錄（$HOME），以便在不同工作階段之間永久保存腳本、金鑰與工具設定。Cloud Shell 完全免在本機安裝 CLI（A），不需要 VM（C）或 VPN（D）。"
+  },
+  {
+    type: "單選題",
+    topic: "ARM 統一管理平面",
+    scene: "",
+    q: "請判斷底線敘述是否正確，若錯誤請選出使敘述正確的選項。\n「Azure CLI、Azure PowerShell 和 Azure Portal 全都將請求發送至 Azure Resource Manager (ARM) 來管理資源。」",
+    opts: [
+      "A. No change is needed（敘述正確，無需變更）",
+      "B. 只有 Azure CLI 和 Azure PowerShell 將請求發送至 ARM",
+      "C. 只有 Azure Portal 將請求發送至 ARM",
+      "D. 所有管理工具都繞過 ARM 直接與虛擬機器 Hypervisor 通訊"
+    ],
+    a: 0,
+    exp: "正確答案是 A（No change is needed）。不論是 Portal（GUI）、CLI、PowerShell、Cloud Shell、SDK 還是 Terraform/Bicep，所有工具底層都轉換成 HTTPS REST API 請求發送給 Azure Resource Manager（ARM）。ARM 集中驗證 Entra ID 身分與 RBAC 權限後，再調用後端的 Resource Providers。沒有任何外部工具可以直接繞過 ARM 與實體主機通訊。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure PowerShell on macOS",
+    scene: "",
+    q: "系統管理員要跑一支 PowerShell 腳本來建立 Azure 資源，解法是從一台執行 macOS 且已安裝 PowerShell Core 6.0 的電腦執行該腳本。這個解法可行嗎？（AZ-900 2020 Q31 改編）",
+    opts: [
+      "A. Yes（可行）",
+      "B. No（不可行）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 0,
+    exp: "正確答案是 A（Yes，可行）。PowerShell 腳本需要 PowerShell 環境執行；自 PowerShell Core（6.0 起），PowerShell 已跨平台支援 macOS 與 Linux。搭配匯入 Az 模組即可建立 Azure 資源，故解法可行。經典陷阱對照：若題目改成「macOS 上只裝了 Azure CLI 卻要跑 PowerShell 腳本」，答案就會變成 No——因為 PowerShell 腳本不能用 CLI 執行。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure Cloud Shell on Android",
+    scene: "",
+    q: "你需要從一台執行 Android 作業系統的平板建立一台新的 Azure 虛擬機器。解法：使用 Azure Cloud Shell 中的 PowerShell。這個解法可行嗎？（AZ-900 2020 Q52 改編）",
+    opts: [
+      "A. Yes（可行）",
+      "B. No（不可行）",
+      "C. 部分正確",
+      "D. 資訊不足"
+    ],
+    a: 0,
+    exp: "正確答案是 A（Yes，可行）。Azure Cloud Shell 是瀏覽器內的 shell，免安裝、預先完成身分驗證。只要 Android 平板有現代瀏覽器就能開啟，並用其中的 PowerShell（或 Bash）建立 VM。記憶點：只要題目問「用某個只有瀏覽器的裝置（Android/iPad/Chromebook）管理 Azure 資源」，Cloud Shell 幾乎都是 Yes；在本機安裝 CLI/PowerShell 則受該裝置 OS 能否安裝而定。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure CLI 語法",
+    scene: "",
+    q: "Azure CLI 的所有指令都以下列哪個前綴開頭？",
+    opts: [
+      "A. New-Az",
+      "B. az",
+      "C. azure",
+      "D. Get-Az"
+    ],
+    a: 1,
+    exp: "正確答案是 B（az）。Azure CLI 的語法結構為 az [group] [subgroup] [action] [parameters]，例如 az vm create 或 az group list。New-Az 和 Get-Az 是 Azure PowerShell（Az 模組）的 Cmdlet 前綴，採用「動詞-名詞」語法；azure 是舊版 Azure CLI（v1）的前綴，現已淘汰。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure PowerShell 語法",
+    scene: "",
+    q: "Azure PowerShell（Az 模組）使用哪種指令語法風格？",
+    opts: [
+      "A. az [group] [action]（與 Azure CLI 相同）",
+      "B. 動詞-名詞（Verb-Noun）格式，例如 New-AzVM、Get-AzResourceGroup",
+      "C. azure [group] [action]",
+      "D. ARM [template] [deploy]"
+    ],
+    a: 1,
+    exp: "正確答案是 B。Azure PowerShell 採用 PowerShell 標準的「動詞-名詞（Verb-Noun）」語法，例如 New-AzVM（建立 VM）、Get-AzResourceGroup（取得資源群組）、Remove-AzStorageAccount（刪除儲存體帳戶）。這種物件導向輸出風格最適合熟悉 Windows/.NET 生態系的維運工程師，也最易於整合現有 PowerShell 腳本資產。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Mobile App",
+    scene: "",
+    q: "你是 Titan 科技的維運工程師，下班通勤時收到告警：一台生產環境 VM 無回應。你手邊只有 Android 手機。下列哪個工具最適合用來快速重啟該 VM？",
+    opts: [
+      "A. Azure Portal（需在桌機瀏覽器操作）",
+      "B. Azure CLI（需在本機終端機安裝並執行）",
+      "C. Azure Mobile App（iOS/Android 行動應用）",
+      "D. Azure PowerShell（需安裝 PowerShell Core 與 Az 模組）"
+    ],
+    a: 2,
+    exp: "正確答案是 C。Azure Mobile App 專為 iOS 與 Android 設計，支援即時告警通知、健康狀況檢視，以及執行基本緊急維運操作（如重啟 VM、停止 Web App），並內建 Cloud Shell 終端。它的定位就是「突發故障警報處理與簡易維運」，適合下班或通勤時使用。Azure Portal 在手機瀏覽器上雖也能存取，但 Mobile App 體驗更佳；CLI/PowerShell 需要本機安裝環境，不適合緊急情況。"
+  },
+  {
+    type: "單選題",
+    topic: "ARM 統一管理平面",
+    scene: "",
+    q: "Azure Resource Manager（ARM）的核心功能是什麼？",
+    opts: [
+      "A. 僅負責 Azure Portal 的圖形化介面渲染",
+      "B. 作為所有 Azure 管理工具的統一控制平面，集中處理身分驗證（Entra ID）、授權（RBAC）、原則套用（Policy）與資源鎖定（Resource Locks）",
+      "C. 僅負責管理 Azure CLI 指令的執行佇列",
+      "D. 直接管理實體資料中心的硬體配置與電源排程"
+    ],
+    a: 1,
+    exp: "正確答案是 B。ARM 是 Azure 的集中部署與管理服務層，所有工具（Portal、CLI、PowerShell、Cloud Shell、SDK、Terraform/Bicep）均透過 HTTPS REST API 將請求發送至 ARM。ARM 的三大核心價值：1) 結果一致性——用任何工具建立的資源完全相同；2) 安全與審計一致性——所有請求均由 Entra ID 驗證、RBAC 授權並寫入 Activity Log；3) 鎖定與原則全面生效——Resource Lock 與 Policy 無法被任何工具繞過。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day5.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\">"
+    +"<span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div>"
+    +"<h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2>"
+    +"<p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p>"
+    +"<div class=\"stats\">"
+    +"<div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div>"
+    +"<div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div>"
+    +"<div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div>"
+    +"<div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div>"
+    +"<div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\">"
+    +"<button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button>"
+    +"<a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a>"
+    +"</div>"
+    +"<p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

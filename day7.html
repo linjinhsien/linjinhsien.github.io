@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 7 – 階段總複習①</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 7</div>
+  <h1>階段總複習①</h1>
+  <p>IaaS / PaaS / SaaS・共同責任・部署模型・治理層級・全球基礎設施・管理工具・IaC・健康監控</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day6.html">← Day 6</a>
+    <a class="nav-link" href="index.html">首頁</a>
+    <a class="nav-link" href="day8.html">Day 8 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 15</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "知識題",
+    topic: "Management Group 治理階層",
+    scene: "",
+    q: "Titan 科技要把研發、營運與資安共 6 個 Subscriptions 放進同一個父層，以便從上層套用治理設定。哪一項是直接位於 Subscription 上方的階層容器？",
+    opts: ["A. Resource Group","B. Management Group","C. Azure Policy","D. Azure Region"],
+    a: 1,
+    exp: "Management Group 是直接位於 Subscription 上方的層級容器，可組織多個訂用帳戶，並讓 RBAC / Policy 從該範圍向下繼承。Resource Group 在 Subscription 之內；Azure Policy 是規則引擎不是容器；Azure Region 屬於實體基礎設施分類。"
+  },
+  {
+    type: "多選（選兩項）",
+    topic: "資源管理範圍",
+    scene: "",
+    q: "Titan 科技希望讓不同部門各自管理 Azure 資源。下列哪兩種方式的組合可以形成清楚的資源管理範圍？",
+    opts: [
+      "A+D: 為部門建立不同 Subscriptions ＋ 在 Subscription 內建立不同 Resource Groups",
+      "A+B: 為部門建立不同 Subscriptions ＋ 為每個部門建立不同 Azure Regions",
+      "A+C: 為部門建立不同 Subscriptions ＋ 為每名員工建立不同 Microsoft Entra ID 租戶",
+      "B+C: 為每個部門建立不同 Azure Regions ＋ 為每名員工建立不同 Microsoft Entra ID 租戶"
+    ],
+    a: 0,
+    exp: "Subscription 提供計費與資源邊界，Resource Group 可在訂用帳戶內依部門分組並指派 RBAC，兩者皆能形成清楚的管理範圍（正確組合 A+D）。Region 是部署位置不是管理邊界；為一般部門拆成多個身分租戶會徒增複雜度。"
+  },
+  {
+    type: "知識題",
+    topic: "Azure Advisor 成本最佳化",
+    scene: "",
+    q: "財務長要求找出長期低使用率 VM、未掛載磁碟，並取得具體的成本最佳化建議。應使用哪一項服務？",
+    opts: ["A. Azure Advisor","B. Azure Service Health","C. Azure Pricing Calculator","D. Azure Activity Log"],
+    a: 0,
+    exp: "Azure Advisor 的 Cost 建議類別能識別低使用率資源並提供具體最佳化建議。Pricing Calculator 用於部署前估價；Service Health 回報平台事件；Activity Log 稽核控制平面操作歷程。"
+  },
+  {
+    type: "情境題",
+    topic: "Availability Zones 故障隔離",
+    scene: "",
+    q: "Titan 科技要讓應用在單一 Azure Region 內，即使其中一座資料中心故障仍可繼續服務。應把工作負載分散到哪裡？",
+    opts: ["A. 多個 Resource Groups","B. 多個 Availability Zones","C. 多個 Management Groups","D. 同一個 Availability Zone 的同一台 VM"],
+    a: 1,
+    exp: "Availability Zones 具獨立電力、冷卻與網路，是區域內的實體故障隔離單元，可防護單一資料中心等級故障。Resource Group 與 Management Group 都是邏輯管理範圍，無法隔離實體資料中心故障；單一 AZ 仍有區域單點風險。"
+  },
+  {
+    type: "情境題",
+    topic: "Azure Activity Log 操作稽核",
+    scene: "",
+    q: "資安團隊要查出過去 14 天內「誰在何時停止了某台生產 VM」。最精確的資料來源是什麼？",
+    opts: ["A. Azure Activity Log","B. Azure Advisor","C. Azure Status","D. Azure Pricing Calculator"],
+    a: 0,
+    exp: "Activity Log 記錄訂用帳戶層級的控制平面事件，包含「誰、何時、對哪個資源做了哪項管理操作」，是稽核 VM 停止操作的正確來源。Advisor 不做操作稽核；Azure Status 顯示公開全域狀態；Pricing Calculator 只負責估價。"
+  },
+  {
+    type: "情境題",
+    topic: "IaaS / PaaS / SaaS 服務模型",
+    scene: "開發團隊要部署自行撰寫的 Web API，但不想管理 OS 修補與 Web Server 執行環境。",
+    q: "最佳服務模型是？",
+    opts: ["A. IaaS VM","B. PaaS App Service","C. SaaS Microsoft 365","D. Private Cloud 實體主機"],
+    a: 1,
+    exp: "自行撰寫應用排除現成 SaaS；不管理 OS 排除 IaaS；PaaS（App Service）讓 Microsoft 管理 OS 與平台執行環境，開發團隊只需專注部署程式碼與資料。"
+  },
+  {
+    type: "情境題",
+    topic: "共同責任模型（SaaS）",
+    scene: "Titan 科技全面採用 Microsoft 365（SaaS）。",
+    q: "下列哪一項仍主要由 Titan 科技負責？",
+    opts: ["A. Microsoft 資料中心的供電","B. 實體伺服器與 Hypervisor 修補","C. 使用者帳號、資料分類與存取權限","D. SaaS 平台程式碼維護"],
+    a: 2,
+    exp: "SaaS 將基礎設施與應用平台交由供應商管理，但資料、帳號、身分與存取權限永遠是客戶責任，不會隨服務模型移轉。供電、伺服器修補與平台程式碼均由 Microsoft 負責。"
+  },
+  {
+    type: "情境題",
+    topic: "雲端部署模型",
+    scene: "因法規要求，資料庫留在自有機房，Web 應用部署於 Azure，兩邊以私有連線互通並接受一致治理。",
+    q: "這是哪種部署模型？",
+    opts: ["A. Public Cloud only","B. Private Cloud only","C. Hybrid Cloud","D. SaaS"],
+    a: 2,
+    exp: "地端私有環境＋公有雲＋互連協作，就是混合雲（Hybrid Cloud）。SaaS 是服務模型，不是部署模型；純公有雲或純私有雲都不符合「兩邊互連」的描述。"
+  },
+  {
+    type: "情境題",
+    topic: "AZ vs Region 故障粒度",
+    scene: "",
+    q: "若需求是防止同一 Region 內單一資料中心故障，而不是整個 Region 的大規模災難，首要設計是？",
+    opts: ["A. 跨 Availability Zones 部署","B. 建立另一個 Resource Group","C. 改用另一個 Subscription","D. 只啟用 Azure Advisor"],
+    a: 0,
+    exp: "先判斷故障粒度：資料中心級故障 → Availability Zones；Region 級 → 跨區域災難復原。Resource Group 與 Subscription 是管理容器，無法提供實體容錯；Advisor 提供最佳化建議，不是高可用性機制。"
+  },
+  {
+    type: "情境題",
+    topic: "主權雲 / Azure China",
+    scene: "",
+    q: "Titan 科技要在中國大陸提供符合當地法規、由中國境內持照業者營運的 Azure 服務。應選哪個環境？",
+    opts: ["A. Global Azure 的 East Asia","B. Azure China（由世紀互聯 21Vianet 營運）","C. Azure Government","D. 任意 Region 加上一個 Resource Group"],
+    a: 1,
+    exp: "Azure China 是由世紀互聯（21Vianet）在中國境內獨立營運的主權雲，具獨立資格、端點與合規認證。East Asia 在香港屬商業 Azure；Azure Government 服務美國政府；Resource Group 是邏輯容器，無法改變服務所在主權環境。"
+  },
+  {
+    type: "情境題",
+    topic: "Azure 管理工具選型",
+    scene: "Windows、macOS 與 Linux 團隊要共用一套命令列腳本，在 CI/CD 中自動建立 Azure 資源。",
+    q: "最直接的選擇是？",
+    opts: ["A. Azure Portal","B. Azure CLI","C. Azure Mobile App","D. Azure Status"],
+    a: 1,
+    exp: "Azure CLI 支援跨平台（Windows/macOS/Linux），適合 CI/CD 腳本自動化部署。Portal 與 Mobile App 適合互動操作，不適合管線腳本；Azure Status 顯示平台健康狀態，不是部署工具。"
+  },
+  {
+    type: "情境題",
+    topic: "IaC / ARM Template / Bicep",
+    scene: "",
+    q: "團隊要用同一份定義重複建立 Dev、Test、Prod，讓變更可進 Git 審查，消除組態漂移。最佳方案是？",
+    opts: ["A. 三次 Portal 手動操作","B. ARM Template 或 Bicep","C. 三份 Excel Checklist","D. Azure Advisor"],
+    a: 1,
+    exp: "ARM Template / Bicep 以宣告式 IaC 描述期望狀態，具備可重複、可版控與冪等性，是消除 Dev/Test/Prod 組態漂移的標準方案。Portal 手動操作與 Excel 都容易產生組態不一致；Advisor 提供最佳化建議，不是部署機制。"
+  },
+  {
+    type: "情境題",
+    topic: "Azure Service Health 計畫性維護",
+    scene: "",
+    q: "維運團隊希望在 Microsoft 對其使用的 Azure 區域安排計畫性維護時，提前收到 Email 與 Webhook 通知。應使用？",
+    opts: ["A. Azure Service Health Alert","B. Azure Advisor Cost 建議","C. Resource Group Tag","D. Azure Pricing Calculator"],
+    a: 0,
+    exp: "Azure Service Health 提供與訂用帳戶相關的服務事件、健康公告與計畫性維護資訊，並可建立 Email / Webhook 警示。Advisor 提供最佳化建議；Tags 是詮釋資料，不具通知功能；Pricing Calculator 用於估價。"
+  },
+  {
+    type: "情境題",
+    topic: "Azure Resource Health 單一資源",
+    scene: "只有 vm-prod-07 無法連線。",
+    q: "團隊想確認該 VM 目前是 Available、Degraded 還是 Unavailable，並判斷是否為平台事件。應先查看哪裡？",
+    opts: ["A. Azure Status","B. Azure Resource Health","C. Management Group","D. Azure Pricing Calculator"],
+    a: 1,
+    exp: "Resource Health 提供單一資源的健康狀態（Available/Degraded/Unavailable），並指出問題是來自平台事件還是客戶操作。Azure Status 看公開全域狀態；Service Health 看訂用帳戶受影響事件；Management Group 是治理容器，不含健康診斷。"
+  },
+  {
+    type: "情境題",
+    topic: "Azure Cloud Shell",
+    scene: "架構師出差時只有一台能使用現代瀏覽器的平板，需要登入後執行 Bash 或 PowerShell 指令檢查 Azure 資源，且不想在本機安裝 CLI。",
+    q: "最佳工具是？",
+    opts: ["A. Azure Cloud Shell","B. ARM Template Complete mode","C. Azure Advisor","D. Azure Region Pair"],
+    a: 0,
+    exp: "Azure Cloud Shell 提供瀏覽器內的已驗證終端環境，支援 Bash 與 PowerShell，無需安裝任何本機工具，適合出差或僅有瀏覽器的緊急管理場景。ARM Complete mode 是部署模式；Advisor 提供最佳化建議；Region Pair 是災難復原配對概念。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day8.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

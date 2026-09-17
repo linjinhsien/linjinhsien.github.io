@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 Day 3｜Sovereign Clouds 主權雲與合規工具全解析</title>
+  <style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 3</div>
+  <h1>Sovereign Clouds 主權雲與合規工具全解析</h1>
+  <p>Azure Government / Azure China / Trust Center / Service Trust Portal / Compliance Manager</p>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">← 首頁</a>
+    <a class="nav-link" href="day2.html">← Day 2</a>
+    <a class="nav-link" href="day4.html">Day 4 →</a>
+  </div>
+</header>
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Sovereign Clouds",
+    scene: "Titan 科技剛拿下美國國防部 (DoD) 的二級供應商合約，同時中國子公司準備推出在地化服務。美國政府要求系統部署在符合 FedRAMP High 且僅限美國授權人員維運的環境；中國法務團隊強調，中國使用者數據絕不能離開中國境內，且必須由中國在地企業營運。",
+    q: "作為 Titan 科技的 Chief Cloud Architect，你應該提出哪個方案？",
+    opts: [
+      "直接在商業版 Azure (East US & East Asia) 部署，Azure 已具備 ISO 認證即可",
+      "美國 DoD 專案申請 Azure Government；中國業務採購 Azure China（21Vianet 營運）；並用 Compliance Manager 定期合規審計",
+      "放棄公有雲，自行在台灣建置私有機房並用專線拉到美國與中國",
+      "在 Azure Cloud Shell 輸入加密命令，將商業版 Azure 升級為政府機密層級"
+    ],
+    a: 1,
+    exp: "Azure Government 專為美國政府及其承包商 (U.S. Contractors) 打造，滿足 DoD L5 與 FedRAMP High 物理隔離要求。Azure China 依中國法規由世紀互聯 (21Vianet) 在境內獨立營運，保證數據落地與合規。商業版 East Asia（香港）並非由 21Vianet 營運的中國區 Azure。Cloud Shell 只是 CLI 工具，無法改變物理隔離架構。"
+  },
+  {
+    type: "多選題",
+    topic: "Azure Government",
+    scene: "",
+    q: "下列哪一組客戶類型符合申請 Azure Government 的資格？（選出正確的兩項組合）",
+    opts: [
+      "C + D：美國政府機構（United States government entity）+ 美國政府承包商（United States government contractor）",
+      "A + B：加拿大政府承包商 + 歐洲政府承包商",
+      "C + E：美國政府機構 + 歐洲政府機構",
+      "B + D：歐洲政府承包商 + 美國政府承包商"
+    ],
+    a: 0,
+    exp: "Azure Government 僅限美國聯邦/州/地方政府機構（U.S. government entity）以及美國政府承包商（U.S. government contractor）申請使用。加拿大或歐洲的政府單位與承包商均不符合資格。（AZ-900 Q69 高頻考點）"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Germany",
+    scene: "",
+    q: "請判斷底線敘述是否正確，若錯誤請選出使敘述正確的選項。\n「Azure Germany 只有德國的合法居民才能使用。」",
+    opts: [
+      "No change is needed（敘述正確，無需變更）",
+      "只有在德國境內註冊的企業才能使用",
+      "只有向德國合作夥伴購買授權的企業才能使用",
+      "任何需要其資料駐留在德國境內的用戶或企業皆可使用"
+    ],
+    a: 3,
+    exp: "Azure Germany（或任何特定國家的獨立合規區域）並非僅限該國公民或在地企業使用。全球任何個人或企業，只要其業務或法規要求資料必須駐留在德國境內（data to reside in Germany），皆有資格申請使用。（AZ-900 Q63 高頻考點）"
+  },
+  {
+    type: "單選題",
+    topic: "Compliance Manager",
+    scene: "",
+    q: "你應該使用哪項工具來評估與追蹤貴公司的 Azure 環境是否符合法規標準（例如 ISO 27001 或 GDPR）？",
+    opts: [
+      "Microsoft Knowledge Center 網站",
+      "Azure 入口網站的 Advisor（顧問）刀鋒",
+      "Service Trust Portal 中的 Compliance Manager",
+      "Azure Cloud Shell"
+    ],
+    a: 2,
+    exp: "Compliance Manager（合規性管理員）是位於 Service Trust Portal 內的工作流風險評估工具，專門用來追蹤、指派與驗證組織針對 ISO 27001、GDPR、NIST 等法規標準的合規進度。Azure Advisor 用於資源最佳化建議；Cloud Shell 是 CLI 終端機；Trust Center 是公開瀏覽認證總覽的展示網站。（AZ-900 Q79/Q82 高頻考點）"
+  },
+  {
+    type: "單選題",
+    topic: "Compliance Manager",
+    scene: "",
+    q: "請判斷底線敘述是否正確，若錯誤請選出使敘述正確的選項。\n「從 Azure Cloud Shell，可以追蹤公司的法規標準，例如 ISO 27001。」",
+    opts: [
+      "No change is needed（敘述正確，無需變更）",
+      "Microsoft Cloud Partner Portal",
+      "Compliance Manager",
+      "Trust Center"
+    ],
+    a: 2,
+    exp: "Azure Cloud Shell 是瀏覽器內的互動式 CLI 環境（Bash / PowerShell），用來管理資源，並非用來追蹤法規合規進度。正確答案是 Compliance Manager（位於 Service Trust Portal），它是工作流式的風險評估工具，可追蹤、指派並驗證 ISO 27001、GDPR、NIST 等法規標準的合規活動。Trust Center 則是「查看 Azure 平台已取得哪些認證」的公開展示網站，兩者功能不同。（AZ-900 Q82 改編）"
+  },
+  {
+    type: "單選題",
+    topic: "Trust Center",
+    scene: "",
+    q: "Titan 科技的稽核人員想快速瀏覽 Azure 目前已取得哪些合規認證（例如 ISO、SOC、各國法遵），以判斷是否符合所在地區的法規要求。應使用哪一項工具？",
+    opts: [
+      "Trust Center（信任中心）",
+      "Azure Advisor",
+      "Azure Monitor",
+      "Azure Cloud Shell"
+    ],
+    a: 0,
+    exp: "Trust Center 是 Microsoft 對外公開的入口網站，可依區域或法規檢視 Azure 已取得的 90+ 項合規認證清單，不需登入即可使用。與 Compliance Manager 的分工：Trust Center = 查看平台已有的認證（唯讀展示）；Compliance Manager = 追蹤/指派/驗證你自己組織的合規活動（工作流工具）。（AZ-900 Q59 改編）"
+  },
+  {
+    type: "是非題",
+    topic: "Azure Government",
+    scene: "",
+    q: "使用 portal.azure.com 建立的商業版 Azure 帳號，可以直接登入 portal.azure.us 來管理 Azure Government 資源。",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確，視情況而定",
+      "D. 題目資訊不足"
+    ],
+    a: 1,
+    exp: "錯誤。Azure Government 使用獨立的入口網站 portal.azure.us，帳號與商業版 Azure (portal.azure.com) 完全隔離，無法用同一帳號跨區登入。必須單獨進行專屬審核與開戶流程。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure China",
+    scene: "",
+    q: "Azure China 是由微軟在中國境內直接建立並獨立營運的主權雲服務。",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確，視情況而定",
+      "D. 題目資訊不足"
+    ],
+    a: 1,
+    exp: "錯誤。Azure China 是由微軟授權中國本土電信業者「世紀互聯 (21Vianet)」在中國境內獨家運營的 Azure 服務，並非微軟直接運營。這是為了滿足中國電信法規與數據不可未經許可出境的規定而採取的架構安排。"
+  },
+  {
+    type: "單選題",
+    topic: "Trust Center",
+    scene: "",
+    q: "Azure Trust Center（信任中心）的主要功能是什麼？",
+    opts: [
+      "下載第三方獨立審計報告（SOC、ISO audit reports）",
+      "公開展示 Microsoft 的安全性、隱私權與全球 90+ 項合規認證總覽（免登入）",
+      "追蹤企業自身針對 ISO 27001、GDPR 的合規活動進度",
+      "提供 CLI 命令列介面管理 Azure 資源"
+    ],
+    a: 1,
+    exp: "Trust Center 是一個公開網站（免登入），展示微軟在安全性、隱私權、法規遵循上的承諾與全球合規認證。下載審計報告要使用 Service Trust Portal；追蹤企業自身合規活動要使用 Compliance Manager；CLI 管理資源要使用 Cloud Shell 或 Azure CLI。"
+  },
+  {
+    type: "單選題",
+    topic: "Service Trust Portal",
+    scene: "",
+    q: "Service Trust Portal (STP) 的核心功能是什麼？",
+    opts: [
+      "免登入公開瀏覽 Azure 所有合規認證清單與公告",
+      "提供 Azure 資源最佳化的成本與效能建議",
+      "需登入後可下載第三方獨立審計報告（SOC、ISO），並內建 Compliance Manager 工作流工具",
+      "管理 Azure Government 訂閱的資源配置與授權"
+    ],
+    a: 2,
+    exp: "Service Trust Portal 提供合規性審計報告、白皮書與安全性資源的下載（需登入），並內建 Compliance Manager 風險評估工作流工具，幫助企業追蹤與落實如 ISO 27001、GDPR 或 NIST 的合規要求。免登入公開展示認證清單的是 Trust Center，資源最佳化建議是 Azure Advisor 的功能。"
+  },
+  {
+    type: "單選題",
+    topic: "Sovereign Clouds",
+    scene: "",
+    q: "下列哪個選項正確描述了 Sovereign Clouds（主權雲）的核心特性？",
+    opts: [
+      "主權雲與商業版 Azure 共用同一資料中心，但有邏輯隔離層",
+      "主權雲的帳號可以與商業版 Azure 帳號通用，方便跨區管理",
+      "主權雲與商業版 Azure 在物理上完全隔離，擁有獨立資料中心與獨立 Portal",
+      "主權雲提供的服務功能與商業版 Azure 完全相同，差異只在計費方式"
+    ],
+    a: 2,
+    exp: "Sovereign Clouds 的核心特性是物理隔離（Physically Separated）：擁有獨立資料中心、獨立網路、獨立 Portal Endpoint（如 portal.azure.us）與獨立帳號體系。商業版 Azure 帳號無法用於主權雲，人員也需通過額外的背景審查。"
+  },
+  {
+    type: "是非題",
+    topic: "AWS GovCloud",
+    scene: "",
+    q: "AWS GovCloud (US) 是 AWS 為美國政府機構及其承包商建立的物理隔離主權雲，與 Azure Government 的設計理念相似。",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確，視情況而定",
+      "D. 題目資訊不足"
+    ],
+    a: 0,
+    exp: "正確。AWS GovCloud (US) 與 Azure Government 設計理念相似，均是針對美國政府機構與其承包商建立的物理隔離主權雲，滿足 FedRAMP、ITAR 等美國政府合規要求。同樣地，AWS China（由光環新網/西雲數據營運）也對應 Azure China（由世紀互聯 21Vianet 營運）的概念。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day4.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\">"
+    +"<span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div>"
+    +"<h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2>"
+    +"<p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p>"
+    +"<div class=\"stats\">"
+    +"<div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div>"
+    +"<div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div>"
+    +"<div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div>"
+    +"<div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div>"
+    +"<div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\">"
+    +"<button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button>"
+    +"<a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a>"
+    +"</div>"
+    +"<p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

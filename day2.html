@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 Day 2｜Azure 基礎架構全解析</title>
+  <style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 2</div>
+  <h1>Azure 基礎架構全解析</h1>
+  <p>Region / Availability Zones / Region Pairs / SLA / Data Residency</p>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">← 首頁</a>
+    <a class="nav-link" href="day3.html">Day 3 →</a>
+  </div>
+</header>
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Availability Zones / SLA",
+    scene: "",
+    q: "您的公司計劃部署多台 Azure 虛擬機器 (VM)。若單一資料中心發生故障，需確保 VM 上的服務仍維持可用，且 SLA 保證至少達 99.99%。請問解決方案中應包含哪一項？",
+    opts: [
+      "A. 將 VM 部署在多個 Resource Groups 中",
+      "B. 將 VM 部署在同一 Azure Region 內的多個 Availability Zones",
+      "C. 將 VM 部署在單一 Availability Zone 並使用 Premium SSD",
+      "D. 將 VM 部署在不同的 Azure Subscriptions 中"
+    ],
+    a: 1,
+    exp: "跨 2 個以上 Availability Zones 部署 VM，微軟官方保證 99.99% SLA。Resource Group（A）和 Subscription（D）只是邏輯管理邊界，無法防止實體資料中心等級的故障。單一 VM 搭配 Premium SSD（C）的 SLA 僅為 99.9%。"
+  },
+  {
+    type: "多選題",
+    topic: "Region Pairs",
+    scene: "",
+    q: "下列哪兩項關於 Azure Region Pairs 的敘述是正確的？（請選出包含兩個正確敘述的組合）",
+    opts: [
+      "A. 「Azure 同時推送維護更新至配對的兩個 Region」與「大多數配對位於同一 Geography 內」",
+      "B. 「大範圍事故時 Azure 優先復原其中一個 Region」與「大多數配對位於同一 Geography 內」",
+      "C. 「Azure 同時推送維護更新至配對的兩個 Region」與「大範圍事故時 Azure 優先復原其中一個 Region」",
+      "D. 「Azure 同時推送維護更新至配對的兩個 Region」與「客戶可自行變更配對對象」"
+    ],
+    a: 1,
+    exp: "正確答案為 B。① 大範圍天災時，Azure 復原演算法確保每個配對組中至少有一個 Region 優先被拉起（正確）。② 為符合各國資料主權法規，絕大多數配對都在同一 Geography 內（正確）。Azure 採用「循序更新（Sequenced Updates）」而非同步更新（A/C 中的敘述錯誤）。Region Pairs 是 Azure 底層預設固定的，使用者無法自行變更（D 錯誤）。"
+  },
+  {
+    type: "是非題",
+    topic: "Data Residency",
+    scene: "",
+    q: "判斷下列敘述是否正確：「為了確保高可用性與合規性，每當主要資料中心發生中斷時，Azure 會自動將客戶資料移至另一個國家。」",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確，視情況而定",
+      "D. 題目資訊不足"
+    ],
+    a: 1,
+    exp: "答案為 No（False）。資料主權（Data Sovereignty / Residency）是核心原則：Azure 保證在預設情況下，資料只會在同一個 Geography 範圍內的 Region 進行複寫與備援，絕不會未經授權地將客戶資料跨國搬移。"
+  },
+  {
+    type: "單選題",
+    topic: "Availability Zones",
+    scene: "Titan 科技的架構師需要辨識哪種故障類型可以透過部署 Azure Availability Zone 來保護服務存取。",
+    q: "Azure Availability Zone 主要用來防護哪一種等級的故障？",
+    opts: [
+      "A. 單一實體伺服器故障 (a physical server failure)",
+      "B. 整個 Azure 區域故障 (an Azure region failure)",
+      "C. 儲存體故障 (a storage failure)",
+      "D. Azure 資料中心故障 (an Azure data center failure)"
+    ],
+    a: 3,
+    exp: "Availability Zone 的防護粒度正是「資料中心（Data Center）等級」的故障。每個 AZ 是 Region 內具備獨立電力、網路與冷卻的實體隔離資料中心群。單一伺服器故障（A）由 Availability Set 的 Fault/Update Domain 處理；Region 級故障（B）需靠跨 Region Pair 防護；儲存體故障（C）由 Storage 備援層級（LRS/ZRS/GRS）處理。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Region",
+    scene: "",
+    q: "請評估下列底線敘述是否正確，若正確選「無需變更」，若錯誤請選出使敘述正確的選項。\n\n底線內容：「一個 Azure 區域包含一個或多個以低延遲網路連接的資料中心。」",
+    opts: [
+      "A. 無需變更（No change is needed）",
+      "B. 位於每個 Microsoft 設有分公司的國家",
+      "C. 只存在於歐洲與美洲的每個國家",
+      "D. 只包含一個資料中心"
+    ],
+    a: 0,
+    exp: "Region（區域）的官方定義正是「一組部署在特定地理範圍、以低延遲網路互連的一個或多個資料中心」，底線敘述完全正確，無需變更。Region 的分佈與 Microsoft 分公司所在地（B）或僅限歐美（C）無關；Region 也可包含多個資料中心，啟用 AZ 的 Region 至少含 3 個實體隔離區（D 錯誤）。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Geography",
+    scene: "",
+    q: "在 Azure 架構層級中，哪一個層級負責定義「資料主權（Data Residency）」邊界，確保客戶資料在預設情況下不會離開特定地理範圍？",
+    opts: [
+      "A. Availability Zone（可用性區域）",
+      "B. Azure Region（區域）",
+      "C. Azure Geography（地理位置）",
+      "D. Resource Group（資源群組）"
+    ],
+    a: 2,
+    exp: "Azure Geography（地理位置）是最高層級的地理邊界，通常對應特定國家或地理管轄範圍（如 United States、Asia Pacific），並作為資料主權與合規邊界。Availability Zone（A）是 Region 內的容錯單元；Region（B）是計費與服務邊界；Resource Group（D）是邏輯管理邊界，三者均不負責跨國資料主權。"
+  },
+  {
+    type: "單選題",
+    topic: "SLA",
+    scene: "",
+    q: "一台 Azure 虛擬機器 (VM) 使用 Premium SSD、但僅部署在單一 Availability Zone 中，微軟官方的 SLA 保證為何？",
+    opts: [
+      "A. 99.999%",
+      "B. 99.99%",
+      "C. 99.9%",
+      "D. 99.5%"
+    ],
+    a: 2,
+    exp: "單一 VM 搭配 Premium SSD 的 SLA 為 99.9%。若要達到 99.99%，必須將 VM 跨 2 個以上的 Availability Zones 部署。這是 AZ-900 的高頻考點，務必記住兩個數字：單一 VM (Premium SSD) = 99.9%；跨 AZ 部署 = 99.99%。"
+  },
+  {
+    type: "單選題",
+    topic: "Region Pairs",
+    scene: "",
+    q: "Azure Region Pairs 中，兩個配對 Region 之間的最小距離要求為何？",
+    opts: [
+      "A. 至少 50 英哩（約 80 公里）",
+      "B. 至少 100 英哩（約 160 公里）",
+      "C. 至少 300 英哩（約 480 公里）",
+      "D. 至少 1,000 英哩（約 1,600 公里）"
+    ],
+    a: 2,
+    exp: "Region Pairs 兩個 Region 之間距離至少 300 英哩（約 480 公里）。這個距離設計是為了確保在自然災害（如地震、颱風）或大規模電力事故時，兩個 Region 不會同時受到波及，從而保障跨區域的災難復原能力。"
+  },
+  {
+    type: "是非題",
+    topic: "Region Pairs / AWS 對照",
+    scene: "",
+    q: "判斷下列敘述是否正確：「AWS 與 Azure 相同，平台會自動將 Region 兩兩配對，並在大規模災難時自動優先復原其中一個配對 Region，無需使用者額外設定。」",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確，視情況而定",
+      "D. 題目資訊不足"
+    ],
+    a: 1,
+    exp: "答案為 No（False）。Region Pairs 是 Azure 的獨家特色（Azure 原生內建的 DR 機制）。在 AWS 中，若要實現跨 Region 備援，需要手動設定 Cross-Region Replication（CRR）、DynamoDB Global Tables 等，AWS 並未提供 Azure 式的固定配對與自動優先復原機制。"
+  },
+  {
+    type: "單選題",
+    topic: "Availability Zones",
+    scene: "",
+    q: "一個啟用 Availability Zones 的 Azure Region，至少包含幾個實體隔離的 AZ？",
+    opts: [
+      "A. 1 個",
+      "B. 2 個",
+      "C. 3 個",
+      "D. 5 個"
+    ],
+    a: 2,
+    exp: "啟用 Availability Zones 的 Azure Region 至少包含 3 個實體隔離的 AZ。每個 AZ 擁有各自獨立的電力系統（Power）、冷卻散熱（Cooling）與網路連線（Networking），三者獨立是確保故障隔離的關鍵設計。"
+  },
+  {
+    type: "是非題",
+    topic: "Azure Geography",
+    scene: "",
+    q: "判斷下列敘述是否正確：「Azure Geography 明確定義資料主權邊界，客戶資料在預設情況下不會離開所在的 Geography 範圍，例如部署在 Asia Pacific Geography 中的資料不會被複製至 Europe Geography。」",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確，視情況而定",
+      "D. 題目資訊不足"
+    ],
+    a: 0,
+    exp: "答案為 Yes（True）。Azure Geography 的核心作用就是確保資料主權（Data Residency）與合規邊界。客戶資料在預設情況下只會在同一個 Geography 內的 Region 之間進行複寫與備援，不會跨 Geography 轉移。這對需要遵守 GDPR、各國隱私法規的企業至關重要。"
+  },
+  {
+    type: "單選題",
+    topic: "Region Pairs",
+    scene: "Titan 科技的 CTO 要求架構師為部署在 East Asia（香港）的主力資料庫規劃跨區域災難復原（DR）方案，且法規要求資料不能離開亞太地理邊界。",
+    q: "根據 Azure 原生 Region Pair 機制，East Asia（香港）的預設配對 Region 為何，且此配對是否符合亞太法遵要求？",
+    opts: [
+      "A. West Europe（荷蘭）；不符合，因跨出亞太邊界",
+      "B. Japan East（東京）；符合，同屬亞太地理邊界",
+      "C. Southeast Asia（新加坡）；符合，兩者皆在 Asia Pacific Geography 內",
+      "D. Australia East（雪梨）；符合，但需手動設定配對"
+    ],
+    a: 2,
+    exp: "East Asia（香港）的 Azure 原生 Region Pair 就是 Southeast Asia（新加坡）。兩者皆位於 Asia Pacific Geography 內，符合不跨出亞太地理邊界的法遵要求。同時，Azure 原生 GRS（Geo-redundant storage）會自動將資料異步複製至配對 Region，無需手動維護通道，大幅降低跨區 DR 的設定複雜度。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day3.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
