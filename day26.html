@@ -2,8 +2,8 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AZ-900 Day 26 Quiz - Azure Policy &amp; Blueprints</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-900 Day 26 Quiz｜Azure Policy &amp; Blueprints</title>
 <style>
 :root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -67,22 +67,26 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <header>
   <div class="day-badge">DAY 26</div>
   <h1>Azure Policy &amp; Blueprints</h1>
-  <p>AZ-900 考題練習｜合規治理與資源防呆實戰</p>
-  <div class="nav-links">
-    <a class="nav-link" href="day25.html">← day25.html</a>
-    <a class="nav-link" href="day27.html">day27.html →</a>
-  </div>
+  <p>合規治理、Resource Locks、Microsoft Purview 與 Blueprints 退役</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day25.html">&#8592; Day 25</a>
+    <a class="nav-link" href="day27.html">Day 27 &#8594;</a>
+  </nav>
 </header>
+
 <div class="progress-wrap">
   <div class="progress-label">
-    <span id="progressText">題目 1 / 13</span>
+    <span id="progressText">題目 1 / 12</span>
     <span id="scoreText">得分：0</span>
   </div>
-  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
 </div>
+
 <div class="card" id="quizCard">
   <div class="question-meta" id="questionMeta"></div>
-  <div class="qtype-badge" id="qtypeBadge"></div>
+  <span class="qtype-badge" id="qtypeBadge"></span>
   <div class="scenario-box" id="scenarioBox" style="display:none">
     <div class="scene-label">情境</div>
     <div id="scenarioText"></div>
@@ -95,22 +99,179 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
     <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題</button>
   </div>
 </div>
+
 <script>
-const QUESTIONS=[
-  {type:"單選題",topic:"Azure Policy 資源類型限制",scene:"",q:"Titan 科技希望禁止 RG-Production 建立任何 VM，但允許團隊繼續在該 Resource Group 建立其他類型資源（如 Storage Account、Key Vault 等），應採用哪一項？",opts:["Resource Lock","Azure RBAC 角色","Tag","Azure Policy"],a:3,exp:"Azure Policy 可透過資源類型條件搭配 Deny Effect，精準禁止特定資源類型的建立。Resource Lock 是整體防刪除/修改保護，無法只針對某種資源類型；RBAC 控制的是身分與操作權限，不是資源屬性規則；Tag 只是分類資訊，無治理效果。"},
-  {type:"單選題",topic:"Azure Policy 地理位置限制",scene:"",q:"Titan 科技的 Subscription 分布於數個核准 Region，公司要求管理員未來只能在這些核准 Region 建立 Azure 資源，應使用哪項服務？",opts:["Read-only Resource Lock","Azure Policy","Management Group","Reservation"],a:1,exp:"Azure Policy 可建立 Location 政策並指派到 Subscription 或 Management Group，強制所有新資源只能建立在核准 Region。Management Group 是治理 Scope 的容器本身，不是規則；Resource Lock 防止刪除/修改；Reservation 是成本容量承諾方案，三者均不能限制 Region。"},
-  {type:"單選題",topic:"Resource Lock 繼承行為",scene:"",q:"Titan 科技將 RG-Payments 設定為 CanNotDelete 鎖定，下列何者最符合 Azure Resource Lock 的行為？",opts:["Resource Group 的鎖只保護當時已存在的資源，新加入的資源不受影響","Resource Group 的鎖可由其中的資源繼承，之後新增的資源也會受到父層鎖定影響","Resource Lock 只能套用到單一 Resource，不能套用到 Resource Group","具有 Owner RBAC 角色就一定可以忽略 Resource Lock"],a:1,exp:"Resource Lock 可套用在 Subscription、Resource Group 或 Resource；父層的鎖可由子資源繼承，包含之後新增的資源。即使具備 Owner RBAC 角色，也必須先移除鎖定才能執行被鎖住的操作，RBAC 不能覆蓋 Lock。"},
-  {type:"單選題",topic:"Azure Policy 跨訂閱治理",scene:"",q:"Titan 科技希望跨多個 Subscription 統一套用「只允許在核准 Region 建立資源」的規則，下列哪項最適合？",opts:["為每個 Resource Group 建立不同的命名慣例","對每個 Subscription 的所有資源建立 Resource Lock","使用 Azure Policy，並在 Management Group 等適當的治理 Scope 指派","使用 Azure Reservation 進行容量承諾"],a:2,exp:"Azure Policy 可在 Management Group 層級指派，讓旗下所有 Subscription 自動套用同一條治理規則，是跨訂閱大規模治理的標準做法。Resource Group 命名和 Reservation 都不是治理規則；Resource Lock 是防刪除/修改機制，無法限制建立 Region。"},
-  {type:"服務配對題",topic:"Azure Policy vs Resource Lock 分工",scene:"",q:"Titan 科技需要同時完成：① 禁止管理員把 VM 建立在未核准 Region；② 防止生產 Resource Group 被意外刪除。下列哪個配對最合理？",opts:["兩者都使用 Resource Lock","兩者都使用 Azure Policy","① 使用 Azure Policy；② 使用 Resource Lock","① 使用 Microsoft Purview；② 使用 Tag"],a:2,exp:"① 限制 Region 是治理規則合規需求，應使用 Azure Policy（Deny Effect）。② 防止意外刪除是資源防呆需求，應使用 Resource Lock（CanNotDelete）。兩者職責不同：Policy 管規則，Lock 管資源保護，不可互換。"},
-  {type:"單選題",topic:"Policy Definition 與 Assignment",scene:"",q:"Azure Policy 中，「Policy Definition」與「Policy Assignment」的關係，下列敘述何者正確？",opts:["Definition 已包含指派範圍，建立後自動套用到整個租用戶","Assignment 才是正式把 Policy Definition 套用到特定 Scope（如 Subscription 或 Resource Group）","Definition 與 Assignment 可以互換使用，功能完全相同","一個 Policy Definition 只能建立一個 Assignment"],a:1,exp:"Policy Definition 是規則本身（法條），描述什麼條件算違規及要採取什麼 Effect；Policy Assignment 才是正式把規則套用到特定 Scope（Management Group、Subscription、Resource Group）。Definition 不等於已套用到環境，必須透過 Assignment 才會生效；一個 Definition 可以建立多個 Assignment 套用到不同 Scope。"},
-  {type:"單選題",topic:"Policy Effect - Audit vs Deny",scene:"",q:"Titan 科技正處於治理導入初期，想先盤點現有哪些資源不合規（尚未準備好全面阻擋新建立的資源），應選擇哪種 Azure Policy Effect？",opts:["Deny，立即阻止所有不符合規則的資源建立或更新請求","Audit，記錄不合規資源為 Non-compliant 但不阻止其建立或修改","Modify，自動修正資源的標籤或設定","DeployIfNotExists，在資源建立時自動部署相關組態"],a:1,exp:"Audit Effect 會評估資源是否符合規則，並將不合規的資源標記為 Non-compliant，但不會阻止請求，適合「先盤點、後治理」的導入階段。Deny 適合規範成熟後直接阻擋違規；Modify 用於修正 Tags 等設定；DeployIfNotExists 用於自動部署相關組態，三者都會干預資源操作。"},
-  {type:"單選題",topic:"Resource Lock 鎖定類型比較",scene:"",q:"Azure Resource Lock 的 ReadOnly 鎖定與 CanNotDelete 鎖定，最主要的差異是什麼？",opts:["ReadOnly 只保護 VM，CanNotDelete 保護所有資源類型","ReadOnly 允許讀取但不允許修改或刪除；CanNotDelete 允許讀取和修改但不允許刪除","CanNotDelete 比 ReadOnly 更嚴格，套用後連讀取都會被阻擋","兩者功能完全相同，只是名稱不同"],a:1,exp:"ReadOnly 允許讀取，但不允許修改或刪除，是最嚴格的鎖定。CanNotDelete 允許讀取和修改，但不允許刪除，適合防止誤刪但仍需調整設定的情境。應依業務需求選擇適當的鎖定類型。"},
-  {type:"情境題",topic:"企業治理架構全局決策",scene:"Titan 科技擁有 12 個 Azure Subscriptions，稽核發現四大問題：① 部分 VM 被部署到未核准 Region；② 資源缺少 CostCenter 與 Environment Tag；③ 開發人員誤刪了一個測試 Resource Group；④ 資料治理團隊需要建立全企業資料資產清單。",q:"下列哪項架構方案最全面且正確地解決上述四個問題？",opts:["在每台 VM 上建立 Resource Lock，並要求工程師自行檢查 Region 與 Tags；以 Resource Group 名稱管理資料資產","在 Management Group/Subscription Scope 指派 Azure Policy 治理 Region 與 Tags；對不可誤刪的生產資源使用 Resource Lock；導入 Microsoft Purview 進行資料資產治理；規劃舊有 Blueprints 遷移至 Deployment Stacks","使用 Microsoft Purview 阻止 VM 建立在錯誤 Region，並使用 Azure Policy 取代所有 Resource Locks","使用 Azure RBAC 限制所有 VM 只能建立在特定 Region，並以 Tags 取代 Resource Locks"],a:1,exp:"正確架構：① ② 使用 Azure Policy（Deny/Modify/Audit）在組織層級治理 Region 與 Tags；③ 對生產資源使用 Resource Lock（CanNotDelete）防止誤刪；④ 導入 Microsoft Purview 的 Data Map / Unified Catalog 進行資料資產治理。Purview 無法限制 ARM 資源建立；RBAC 控制身分權限而非資源屬性規則；Tags 不是刪除防護機制。"},
-  {type:"單選題",topic:"Microsoft Purview 定位",scene:"",q:"Titan 科技資料治理團隊需要掃描並盤點全公司在 Azure、地端與多雲環境中有哪些包含敏感客戶個資的資料資產，應使用哪項服務？",opts:["Azure Policy（建立資料掃描政策）","Resource Lock（防止資料被刪除）","Microsoft Purview（Data Map 與 Unified Catalog）","Azure Monitor（資料存取監控）"],a:2,exp:"Microsoft Purview 的 Data Map 負責掃描、分類與建立資料資產中繼資料；Unified Catalog 提供跨組織的資料探索與治理能力，適用於資料資產清單與敏感度分類。Azure Policy 管理 ARM 資源規則；Resource Lock 防止資源被刪除；Azure Monitor 監控效能與指標，三者均不具備資料資產探索功能。"},
-  {type:"單選題",topic:"Azure Blueprints 退役狀態",scene:"",q:"關於 Azure Blueprints，下列何者最符合 2026 年的現況？",opts:["Azure Blueprints 是 Microsoft 目前最推薦的主要新架構治理工具","Azure Blueprints 正在 2026–2027 年分階段退役，2027 年 1 月 31 日正式退休，Microsoft 建議遷移至 Deployment Stacks + Template Specs","Azure Blueprints 與 Azure Policy 功能完全相同，可以任意替換使用","Azure Blueprints 退役後將由 Azure Monitor 接管其治理功能"],a:1,exp:"Azure Blueprints 已進入分階段退役流程：2026/7/31 起不能建立新 Blueprint 定義，2027/1/31 正式退休。Microsoft 建議將既有 Blueprints 遷移至 Azure Deployment Stacks + Template Specs。舊題庫若以 Blueprints 為現行答案需特別注意此退役狀態。"},
-  {type:"單選題",topic:"Azure Policy Initiative",scene:"",q:"Azure Policy 中的 Initiative（方案）是什麼？",opts:["一種 Policy Effect，如 Audit 或 Deny 的組合設定","將多個 Policy Definitions 集合成一組治理方案，便於大規模管理多條相關規則","與 Policy Definition 完全相同，只是不同名稱的別名","只能在 Management Group 層級使用的特殊政策類型"],a:1,exp:"Initiative（方案）是將多個 Policy Definitions 封裝成一組治理方案，當企業需要同時管理多條相關規則（如「ISO 27001 合規方案」包含十幾條政策）時，可透過一個 Initiative Assignment 統一套用，簡化管理。Policy Effect 是單條政策的行為設定，與 Initiative 層級不同。"},
-  {type:"單選題",topic:"Azure Tags 繼承行為",scene:"",q:"Titan 科技在 Resource Group 層級設定了 CostCenter 和 Environment Tags，請問其中的 VM、Storage Account 等子資源是否會自動繼承這些 Tags？",opts:["是，Azure Resource Manager 會自動讓所有子資源繼承父層的 Tag 值","否，Tags 不會自動繼承；若需強制所有資源具備特定 Tags，需要使用 Azure Policy","是，但只有 VM 類型的資源會繼承 Tag，其他資源類型不受影響","否，Tags 只能手動逐一套用，Azure Policy 無法自動化 Tag 管理"],a:1,exp:"Azure Resource Manager 的 Tags 不會自動從父層（Resource Group、Subscription）繼承到子資源。若企業要求每個資源都具備 CostCenter、Environment 等欄位，需使用 Azure Policy 搭配 Audit Effect 稽核缺少 Tag 的資源，或使用 Modify Effect 在符合條件的情況下自動補充 Tag。"}
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Policy 應用場景",
+    scene: "Titan 科技希望禁止 RG-Production 建立任何 VM，但允許團隊繼續在該 Resource Group 建立其他類型資源。",
+    q: "應該採用哪一項 Azure 服務達成此目標？",
+    opts: [
+      "Resource Lock",
+      "Azure RBAC Role",
+      "Tag",
+      "Azure Policy"
+    ],
+    a: 3,
+    exp: "關鍵字「只禁止某一類資源建立，但其他資源仍可建立」是治理規則，不是整個 Resource Group 的刪除或修改鎖定。Azure Policy 可以透過資源類型條件與 Deny Effect 達成這類精細限制。Resource Lock 無法精準禁止「只建立 VM」而不影響其他資源；RBAC 是身分與權限模型，無法限制特定資源類型的建立；Tag 只是分類標籤，不具治理強制力。ExamTopics Q277 高票支持 D。"
+  },
+  {
+    type: "單選題",
+    topic: "Region 限制",
+    scene: "Titan 科技有一個 Subscription，現有資源分布於數個核准 Region。公司要求管理員未來只能在這些核准 Region 建立 Azure 資源。",
+    q: "應該使用哪項服務達成此治理目標？",
+    opts: [
+      "Read-only Resource Lock",
+      "Azure Policy",
+      "Management Group",
+      "Reservation"
+    ],
+    a: 1,
+    exp: "「建立資源時的治理規則」→ Azure Policy。可建立 Allowed Locations Policy Definition，再套用 Deny Effect，阻止在未核准 Region 建立任何資源。Management Group 是治理 Scope 的容器，不是規則本身；Reservation 是成本/容量承諾方案；Resource Lock (ReadOnly) 是防止修改或刪除現有資源，不能限制新資源的建立位置。ExamTopics Q145 社群回報與 Microsoft Learn Policy 文件一致。"
+  },
+  {
+    type: "單選題",
+    topic: "Resource Lock 繼承行為",
+    scene: "Titan 科技將 RG-Payments 設定為 CanNotDelete 鎖定。",
+    q: "下列敘述何者最符合 Azure Resource Lock 的行為？",
+    opts: [
+      "Resource Group 的鎖只保護當時已存在的資源，之後新加入的資源不受影響",
+      "Resource Group 的鎖可由其中的資源繼承，之後新增的資源也會受到父層鎖定影響",
+      "Resource Lock 只能套用到單一 Resource，不能套用到 Resource Group 層級",
+      "具有 Owner RBAC 角色就一定可以忽略 Resource Lock，直接進行刪除"
+    ],
+    a: 1,
+    exp: "Resource Lock 的繼承特性：可套用在 Subscription、Resource Group 或 Resource；父層的鎖可以由子資源繼承，包括之後新增的資源。這正是把鎖放在 Resource Group 層級來保護整批生產資源的原因。選項 D 是重要陷阱：即使具有 Owner RBAC 角色，仍受 Lock 限制，必須先移除鎖定才能進行被鎖住的操作——RBAC 與 Lock 是兩個獨立的保護機制。ExamTopics Q303 高票討論支持 B。"
+  },
+  {
+    type: "單選題",
+    topic: "跨 Subscription 治理",
+    scene: "Titan 科技希望跨多個 Subscription 統一套用「只允許在核准 Region 建立資源」的規則。",
+    q: "下列哪項方案最適合達成此跨訂用帳戶治理目標？",
+    opts: [
+      "為每個 Resource Group 建立不同名稱以識別核准區域",
+      "建立 Resource Lock 鎖定各 Resource Group",
+      "使用 Azure Policy，並在適當的治理 Scope（如 Management Group）指派",
+      "使用 Reservation 預訂特定 Region 的容量"
+    ],
+    a: 2,
+    exp: "跨多個 Subscription 的規則治理應使用 Azure Policy，並在 Management Group 等上層 Scope 進行 Policy Assignment，讓規則自動往下套用到所有 Subscription 與 Resource Group。Resource Group 名稱只是識別容器，不是跨 Subscription 的治理規則引擎；Resource Lock 是防刪/防修改，不是建立規則；Reservation 是成本承諾，完全不適用。Microsoft Learn Policy 官方文件驗證。"
+  },
+  {
+    type: "單選題",
+    topic: "Policy vs Lock 分工",
+    scene: "Titan 科技要同時完成兩件事：(1) 禁止管理員在未核准 Region 建立 VM；(2) 防止生產 Resource Group 被意外刪除。",
+    q: "下列哪個配對方案最合理？",
+    opts: [
+      "兩者都使用 Resource Lock",
+      "兩者都使用 Azure Policy",
+      "Region 限制使用 Azure Policy；生產 Resource Group 使用 Resource Lock",
+      "Region 限制使用 Microsoft Purview；生產 Resource Group 使用 Tag"
+    ],
+    a: 2,
+    exp: "AZ-900 最核心的治理服務分工題型：第一個需求是「規則合規」→ Azure Policy（限制 Region、Deny Effect）；第二個需求是「防止意外刪除」→ Resource Lock（CanNotDelete）。全選 Lock 無法強制 Region 規則；全選 Policy 無法作為防刪保護；Purview 是資料治理工具，Tag 是分類標籤，兩者都不能達成這兩個目標。記住口訣：「組織規則→Policy；防呆保護→Lock；資料治理→Purview」。"
+  },
+  {
+    type: "情境決策題",
+    topic: "治理架構選型",
+    scene: "Titan 科技擁有 12 個 Azure Subscriptions。稽核發現：有些 VM 被部署到未核准 Region；部分資源缺少 CostCenter 與 Environment Tag；開發人員誤刪了一個 Resource Group；資料治理團隊需要建立全企業資料資產清單。",
+    q: "CTO 要求以正確分工的現代化方案解決以上問題，哪個架構方案最合理？",
+    opts: [
+      "在每台 VM 上建立 Resource Lock，要求工程師自行檢查 Region 與 Tags；資料資產以 Resource Group 名稱管理",
+      "在 Management Group/Subscription Scope 指派 Azure Policy 治理 Region 與 Tags；對生產資源使用 Resource Lock；資料資產治理導入 Microsoft Purview；舊 Blueprints 規劃遷移至 Deployment Stacks / Template Specs",
+      "使用 Microsoft Purview 阻止 VM 建立在錯誤 Region，並使用 Azure Policy 取代所有 Resource Locks",
+      "使用 Azure RBAC 限制所有 VM 只能建立在特定 Region，以 Tags 取代 Resource Locks"
+    ],
+    a: 1,
+    exp: "選項 B 是標準現代 Azure 治理架構：Policy 解決規則問題（Region、Tags、組態標準）；Lock 解決資源防呆問題（防止誤刪生產資源）；Purview 解決資料治理問題（資料資產探索與中繼資料）；Blueprints 正在退役，現行遷移方向是 Deployment Stacks + Template Specs。選項 A 把 Policy 責任推回人工流程，必然產生組態漂移。選項 C 誤用 Purview（它不是 ARM 資源建立的治理工具）。選項 D 誤用 RBAC（它控制誰有權限，不是資源組態規則）。"
+  },
+  {
+    type: "單選題",
+    topic: "CanNotDelete vs ReadOnly",
+    scene: null,
+    q: "Azure Resource Lock 的 CanNotDelete 與 ReadOnly 兩種層級的最主要差異是什麼？",
+    opts: [
+      "CanNotDelete 允許讀取與修改但不允許刪除；ReadOnly 允許讀取但不允許修改與刪除",
+      "CanNotDelete 不允許任何操作；ReadOnly 只允許讀取",
+      "CanNotDelete 和 ReadOnly 效果相同，只差在鎖定的名稱",
+      "CanNotDelete 只能套用到 Resource；ReadOnly 只能套用到 Resource Group"
+    ],
+    a: 0,
+    exp: "兩種 Lock 的核心差異：CanNotDelete（允許讀取 ✅、允許修改 ✅、不允許刪除 ❌）；ReadOnly（允許讀取 ✅、不允許修改 ❌、不允許刪除 ❌）。ReadOnly 的限制更嚴格，連修改都不允許。生產資料庫通常使用 CanNotDelete 防誤刪，但仍允許正常讀寫；若要凍結特定設定不被修改則使用 ReadOnly。兩種鎖定都可以套用到 Subscription、Resource Group 或 Resource 層級。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Blueprints 現況",
+    scene: null,
+    q: "關於 Azure Blueprints 的現況（截至 2026 年），哪個描述最正確？",
+    opts: [
+      "Azure Blueprints 是微軟目前最推薦的新治理與部署封裝服務",
+      "Azure Blueprints 正在分階段退休，2026 年 7 月 31 日起無法建立新的 Blueprint 定義與版本，2027 年 1 月 31 日正式退休",
+      "Azure Blueprints 是 Enterprise Agreement 的獨家功能，一般訂用帳戶無法使用",
+      "Azure Blueprints 已正式更名為 Azure Deployment Stacks，功能完全相同"
+    ],
+    a: 1,
+    exp: "Azure Blueprints 退休時程：2026/07/31 起不能建立新的 Blueprint 定義與版本；2026/10/31 既有定義不能修改，也不能建立新 Assignment；2026/12/31 既有 Assignment 不能修改；2027/01/31 正式退休。若舊題庫出現 Blueprints 作為現行答案，需要辨識這是歷史答案。Azure Deployment Stacks 是獨立的新服務（不是更名），與 Template Specs 搭配使用是微軟建議的遷移方向。"
+  },
+  {
+    type: "單選題",
+    topic: "Blueprints 遷移方向",
+    scene: null,
+    q: "微軟建議用哪個組合取代即將退休的 Azure Blueprints？",
+    opts: [
+      "Azure Policy + Resource Locks",
+      "Azure DevOps + ARM Templates",
+      "Azure Deployment Stacks + Template Specs",
+      "Azure Resource Manager + Management Groups"
+    ],
+    a: 2,
+    exp: "Microsoft 官方建議：將既有 Azure Blueprints 內容遷移至 Azure Deployment Stacks（用於將一組 Azure 資源作為單位進行部署、生命週期管理與保護）搭配 Template Specs（用於儲存與共用 ARM / Bicep 範本）。Azure Policy + Resource Locks 各有其職責（合規治理與防刪保護），不是 Blueprints 的直接替代；Azure DevOps 是 CI/CD 平台；Management Groups 是治理範圍容器。"
+  },
+  {
+    type: "單選題",
+    topic: "Microsoft Purview 定位",
+    scene: null,
+    q: "下列關於 Microsoft Purview 的描述，哪個最正確？",
+    opts: [
+      "Microsoft Purview 用於強制執行跨 Subscription 的資源建立規則，例如限制 VM 只能在特定 Region",
+      "Microsoft Purview 用於防止生產資料庫被意外刪除，相當於 Resource Lock 的替代方案",
+      "Microsoft Purview 提供資料資產探索、敏感度分類、中繼資料管理與資料治理能力",
+      "Microsoft Purview 是 Azure 的 SIEM 平台，用於分析跨多雲的資安日誌"
+    ],
+    a: 2,
+    exp: "Microsoft Purview 現代資料治理體驗包含 Data Map（技術層的資料資產與中繼資料地圖）與 Unified Catalog（商務與治理使用者的資料探索與治理）。它聚焦在「資料內容本體與中繼資料」，不管 ARM 基礎設施資源（VM/NIC）的建立或刪除防護。考場秒殺口訣：問「探索資料資產、資料目錄、中繼資料、敏感個資掃描」→ Purview；問「限制 Region / 強制 Tag」→ Policy；問「防止刪除」→ Lock；問「SIEM/SOAR」→ Sentinel。"
+  },
+  {
+    type: "單選題",
+    topic: "Policy Initiative",
+    scene: null,
+    q: "Azure Policy 中的 Initiative（方案）是什麼？",
+    opts: [
+      "帶有多個條件判斷的單一複雜 Policy Definition",
+      "將多個相關的 Policy Definitions 集合成一組治理方案，方便統一管理與指派",
+      "全域自動套用到所有 Subscription 的特殊政策",
+      "套用到 Policy Assignment 上的 Resource Lock 類型"
+    ],
+    a: 1,
+    exp: "Initiative（方案）是將多個相關 Policy Definitions 集合成一組治理方案，例如「ISO 27001 合規方案」可能包含數十條各別的 Policy Definition。使用 Initiative 的好處是只需一次 Assignment 就能套用整套規則，並在合規儀表板中統一追蹤合規狀態。舉例：Microsoft 內建的「啟用 Azure 資訊安全中心監控」Initiative 就是由多條 Policy Definition 組成的方案。"
+  },
+  {
+    type: "單選題",
+    topic: "Audit vs Deny Effect",
+    scene: null,
+    q: "Azure Policy 中 Audit 與 Deny 兩種 Effect 的最主要差異是什麼？",
+    opts: [
+      "Audit 會阻擋不符合規則的資源建立請求；Deny 只記錄違規不會阻擋",
+      "Audit 將不符合規則的資源標記為 Non-compliant 並記錄，但不阻擋資源建立；Deny 直接阻止 ARM 請求，不符合規則的資源無法建立",
+      "Audit 和 Deny 效果完全相同，只差在違規通知的方式",
+      "Audit 是免費功能；Deny 需要額外付費才能使用"
+    ],
+    a: 1,
+    exp: "Audit vs Deny 是 AZ-900 考場最重要的分水嶺：Audit（稽核）—不符合規則 → 記錄為 Non-compliant，但資源仍可建立，適合「先盤點後治理」的導入階段；Deny（拒絕）—不符合規則 → 阻止 ARM 請求，資源根本無法建立，適合規範已成熟、不能允許例外的安全邊界。其他 Effect 還包括 Modify（自動修正屬性，如補 Tag）與 DeployIfNotExists（若缺少相依資源則自動部署）。"
+  }
 ];
+
 let current=0,score=0,skipped=0,answered,shuffled;
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
