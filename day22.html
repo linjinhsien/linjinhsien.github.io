@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AZ-900 Day 22 Quiz – Microsoft Entra ID &amp; Conditional Access</title>
+<title>AZ-900 Day 22 — Microsoft Entra ID &amp; Conditional Access</title>
 <style>
 :root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -67,16 +67,16 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <header>
   <div class="day-badge">DAY 22</div>
   <h1>Microsoft Entra ID &amp; Conditional Access</h1>
-  <p>身分驗證・授權・SSO・MFA・Zero Trust 條件式存取</p>
+  <p>身分是新的安全邊界：Authentication、Authorization、SSO、MFA、Conditional Access</p>
   <nav class="nav-links">
-    <a class="nav-link" href="day21.html">← day21.html</a>
-    <a class="nav-link" href="day23.html">day23.html →</a>
+    <a class="nav-link" href="day21.html">← Day 21</a>
+    <a class="nav-link" href="day23.html">Day 23 →</a>
   </nav>
 </header>
 
 <div class="progress-wrap">
   <div class="progress-label">
-    <span id="progressText">題目 1 / 10</span>
+    <span id="progressText">題目 1 / 12</span>
     <span id="scoreText">得分：0</span>
   </div>
   <div class="progress-bar-track">
@@ -89,7 +89,7 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
   <div class="qtype-badge" id="qtypeBadge"></div>
   <div class="scenario-box" id="scenarioBox" style="display:none">
     <div class="scene-label">情境</div>
-    <span id="scenarioText"></span>
+    <div id="scenarioText"></div>
   </div>
   <div class="question-text" id="questionText"></div>
   <div class="options" id="optionsContainer"></div>
@@ -103,84 +103,112 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <script>
 const QUESTIONS = [
   {
-    type:"觀念判斷",topic:"Authentication vs Authorization",
-    scene:"Titan 科技的員工成功登入 Azure Portal（帳號密碼正確），但無法修改任何正式環境的資源。",
-    q:"這個問題出在哪個環節？",
-    opts:["Authentication（驗證）失敗","Authorization（授權）不足","需要重建 Entra ID Tenant","Resource Group 被刪除"],
-    a:1,
-    exp:"帳密正確且成功登入代表 Authentication 已通過。無法修改資源代表缺少足夠的 RBAC 角色權限，屬於 Authorization（授權）不足。Authentication 失敗的話使用者根本無法登入，連 Portal 首頁都看不到。"
+    type: "單選題",
+    topic: "Authentication vs Authorization",
+    scene: "Titan 科技的員工成功登入 Azure Portal（帳號密碼正確），但無法修改任何正式環境的資源。",
+    q: "這個問題出在哪個環節？",
+    opts: ["Authentication（驗證）失敗", "Authorization（授權）不足", "需要重建 Entra ID Tenant", "Resource Group 被刪除"],
+    a: 1,
+    exp: "「帳密正確、成功登入」= Authentication 已通過。「無法修改資源」= 缺少足夠的 RBAC 角色權限，即 Authorization 不足。若 Authentication 失敗，使用者根本無法看到 Portal 首頁。"
   },
   {
-    type:"場景推理",topic:"Conditional Access",
-    scene:"Titan 科技要確保管理員從公司網路以外的位置登入 Azure Portal 時，系統自動要求 MFA。",
-    q:"應使用什麼機制？",
-    opts:["Azure Policy","Conditional Access Policy","Network Security Group（NSG）","Azure Advisor"],
-    a:1,
-    exp:"Conditional Access 是 Microsoft 的 Zero Trust 策略引擎，根據使用者群組、IP 位置、裝置狀態等訊號動態決策。Azure Policy 管資源合規；NSG 做網路層流量過濾，無法根據身分情境動態升級驗證要求；Advisor 提供最佳化建議，不做存取控制。"
+    type: "單選題",
+    topic: "Conditional Access",
+    scene: "Titan 科技要確保管理員從公司網路以外的位置登入 Azure Portal 時，系統自動要求 MFA。",
+    q: "應使用什麼機制？",
+    opts: ["Azure Policy", "Conditional Access Policy", "Network Security Group (NSG)", "Azure Advisor"],
+    a: 1,
+    exp: "Conditional Access 是 Zero Trust 策略引擎，根據使用者、位置、裝置、風險等訊號動態決策。Azure Policy 管資源合規；NSG 是網路層流量過濾，無法根據身分做動態驗證升級；Advisor 提供最佳化建議，不是身分控制工具。"
   },
   {
-    type:"服務選型",topic:"Entra Domain Services vs Entra ID",
-    scene:"Titan 科技有一批舊系統必須使用 LDAP 繫結與 Kerberos 驗證，但不想在 Azure VM 上自行部署與維護網域控制器。",
-    q:"應使用什麼服務？",
-    opts:["Microsoft Entra ID","Microsoft Entra Domain Services","Azure Key Vault","Azure Virtual Network"],
-    a:1,
-    exp:"Entra Domain Services 提供受控傳統網域服務（LDAP、Kerberos、NTLM、Group Policy、domain join），由 Microsoft 部署與維護 DC，無需客戶自建。Entra ID 是雲端原生現代身分服務（OAuth 2.0 / OIDC / SAML），不直接提供 LDAP 繫結或 Kerberos 驗證，這是最常見的名稱陷阱。"
+    type: "單選題",
+    topic: "Entra Domain Services",
+    scene: "Titan 科技有一批舊系統必須使用 LDAP 繫結與 Kerberos 驗證，但不想在 Azure VM 上自行部署與維護網域控制器。",
+    q: "應使用什麼服務？",
+    opts: ["Microsoft Entra ID", "Microsoft Entra Domain Services", "Azure Key Vault", "Azure Virtual Network"],
+    a: 1,
+    exp: "Microsoft Entra Domain Services 提供受控傳統網域服務（LDAP、Kerberos、NTLM、Group Policy、domain join），由 Microsoft 部署與維護 DC。Entra ID 是現代雲端身分服務，使用 OAuth 2.0/OIDC/SAML，不直接提供 LDAP 或 Kerberos。"
   },
   {
-    type:"觀念判斷",topic:"Single Sign-On（SSO）",
-    scene:"Titan 科技希望員工只需登入一次就能存取 Microsoft 365、Azure Portal 與自訂的內部 SaaS 應用。",
-    q:"這種做法稱為？",
-    opts:["Multi-Factor Authentication（MFA）","Single Sign-On（SSO）","Role-Based Access Control（RBAC）","Azure Policy"],
-    a:1,
-    exp:"SSO（單一登入）讓使用者驗證一次即可存取所有已整合的應用程式，降低密碼疲勞與弱密碼重用風險。MFA 是增加驗證強度；RBAC 是授權機制，控制能做什麼；Azure Policy 管資源合規。"
+    type: "單選題",
+    topic: "Single Sign-On (SSO)",
+    scene: "Titan 科技希望員工只需登入一次就能存取 Microsoft 365、Azure Portal 與自訂的內部 SaaS 應用。",
+    q: "這種做法稱為？",
+    opts: ["Multi-Factor Authentication (MFA)", "Single Sign-On (SSO)", "Role-Based Access Control (RBAC)", "Azure Policy"],
+    a: 1,
+    exp: "SSO（單一登入）讓使用者驗證一次即可存取所有已整合的應用程式，降低密碼疲勞與弱密碼重用。MFA 是加強驗證強度；RBAC 是授權機制；Azure Policy 管資源合規。"
   },
   {
-    type:"觀念判斷",topic:"MFA 驗證因素分類",
-    scene:"Titan 科技為管理員啟用 MFA。",
-    q:"以下哪一組是 MFA 的兩個有效驗證因素（屬於不同類別）？",
-    opts:["密碼 + 安全問題","密碼 + 手機驗證碼","兩組不同的密碼","使用者名稱 + Email 地址"],
-    a:1,
-    exp:"MFA 要求兩個不同類別的因素：你知道的（密碼）+ 你擁有的（手機驗證碼）。密碼與安全問題都屬於「你知道的」同一類別；兩組密碼也是同一類別；使用者名稱與 Email 不是獨立的驗證因素。"
+    type: "單選題",
+    topic: "MFA 驗證因素分類",
+    scene: "Titan 科技為管理員啟用 MFA。",
+    q: "以下哪一組是 MFA 的兩個有效驗證因素？",
+    opts: ["密碼＋安全問題", "密碼＋手機驗證碼", "兩組不同的密碼", "使用者名稱＋Email 地址"],
+    a: 1,
+    exp: "MFA 要求兩個不同類別的因素：你知道的（密碼）＋你擁有的（手機驗證碼）。密碼與安全問題都是「你知道的」，屬於同一類別；兩組密碼亦同；使用者名稱不是驗證因素。"
   },
   {
-    type:"架構設計",topic:"Tenant 與 Subscription 的關係",
-    scene:"Titan 科技有一個 Microsoft Entra ID 租用戶，三個部門各需要獨立的計費。",
-    q:"正確做法是？",
-    opts:["為每個部門建立一個 Tenant","在同一個 Tenant 下建立三個 Subscriptions","建立三個 Resource Groups 來區分帳單","使用 Azure Advisor 分割費用"],
-    a:1,
-    exp:"Subscription 是 Azure 的計費與管理邊界，一個 Tenant（身分目錄）下可有多個 Subscriptions。為每個部門建立 Tenant 會讓身分管理碎片化，跨部門協作困難；Resource Group 不是計費邊界；Advisor 提供建議，不分割費用。"
+    type: "單選題",
+    topic: "Tenant 與 Subscription",
+    scene: "Titan 科技有一個 Microsoft Entra ID 租用戶和三個部門，每個部門需要獨立的計費。",
+    q: "正確做法是？",
+    opts: ["為每個部門建立一個 Tenant", "在同一個 Tenant 下建立三個 Subscriptions", "建立三個 Resource Groups 來區分帳單", "使用 Azure Advisor 分割費用"],
+    a: 1,
+    exp: "Subscription 是計費邊界，一個 Tenant 下可有多個 Subscriptions。拆成三個 Tenant 會讓身分管理碎片化且跨部門協作困難。Resource Group 不是計費邊界；Advisor 提供最佳化建議，不做計費分割。"
   },
   {
-    type:"觀念判斷",topic:"Passwordless 驗證",
-    scene:"Titan 科技要從根本降低密碼洩漏風險。",
-    q:"以下哪種做法最有效？",
-    opts:["要求每 30 天更換一次密碼","採用 Passwordless 驗證（FIDO2 / Windows Hello）","把密碼長度加到 32 字元","用 Azure Blob Storage 加密儲存所有密碼"],
-    a:1,
-    exp:"Passwordless 從根本移除密碼，攻擊者無密碼可竊。頻繁更換密碼反而促使使用者選弱密碼；加長密碼增加記憶負擔但不消除洩漏風險；Blob Storage 是物件儲存，不是密碼管理工具（密碼管理應用 Azure Key Vault）。"
+    type: "單選題",
+    topic: "Passwordless 驗證",
+    scene: "Titan 科技要從根本降低密碼洩漏風險。",
+    q: "以下哪種做法最有效？",
+    opts: ["要求每 30 天更換一次密碼", "採用 Passwordless 驗證（FIDO2 / Windows Hello）", "把密碼長度加到 32 字元", "用 Azure Blob Storage 加密儲存所有密碼"],
+    a: 1,
+    exp: "Passwordless 驗證從根本移除密碼，攻擊者無密碼可竊。頻繁更換密碼反而促使使用者選弱密碼；加長密碼不消除洩漏風險；Blob Storage 是物件儲存，不是密碼管理工具。"
   },
   {
-    type:"服務選型",topic:"外部身分管理",
-    scene:"Titan 科技要讓合作夥伴使用他們自己的 Google 帳號登入 Titan 的 Azure 資源，不需要為他們建立新帳號。",
-    q:"應使用什麼功能？",
-    opts:["Microsoft Entra External ID","Azure Key Vault","Azure ExpressRoute","Azure Managed Disks"],
-    a:0,
-    exp:"Entra External ID 支援外部合作夥伴使用自己的身分識別（Google、Facebook、其他企業 Entra ID）直接登入，無需在 Titan 的 Tenant 建立新帳號。Key Vault 管祕密；ExpressRoute 做私有網路連線；Managed Disks 是 VM 磁碟。"
+    type: "單選題",
+    topic: "外部身分存取",
+    scene: "Titan 科技要讓合作夥伴使用他們自己的 Google 帳號登入 Titan 的 Azure 資源，不需要為他們建立新帳號。",
+    q: "應使用什麼功能？",
+    opts: ["Microsoft Entra External ID", "Azure Key Vault", "Azure ExpressRoute", "Azure Managed Disks"],
+    a: 0,
+    exp: "Microsoft Entra External ID 支援外部身分（B2B/B2C）整合，合作夥伴可用自己的 Google、Facebook 或企業帳號登入，不需在 Titan 的 Tenant 建立新帳號。Key Vault 管祕密；ExpressRoute 做私有連線；Managed Disks 是 VM 磁碟。"
   },
   {
-    type:"觀念判斷",topic:"Conditional Access 觸發時間點",
-    scene:null,
-    q:"Conditional Access Policy 在身分驗證流程的哪個時間點觸發？",
-    opts:["在使用者輸入密碼前（替代密碼驗證）","在第一因素驗證通過後（動態評估訊號）","在 Azure RBAC 角色指派完成後","在建立新 Subscription 時自動套用"],
-    a:1,
-    exp:"Conditional Access 在第一因素驗證（帳號密碼）通過後才觸發，根據使用者、位置、裝置、風險等訊號動態決策（允許 / 要求 MFA / 封鎖）。它不是取代密碼的防線，而是根據登入情境動態升級安全要求的策略引擎。"
+    type: "單選題",
+    topic: "Entra ID 協定特性",
+    scene: null,
+    q: "以下關於 Microsoft Entra ID 的描述，哪一項正確？",
+    opts: ["Entra ID 直接支援 LDAP 繫結與 Kerberos 驗證", "Entra ID 使用 OAuth 2.0、OpenID Connect 和 SAML 等現代協定", "Entra ID 需要客戶自行部署網域控制器", "Entra ID 只適用於企業本地端環境"],
+    a: 1,
+    exp: "Microsoft Entra ID 是雲端原生身分服務，使用現代驗證協定（OAuth 2.0、OpenID Connect、SAML）。需要 LDAP/Kerberos 的舊系統應選 Entra Domain Services。Entra ID 完全由 Microsoft 管理，客戶不需部署 DC；且為雲端服務，非本地端。"
   },
   {
-    type:"觀念判斷",topic:"Microsoft Entra ID 定位",
-    scene:null,
-    q:"Microsoft Entra ID（原 Azure Active Directory）的主要功能是什麼？",
-    opts:["提供 VM 的 OS 修補與自動更新","提供雲端身分驗證、SSO 與存取管理","管理 Azure 訂用帳戶的計費與資源配額","部署 Azure 虛擬網路與子網路路由"],
-    a:1,
-    exp:"Microsoft Entra ID 是 Microsoft 的雲端身分與存取管理服務（IAM），提供使用者/群組管理、SSO、MFA、Conditional Access 等功能（對標 AWS IAM + IAM Identity Center）。它不負責 VM OS 管理（App Service 負責 PaaS OS）、帳單（Subscription 負責）或網路基礎設施（VNet 負責）。"
+    type: "單選題",
+    topic: "Tenant 與 Subscription 關係",
+    scene: null,
+    q: "關於 Microsoft Entra ID Tenant（租用戶）與 Subscription（訂用帳戶）的關係，以下哪項描述正確？",
+    opts: ["一個 Subscription 可包含多個 Tenants", "一個 Tenant 只能包含一個 Subscription", "一個 Tenant 可包含多個 Subscriptions", "Tenant 和 Subscription 是相同的概念"],
+    a: 2,
+    exp: "一個 Tenant 可包含多個 Subscriptions（計費邊界），但一個 Subscription 只屬於一個 Tenant。Tenant 管身分目錄，Subscription 管資源與帳單，兩者層次不同不可混淆。"
+  },
+  {
+    type: "單選題",
+    topic: "Conditional Access 觸發時機",
+    scene: null,
+    q: "Microsoft Conditional Access（條件式存取）在驗證流程的哪個階段觸發？",
+    opts: ["在使用者輸入帳號之前", "在第一因素驗證（密碼）之後", "在 RBAC 授權之後", "在資源被實際存取之後"],
+    a: 1,
+    exp: "Conditional Access 在第一因素驗證（密碼登入）之後觸發——它不是取代密碼的防線，而是根據登入情境（使用者、位置、裝置、風險）動態升級安全要求（允許 / 要求 MFA / 封鎖）。"
+  },
+  {
+    type: "單選題",
+    topic: "Zero Trust 身分原則",
+    scene: null,
+    q: "Microsoft Zero Trust 架構中，「身分是新的安全邊界」主要是指什麼概念？",
+    opts: ["只需要防火牆保護網路邊界即可", "無論來自何處，都需驗證身分並根據情境動態授與最小存取權限", "所有員工預設有完整存取所有資源的權限", "網路邊界比身分驗證更重要"],
+    a: 1,
+    exp: "Zero Trust 的核心原則是「永不信任，始終驗證（Never Trust, Always Verify）」。雲端環境中使用者從任何裝置、任何地點存取資源，傳統網路邊界已模糊。身分驗證加上 Conditional Access 的動態決策才是第一道防線。"
   }
 ];
 
@@ -215,10 +243,10 @@ function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
 function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
 function showResults(){
   const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  const nextDayHtml="day23.html";
   document.getElementById("progressFill").style.width="100%";
   document.getElementById("progressText").textContent="全部完成";
   document.getElementById("scoreText").textContent="得分："+score;
-  const nextDayHtml="day23.html";
   document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
 }
 startQuiz();
