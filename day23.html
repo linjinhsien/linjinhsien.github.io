@@ -67,11 +67,11 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <header>
   <div class="day-badge">DAY 23</div>
   <h1>RBAC 角色型存取控制</h1>
-  <p>Azure Role-Based Access Control — AZ-900 練習題庫</p>
-  <div class="nav-links">
-    <a class="nav-link" href="day22.html">← day22.html</a>
-    <a class="nav-link" href="day24.html">day24.html →</a>
-  </div>
+  <p>Azure Role-Based Access Control | Security Principal · Role Definition · Scope</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day22.html">← Day 22</a>
+    <a class="nav-link" href="day24.html">Day 24 →</a>
+  </nav>
 </header>
 
 <div class="progress-wrap">
@@ -101,109 +101,172 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <script>
 const QUESTIONS = [
   {
-    type: "單選題",
-    topic: "內建角色 — Owner vs Contributor",
-    scene: "Titan 科技的系統管理員希望授權給維運主管 Alice，讓她可以建立 Resource Group 並管理其中的 VM，同時 Alice 還需要能夠將小組成員納入該 Resource Group 的存取清單中。",
-    q: "應給予 Alice 哪種內建角色？",
-    opts: ["A. Reader", "B. Contributor", "C. Owner", "D. Management Group Contributor"],
+    type: "角色選擇題",
+    topic: "Owner vs Contributor",
+    scene: "Titan 科技的系統管理員希望授權給維運主管 Alice，讓她可以建立 Resource Group 並管理其中的 VM，同時 Alice 還需要能夠將小組成員加入該 Resource Group 的存取清單中。",
+    q: "應給予 Alice 哪種 Azure 內建角色？",
+    opts: [
+      "Reader（讀取者）",
+      "Contributor（參與者）",
+      "Owner（所有者）",
+      "User Access Administrator"
+    ],
     a: 2,
-    exp: "Owner 同時擁有資源管理（建立/修改/刪除）與權限管理（指派角色）的能力。Contributor 可管理資源，但無法指派權限給他人；Reader 僅能讀取；Management Group Contributor 管理的是管理群組，不符合此需求。"
+    exp: "Owner 是唯一同時擁有「管理資源（建立/修改/刪除）」與「指派權限給他人（Microsoft.Authorization/*）」能力的內建角色。Contributor 雖可管理 VM，但無法將成員加入存取清單；Reader 僅能讀取；User Access Administrator 只能管理權限但無法建立 VM。"
   },
   {
-    type: "單選題",
-    topic: "Scope 權限繼承",
+    type: "Scope 繼承題",
+    topic: "RBAC 權限繼承",
     scene: "Titan 科技在 Azure 上有一個名為 Sub-Production 的訂用帳戶。資安主管在 Sub-Production 範圍將工程師 Bob 指派為 Reader 角色。",
     q: "Bob 對該訂用帳戶內名為 RG-Data 的資源群組擁有什麼權限？",
-    opts: ["A. 完全沒有權限，必須在 RG-Data 重新指派", "B. 自動繼承 Reader 權限，可檢視 RG-Data 內的所有資源", "C. 自動升級為 Contributor 權限", "D. 只能檢視 RG-Data 本身，無法檢視內部資源"],
+    opts: [
+      "完全沒有權限，必須在 RG-Data 重新指派",
+      "自動繼承 Reader 權限，可檢視 RG-Data 內所有資源",
+      "自動升級為 Contributor 權限",
+      "只能檢視 RG-Data 本身，無法檢視內部資源"
+    ],
     a: 1,
-    exp: "Azure RBAC 遵循父層向子層自動向下繼承原則。在 Subscription 範圍設定的角色會自動貫穿至底下所有 Resource Group 與 Resource，不需要重複指派。"
+    exp: "Azure RBAC 遵循父層向子層自動繼承原則。在 Subscription 設定的 Reader 角色，會自動向下貫穿至底下所有 Resource Group 與 Resource，不需要重複指派。"
   },
   {
-    type: "單選題",
-    topic: "Managed Identity 自動化身分",
+    type: "Managed Identity 題",
+    topic: "Security Principal 自動化身分",
     scene: "Titan 的開發生態系需要讓運行在 Azure VM 上的 Python 程式自動存取 Azure Key Vault 讀取金鑰。",
-    q: "為符合資安最佳實務，應使用何種身分方式？",
-    opts: ["A. 將管理員帳號密碼寫死在 Python 程式碼中", "B. 啟用 VM 的受控身分 (Managed Identity)，並於 Key Vault 授予該身分 RBAC 角色", "C. 為該程式建立一個具備 Owner 權限的使用者帳號", "D. 關閉 Key Vault 的權限控管"],
+    q: "為符合資安最佳實務，應使用何種身分並搭配 RBAC？",
+    opts: [
+      "將管理員的帳號密碼寫死在 Python 程式碼中",
+      "啟用 VM 的受控身分（Managed Identity），並於 Key Vault 授予該身分 RBAC 角色",
+      "為該程式建立一個具備 Owner 權限的使用者帳號",
+      "關閉 Key Vault 的權限控管"
+    ],
     a: 1,
-    exp: "Managed Identity 是 Azure 資源專用的受控身分，免去在程式碼中寫死 credentials 的風險，符合最小權限與安全最佳實務。硬編碼帳密或指派 Owner 皆嚴重違反安全原則。"
+    exp: "Azure Managed Identity 是專為 Azure 資源設計的身分，免去在程式碼中寫死 credentials 的風險，是資安最佳實務。硬編碼帳密（A）或指派 Owner（C）皆嚴重違反最小權限與安全原則；關閉權限控管（D）更是極度危險。"
   },
   {
-    type: "是非題",
+    type: "Yes / No 題",
     topic: "Deny Assignment 建立限制",
     scene: "Titan 科技的 Subscription Owner 希望手動建立自訂的 Deny Assignment，以明確禁止特定團隊存取核心財務資源。",
-    q: "Subscription Owner 可以手動建立自訂的 Deny Assignment，以明確禁止特定主體存取資源。此敘述是否正確？",
-    opts: ["A. Yes（正確）", "B. No（錯誤）", "C. 部分正確", "D. 資訊不足"],
+    q: "Subscription Owner 可以在 Azure Portal 中手動建立 Deny Assignment 嗎？",
+    opts: [
+      "Yes（正確）",
+      "No（錯誤）",
+      "部分正確",
+      "資訊不足"
+    ],
     a: 1,
-    exp: "Deny Assignment 唯有 Azure 平台與特定受控服務（如 Azure Blueprints / Managed Applications）能自動建立，一般使用者（即便身為 Owner）均無法手動建立。若要阻止建立特定資源，應使用 Azure Policy 的 Deny 效果。"
+    exp: "Deny Assignment 唯有 Azure 平台與特定受控服務（如 Azure Blueprints、Azure Managed Applications）能自動建立，一般使用者（即便身為 Owner）均無法手動建立。若要阻止建立特定資源，應改用 Azure Policy 的 Deny 效果。"
   },
   {
-    type: "單選題",
-    topic: "Azure Policy vs RBAC 職責邊界",
+    type: "RBAC vs Policy 辨別題",
+    topic: "Azure Policy vs Azure RBAC",
     scene: "Titan 科技希望限制所有員工只能在「East US」區域建立資源。",
-    q: "這項地理位置限制規則應該透過哪個工具來實施？",
-    opts: ["A. Azure RBAC，指派特定的 Regional Role", "B. Azure Policy，建立並指派 Allowed Locations 的政策", "C. Entra ID Conditional Access", "D. Resource Lock"],
+    q: "這項規則應透過哪種服務來實施？",
+    opts: [
+      "Azure RBAC，指派特定的 Regional Role",
+      "Azure Policy，建立並指派 Allowed Locations 的政策",
+      "Entra ID Conditional Access",
+      "Resource Lock"
+    ],
     a: 1,
-    exp: "RBAC 管人（誰能做什麼），Policy 管資源（資源長什麼樣子才符合規定）。RBAC 無法限制資源的地理位置或規格大小，這類資源合規性要求必須靠 Azure Policy。"
+    exp: "RBAC 管人（誰能做什麼），Policy 管資源（資源屬性是否合規）。RBAC 無法限制資源的地理位置或規格大小，這類資源合規性要求必須靠 Azure Policy 的 Allowed Locations 政策。"
   },
   {
-    type: "單選題",
-    topic: "RBAC 三要素 — Security Principal",
-    scene: "Titan 科技的 GitHub Actions 工作流程需要在夜間自動關閉不使用的測試 VM 以節省成本。",
-    q: "對於此自動化腳本，Azure RBAC 的「Security Principal（安全性主體）」最佳選擇為何？",
-    opts: ["A. 一般使用者帳號（User Account）", "B. 管理員的個人帳號", "C. 受控身分（Managed Identity）或服務主體（Service Principal）", "D. 安全性群組（Security Group）"],
+    type: "最小權限情境題",
+    topic: "Contributor 角色應用",
+    scene: "Titan 科技新進工程師 Leo 需要負責建立 Azure Kubernetes Service (AKS) 與虛擬網路。CSO 規定：Leo 絕對不能有權限將其他人加進管理員名單。",
+    q: "應在目標 Resource Group 上指派哪個角色給 Leo？",
+    opts: [
+      "Owner（所有者）",
+      "Contributor（參與者）",
+      "User Access Administrator",
+      "Reader（讀取者）"
+    ],
+    a: 1,
+    exp: "Contributor 擁有完全管理資源的能力（建立 AKS/VNet），同時完全不具備 Microsoft.Authorization/* 權限，無法指派角色給他人，完美符合最小權限原則。Owner 讓 Leo 能開權限給別人（不符 CSO 要求）；User Access Admin 只能管理權限但無法建立資源；Reader 只能讀取。"
+  },
+  {
+    type: "概念辨識題",
+    topic: "RBAC 三要素",
+    scene: null,
+    q: "Azure 中一個完整的 Role Assignment（角色指派）由哪三個要素組成？",
+    opts: [
+      "使用者名稱 + 密碼 + MFA 設定",
+      "Security Principal（誰）+ Role Definition（能做什麼）+ Scope（在哪生效）",
+      "訂用帳戶 ID + 資源群組名稱 + 資源 ID",
+      "政策名稱 + 政策效果 + 政策範圍"
+    ],
+    a: 1,
+    exp: "Azure RBAC 將「授給誰（Security Principal）」、「能做什麼（Role Definition）」與「在哪生效（Scope）」三個維度完全解耦。Scope 階層由上至下為：Management Group → Subscription → Resource Group → Resource，且上層權限自動向下繼承。"
+  },
+  {
+    type: "角色限制辨識題",
+    topic: "User Access Administrator 限制",
+    scene: null,
+    q: "下列哪一項是 User Access Administrator 角色「無法」執行的操作？",
+    opts: [
+      "將某個使用者指派為 Contributor 角色",
+      "在 Subscription 為某群組新增 Reader 角色",
+      "建立一台 Azure Virtual Machine",
+      "移除某人的 Owner 角色"
+    ],
     a: 2,
-    exp: "自動化腳本與服務應使用 Managed Identity 或 Service Principal 作為安全性主體，而非使用人類帳號。Managed Identity 尤佳，因為不需要管理密碼或金鑰。"
+    exp: "User Access Administrator 專司管理使用者存取權限（Microsoft.Authorization/*），可以為他人指派或移除任何角色。但它完全無法管理實際的 Azure 資源（如 VM、Storage），所以無法建立 Virtual Machine。"
   },
   {
-    type: "單選題",
-    topic: "User Access Administrator 角色職責",
-    q: "下列關於 User Access Administrator 內建角色的描述，何者正確？",
-    opts: ["A. 可建立與刪除所有 Azure 資源，且可指派權限", "B. 僅能讀取 Azure 資源，無法進行任何修改", "C. 專門管理使用者存取權限，但無法建立 VM 或修改實際資源", "D. 等同 Owner 但限縮在特定 Resource Group"],
-    a: 2,
-    exp: "User Access Administrator 專司權限指派（Microsoft.Authorization/*），無法建立 VM、Storage 等實際資源。Owner 才同時擁有資源管理與權限管理能力。"
-  },
-  {
-    type: "單選題",
-    topic: "最小權限 — 工程師角色選擇",
-    scene: "Titan 科技的新進工程師 Leo 需要負責建立 Azure Kubernetes Service (AKS) 與虛擬網路，但 CSO 規定 Leo 絕對不能有權限把其他人加進管理員名單。",
-    q: "應在目標 Resource Group 上為 Leo 指派哪個角色？",
-    opts: ["A. 在 Resource Group 範圍指派 Owner 角色", "B. 在 Resource Group 範圍指派 Contributor 角色", "C. 在 Subscription 範圍指派 User Access Administrator 角色", "D. 在 Resource 範圍指派 Reader 角色"],
-    a: 1,
-    exp: "Contributor 擁有完全管理資源（建立、修改、刪除 VM、VNet、AKS）的能力，同時完全不具備權限管理能力，無法指派角色給他人，完美符合 CSO 要求與最小權限原則。"
-  },
-  {
-    type: "單選題",
-    topic: "RBAC Scope 四層階層",
-    q: "Azure RBAC 的 Scope（存取範圍）層級由上至下正確排列為何？",
-    opts: ["A. Resource → Resource Group → Subscription → Management Group", "B. Management Group → Subscription → Resource Group → Resource", "C. Subscription → Management Group → Resource Group → Resource", "D. Resource Group → Subscription → Resource → Management Group"],
-    a: 1,
-    exp: "Azure RBAC Scope 正確層級：Management Group（最上層）→ Subscription → Resource Group → Resource（最細粒度）。權限從上層向下自動繼承。"
-  },
-  {
-    type: "單選題",
-    topic: "AWS 雙雲對照 — 角色對應",
-    q: "AWS PowerUserAccess 策略與 Azure 哪個內建角色最對應？兩者的共同特點是什麼？",
-    opts: ["A. Owner，兩者皆可管理資源且可管理 IAM/權限", "B. Contributor，兩者皆可管理資源但不能管理 IAM/權限", "C. Reader，兩者皆為唯讀", "D. User Access Administrator，兩者專司權限管理"],
-    a: 1,
-    exp: "AWS PowerUserAccess = Azure Contributor（能管資源、不能管 IAM/權限）；AWS AdministratorAccess = Azure Owner（資源與權限雙管）。這是 AZ-900 跨雲考點的高頻對照。"
-  },
-  {
-    type: "單選題",
-    topic: "自訂角色 (Custom Roles) 使用時機",
-    scene: "Titan 科技的特定工程師只能重啟 VM，但不能刪除 VM 或變更網路設定。現有內建角色無法滿足此細緻需求。",
+    type: "自訂角色情境題",
+    topic: "Custom Roles",
+    scene: "Titan 科技的資安要求：特定工程師只能重啟 VM，但不能刪除 VM 或變更網路設定。現有所有內建角色均無法精確符合此需求。",
     q: "應採用哪種解決方案？",
-    opts: ["A. 同時指派 Contributor 與 Reader 角色，透過優先順序控制", "B. 使用 Azure 自訂角色 (Custom Roles)，選取特定 Actions 與 NotActions", "C. 指派 Owner 角色，再透過 Azure Policy 補充限制", "D. 在 Subscription 層指派 Reader，在 VM 層指派 Owner"],
-    a: 1,
-    exp: "自訂角色 (Custom Roles) 允許架構師自行挑選 Actions 與 NotActions 組合成專屬角色。當內建角色無法符合特定業務需求時，應使用自訂角色。"
+    opts: [
+      "指派 Owner 角色，並口頭告知工程師不要刪除 VM",
+      "同時指派 Contributor 與 Reader 兩個角色",
+      "建立 Azure Custom Role（自訂角色），精確定義允許的 Actions 與 NotActions",
+      "使用 Azure Policy 限制 VM 操作"
+    ],
+    a: 2,
+    exp: "當內建角色無法符合團隊特定權限需求時，Azure Custom Roles（自訂角色）允許架構師自行挑選 Actions 與 NotActions 組合成專屬角色，可使用 Azure Portal、PowerShell、CLI 或 ARM 範本定義。"
   },
   {
-    type: "單選題",
-    topic: "跨 Subscription RBAC 授權",
-    scene: "Titan 科技訂用帳戶 A 的 VM 需要存取訂用帳戶 B 的 Storage Account 中的資料。",
-    q: "符合 Azure 安全最佳實踐的設計方式為何？",
-    opts: ["A. 複製 Storage Account Key 並寫在 VM 設定檔中", "B. 啟用 VM 的 Managed Identity，並在訂用帳戶 B 的 Storage Account 上對該 Managed Identity 進行 RBAC 角色指派", "C. 在 Entra ID 建立一個全局 Owner 帳號", "D. 無法跨 Subscription 授權"],
+    type: "跨訂用帳戶情境題",
+    topic: "Managed Identity 跨 Subscription",
+    scene: "Titan 科技的訂用帳戶 A 中有一台 VM，需要存取訂用帳戶 B 的 Storage Account 讀取 Blob 資料。",
+    q: "符合資安最佳實務的設計方案是？",
+    opts: [
+      "複製 Storage Account Key 並寫在 VM 設定檔中",
+      "啟用 VM 的 Managed Identity，並在訂用帳戶 B 的 Storage Account 直接對該 Managed Identity 進行 RBAC 角色指派",
+      "在 Entra ID 建立一個全局 Owner 帳號供 VM 使用",
+      "Azure RBAC 無法跨訂用帳戶授權"
+    ],
     a: 1,
-    exp: "Azure RBAC 的 Scope 具備高度彈性。Managed Identity 屬於 Entra ID 租戶層級，可以被直接指派給同租戶下任何 Subscription 的任何資源，無需像 AWS 一樣編寫複雜的跨帳號 Trust Policy。"
+    exp: "Azure RBAC 的 Scope 具備高度彈性。Managed Identity 屬於 Entra ID 租戶層級，可被直接指派給同租戶下任何 Subscription 的任何資源，無需硬編碼金鑰，符合最小權限與零密碼管理原則。"
+  },
+  {
+    type: "雙雲對照題",
+    topic: "AWS vs Azure 角色對照",
+    scene: null,
+    q: "AWS IAM 的 PowerUserAccess 策略（可完全管理資源但無 IAM 管理權限）與 Azure 哪個內建角色最接近？",
+    opts: [
+      "Owner（所有者）",
+      "Reader（讀取者）",
+      "Contributor（參與者）",
+      "User Access Administrator"
+    ],
+    a: 2,
+    exp: "雙雲對照口訣：AWS PowerUserAccess = Azure Contributor（能管資源、不能管權限）；AWS AdministratorAccess = Azure Owner（資源與權限雙管）。Contributor 是最常用的工程師角色，無 Microsoft.Authorization/* 能力。"
+  },
+  {
+    type: "Deny Assignment 概念題",
+    topic: "Deny Assignment 建立者",
+    scene: null,
+    q: "在 Azure RBAC 中，Deny Assignment（拒絕指派）通常由哪種方式建立？",
+    opts: [
+      "任何具有 Owner 角色的使用者均可在 Azure Portal 手動建立",
+      "透過 ARM Template 的 notActions 欄位手動定義即可生效",
+      "由 Azure 系統服務（如 Azure Blueprints、Managed Applications）自動建立",
+      "透過 Azure Policy 的 Deny 效果自動轉換為 Deny Assignment"
+    ],
+    a: 2,
+    exp: "Deny Assignment 無法由一般使用者（包括 Owner）手動建立，它主要由 Azure Blueprints 或 Azure Managed Applications 等平台級服務自動建立，用來防止使用者誤刪全套合規資源。若需阻止特定資源操作，應使用 Azure Policy 的 Deny 效果（與 Deny Assignment 為不同機制）。"
   }
 ];
 
