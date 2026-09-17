@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 情境題練習</title>
+  <style>
+    :root {
+      --azure: #0078d4;
+      --azure-dark: #005a9e;
+      --azure-light: #d0e8f8;
+      --correct: #107c10;
+      --correct-bg: #dff6dd;
+      --wrong: #c50f1f;
+      --wrong-bg: #fde7e9;
+      --neutral: #605e5c;
+      --bg: #f3f2f1;
+      --card: #ffffff;
+      --text: #201f1e;
+      --border: #d2d0ce;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 760px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--azure);
+      letter-spacing: -0.3px;
+    }
+
+    header p {
+      color: var(--neutral);
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    .nav-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--azure);
+      text-decoration: none;
+      border: 1px solid var(--azure);
+      border-radius: var(--radius);
+      padding: 4px 12px;
+    }
+    .nav-link:hover { background: var(--azure-light); }
+
+    .progress-wrap {
+      width: 100%;
+      max-width: 760px;
+      margin-bottom: 20px;
+      margin-top: 16px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--neutral);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-track {
+      background: var(--border);
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--azure);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 760px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .question-meta {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--azure);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .scenario-box {
+      background: #f0f6fc;
+      border-left: 4px solid var(--azure);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: #1a1a1a;
+    }
+
+    .scenario-box .scene-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--azure-dark);
+      margin-bottom: 6px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: #faf9f8;
+      cursor: pointer;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      width: 100%;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--azure);
+      background: var(--azure-light);
+    }
+
+    .option-btn .letter {
+      min-width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.78rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .option-btn:hover:not(:disabled) .letter {
+      border-color: var(--azure);
+      color: var(--azure);
+    }
+
+    .option-btn.correct {
+      border-color: var(--correct);
+      background: var(--correct-bg);
+    }
+
+    .option-btn.correct .letter {
+      background: var(--correct);
+      border-color: var(--correct);
+      color: #fff;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--wrong);
+      background: var(--wrong-bg);
+    }
+
+    .option-btn.wrong .letter {
+      background: var(--wrong);
+      border-color: var(--wrong);
+      color: #fff;
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    .explanation {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: #fffbe6;
+      border-left: 4px solid #f9c53b;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text);
+      display: none;
+    }
+
+    .explanation strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #7a5700;
+    }
+
+    .explanation.visible { display: block; }
+
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary { background: var(--azure); color: #fff; }
+    .btn-primary:hover { background: var(--azure-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--azure);
+      border: 2px solid var(--azure);
+    }
+    .btn-secondary:hover { background: var(--azure-light); }
+
+    .results {
+      text-align: center;
+      padding: 40px 32px;
+    }
+
+    .score-ring {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .score-ring.pass {
+      background: var(--correct-bg);
+      border: 5px solid var(--correct);
+      color: var(--correct);
+    }
+
+    .score-ring.fail {
+      background: var(--wrong-bg);
+      border: 5px solid var(--wrong);
+      color: var(--wrong);
+    }
+
+    .score-ring .pct { font-size: 2rem; line-height: 1; }
+    .score-ring .label { font-size: 0.75rem; margin-top: 2px; }
+
+    .results h2 { font-size: 1.4rem; margin-bottom: 8px; }
+
+    .results .subtitle {
+      color: var(--neutral);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      min-width: 100px;
+    }
+
+    .stat-box .num { font-size: 1.5rem; font-weight: 700; }
+    .stat-box .desc { font-size: 0.78rem; color: var(--neutral); margin-top: 2px; }
+    .stat-box.green .num { color: var(--correct); }
+    .stat-box.red .num { color: var(--wrong); }
+
+    .disclaimer {
+      font-size: 0.75rem;
+      color: var(--neutral);
+      margin-top: 16px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 500px) {
+      .card { padding: 20px 16px; }
+      header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>AZ-900 情境題練習</h1>
+  <p>Microsoft Azure Fundamentals &mdash; 25 道情境式選擇題</p>
+  <a class="nav-link" href="index.html">← 回到標準練習題</a>
+</header>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 25</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta">題目 1 &bull; 雲端概念</div>
+  <div class="scenario-box" id="scenarioBox">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    topic: "雲端概念",
+    scene: "Contoso 是一家中小型製造業公司，目前所有 IT 系統都自行建置於公司機房。IT 部門每季都要花大量時間採購伺服器、安裝硬體，並在業務量突增時苦於沒有足夠的計算資源。",
+    q: "哪一項雲端特性最能解決 Contoso 在業務量突增時資源不足的問題？",
+    opts: ["高可用性（High Availability）", "彈性（Elasticity）", "地理冗餘（Geo-redundancy）", "服務層級協議（SLA）"],
+    a: 1,
+    exp: "彈性（Elasticity）是指根據需求自動擴大或縮小計算資源的能力。當業務量突增時，雲端可自動增加資源；需求下降後再縮回，只需為實際使用量付費，完全解決了傳統機房資源不足的困境。"
+  },
+  {
+    topic: "雲端概念",
+    scene: "Fabrikam 正在評估是否將資料中心遷移至 Azure。財務長希望了解，遷移後 IT 支出的性質會有什麼改變，以及這對公司財務報表有何影響。",
+    q: "將基礎架構從自建機房遷移至 Azure 後，IT 支出模式會如何轉變？",
+    opts: ["從營運支出（OpEx）轉為資本支出（CapEx）", "從資本支出（CapEx）轉為營運支出（OpEx）", "CapEx 與 OpEx 同時增加", "IT 支出性質不變，只是總金額降低"],
+    a: 1,
+    exp: "傳統自建機房需要大量前期資本支出（CapEx）購買硬體設備。遷移至 Azure 後，改為依使用量付費的訂閱模式，屬於營運支出（OpEx）。OpEx 可立即於當期費用認列，改善現金流，且不需折舊攤提。"
+  },
+  {
+    topic: "雲端概念",
+    scene: "Adventure Works 是一家全球性零售商。他們希望同時利用現有機房投資（尤其是已折舊完畢的設備），又能在需求高峰（如雙十一購物季）時使用公有雲的彈性資源。",
+    q: "哪種雲端部署模型最符合 Adventure Works 的需求？",
+    opts: ["公有雲", "私有雲", "混合雲", "社群雲"],
+    a: 2,
+    exp: "混合雲（Hybrid Cloud）結合了地端私有雲與公有雲，讓組織能同時保留現有的機房投資，並在需要時彈性使用公有雲資源。Adventure Works 可將日常工作負載留在地端，尖峰時段再「爆發」至 Azure，最大化資源利用效率。"
+  },
+  {
+    topic: "Azure 架構",
+    scene: "Tailwind Traders 正在 Azure 上部署一個電商網站。架構師要求這個網站即使在單一資料中心發生全面故障（例如電力中斷或冷卻系統失效）時，仍必須保持正常運作。",
+    q: "應使用哪個 Azure 功能將虛擬機器部署至不同的實體隔離設施，以抵禦單一資料中心故障？",
+    opts: ["Azure 區域配對（Region Pairs）", "可用性區域（Availability Zones）", "可用性集合（Availability Sets）", "Azure Front Door"],
+    a: 1,
+    exp: "可用性區域（Availability Zones）是 Azure 區域內實體分隔的資料中心，各自擁有獨立的電力、冷卻和網路。將 VM 分散部署至不同的 AZ，即可在單一資料中心完全故障時維持服務，可達 99.99% 的 SLA。"
+  },
+  {
+    topic: "Azure 架構",
+    scene: "一家跨國企業擁有 8 個 Azure 訂閱，分別給不同的事業單位使用。IT 治理部門希望在所有訂閱上統一套用「所有資源必須加上 CostCenter 標籤」的規則，而不需要逐一到每個訂閱設定。",
+    q: "哪個 Azure 功能可在多個訂閱之上提供統一的治理範圍，讓政策和存取控制向下套用至所有子訂閱？",
+    opts: ["資源群組（Resource Groups）", "管理群組（Management Groups）", "Azure 藍圖（Azure Blueprints）", "Azure 原則（Azure Policy）"],
+    a: 1,
+    exp: "管理群組（Management Groups）是訂閱之上的治理範圍。您可以將多個訂閱組織在管理群組下，在管理群組層級指派 Azure 原則和 RBAC，這些設定會自動繼承到其下所有的訂閱和資源群組，大幅降低跨訂閱治理的管理負擔。"
+  },
+  {
+    topic: "Azure 計算",
+    scene: "Litware 是一家新創公司，開發了一個 Python Web API。他們希望快速上線，不想花時間管理虛擬機器的作業系統更新、修補程式或擴展設定；只想專注在程式碼本身。",
+    q: "哪個 Azure 服務最適合 Litware 部署他們的 Python Web API，且無需管理基礎 VM？",
+    opts: ["Azure 虛擬機器（Azure Virtual Machines）", "Azure Kubernetes Service (AKS)", "Azure App Service", "Azure Batch"],
+    a: 2,
+    exp: "Azure App Service 是 PaaS 服務，支援 Python、Node.js、.NET 等多種語言。Microsoft 負責管理底層 VM、OS 修補與自動縮放，開發人員只需部署程式碼。對於希望快速上線且不想管理基礎架構的新創公司而言是最佳選擇。"
+  },
+  {
+    topic: "Azure 計算",
+    scene: "每天午夜，Northwind 的系統需要掃描資料庫中所有訂單，產生日報表，通常只需執行 3 到 5 分鐘。這個任務在其他時間完全不需要任何計算資源。",
+    q: "哪個 Azure 服務最適合執行這種短時間、事件觸發的自動化任務，且只在執行期間產生費用？",
+    opts: ["Azure 虛擬機器（7×24 運行）", "Azure App Service（基本方案）", "Azure Functions（消費方案）", "Azure Container Instances（持續運行）"],
+    a: 2,
+    exp: "Azure Functions 消費方案（Consumption Plan）是無伺服器（Serverless）計算，程式碼只在觸發時執行，執行完畢後資源立即釋放。計費以「執行次數 × 執行時間 × 記憶體用量」計算，對於每天只跑幾分鐘的排程任務，成本極低。"
+  },
+  {
+    topic: "Azure 計算",
+    scene: "Best For You Organics 需要批次處理數十萬張影像的縮圖轉換工作。這些工作高度平行、計算密集，且任務之間相互獨立。他們希望能使用數百台 VM 同時處理，完成後自動釋放資源。",
+    q: "哪個 Azure 服務專門設計用於大規模平行批次計算工作負載？",
+    opts: ["Azure App Service", "Azure Functions", "Azure Batch", "Azure Container Instances"],
+    a: 2,
+    exp: "Azure Batch 可以排程並管理大規模的平行計算工作。您定義工作和任務，Batch 自動佈建數百到數千台 VM 並行處理，完成後自動清除資源。非常適合影像轉換、財務模擬、基因組分析等高平行化批次工作。"
+  },
+  {
+    topic: "Azure 儲存",
+    scene: "Wide World Importers 正在建立一個媒體平台，需要儲存數 TB 的使用者上傳影片、圖片和 PDF 文件。這些是非結構化資料，需要透過 HTTP/HTTPS 提供給全球使用者存取。",
+    q: "哪個 Azure 儲存服務最適合儲存大量非結構化的媒體檔案？",
+    opts: ["Azure SQL Database", "Azure Queue Storage", "Azure Blob Storage", "Azure File Storage"],
+    a: 2,
+    exp: "Azure Blob Storage 是專為非結構化資料（影片、圖片、文件、備份）設計的物件儲存服務，可儲存任意大小的資料，支援 HTTP/HTTPS 直接存取，有「熱」、「冷」、「封存」等存取層級可依成本需求選擇，非常適合媒體平台使用。"
+  },
+  {
+    topic: "Azure 儲存",
+    scene: "一家金融機構將交易記錄儲存在 Azure Blob Storage。他們的合規部門要求：即使某個 Azure 資料中心發生完全故障，資料仍必須可以被讀取。但他們也擔心整個 Azure 區域（例如東亞）發生災難性事件。",
+    q: "哪種儲存冗餘選項最能滿足這家金融機構「跨資料中心 + 跨區域」的資料保護需求？",
+    opts: ["本地備援儲存 (LRS)", "區域備援儲存 (ZRS)", "異地備援儲存 (GRS)", "讀取存取異地備援儲存 (RA-GRS)"],
+    a: 3,
+    exp: "RA-GRS 在主要區域的 3 個 AZ 間複製資料（保護資料中心故障），同時非同步複製到次要區域（保護整個區域災難）。相比 GRS，RA-GRS 還允許從次要區域唯讀存取，在主要區域故障時仍可讀取資料，最符合這家金融機構的需求。"
+  },
+  {
+    topic: "Azure 網路",
+    scene: "Adatum Corporation 在台北有自己的資料中心，他們計劃遷移部分工作負載至 Azure，但有些敏感的財務系統必須留在地端。他們需要確保地端系統與 Azure 上的系統之間能安全互通，且連線不透過公共網際網路，要求低延遲和穩定頻寬。",
+    q: "哪個 Azure 服務提供私有的專線連線，不透過公共網際網路連接地端和 Azure？",
+    opts: ["Azure VPN Gateway (Site-to-Site VPN)", "Azure Application Gateway", "Azure ExpressRoute", "Azure Traffic Manager"],
+    a: 2,
+    exp: "Azure ExpressRoute 透過電信業者提供的私有連線，將地端網路連至 Azure，完全不經過公共網際網路。相比 VPN Gateway，ExpressRoute 提供更低的延遲、更高的頻寬可靠性，以及更強的安全性，適合需要穩定高速專線的金融和企業客戶。"
+  },
+  {
+    topic: "Azure 網路",
+    scene: "Contoso 將電商網站部署在 Azure 的 3 台虛擬機器上。他們希望當使用者流量進來時，能均勻分配到這 3 台 VM，並在某台 VM 故障時自動將流量導向其他健康的 VM。",
+    q: "哪個 Azure 服務在網路層（Layer 4）將傳入流量分散至多個後端 VM？",
+    opts: ["Azure Traffic Manager", "Azure Load Balancer", "Azure Application Gateway", "Azure Front Door"],
+    a: 1,
+    exp: "Azure Load Balancer 在 Layer 4（TCP/UDP）運作，透過健康狀態探測自動偵測後端 VM 的狀態，並將傳入流量均勻分散至健康的 VM。它是 Azure 內部負載平衡的基礎服務，支援 VM 和 VM 擴展集（VMSS）。"
+  },
+  {
+    topic: "Azure 資料庫",
+    scene: "Relecloud 正在開發一個社交遊戲平台，需要儲存玩家資料、遊戲狀態和排行榜。他們的用戶遍布全球各地，要求無論玩家在哪個洲，讀寫延遲都必須在 10 毫秒以內，且資料庫本身必須能在全球多個區域提供服務。",
+    q: "哪個 Azure 資料庫服務最適合這個需要全球分散、低延遲的應用場景？",
+    opts: ["Azure SQL Database", "Azure Database for MySQL", "Azure Cosmos DB", "Azure Table Storage"],
+    a: 2,
+    exp: "Azure Cosmos DB 是 Microsoft 的全球分散式多模型 NoSQL 資料庫，可自動在全球多個 Azure 區域複製資料，保證 99 百分位數讀寫延遲低於 10 毫秒。它支援多種 API（SQL、MongoDB、Cassandra 等），非常適合需要全球低延遲的遊戲平台。"
+  },
+  {
+    topic: "Azure 資料庫",
+    scene: "Woodgrove Bank 有一個十年以上的核心系統，以 SQL Server 2016 撰寫，使用了大量 T-SQL 語法、預存程序和觸發器。他們計劃遷移到 Azure，但希望應用程式的修改量降到最低。",
+    q: "哪個 Azure 服務與 SQL Server 相容性最高，可讓 Woodgrove Bank 以最少的程式碼修改完成遷移？",
+    opts: ["Azure Cosmos DB", "Azure SQL Database", "Azure Database for PostgreSQL", "Azure Synapse Analytics"],
+    a: 1,
+    exp: "Azure SQL Database 是基於最新穩定版 SQL Server 引擎的完全受控 PaaS 服務，對 T-SQL、預存程序、觸發器和現有 SQL Server 功能有極高的相容性。大多數 SQL Server 應用程式可以在幾乎不修改程式碼的情況下遷移。"
+  },
+  {
+    topic: "身分識別與安全",
+    scene: "Contoso 剛併購了一家小公司，需要讓被併購公司的員工也能以單一登入（SSO）存取 Contoso 的 Microsoft 365 和 Azure 資源，而不需要為他們建立新帳號。",
+    q: "哪個 Azure 服務處理身分識別驗證、支援 SSO，並能與外部組織建立信任關係（B2B 協作）？",
+    opts: ["Azure Key Vault", "Microsoft Entra ID（原 Azure Active Directory）", "Azure Multi-Factor Authentication（單獨服務）", "Azure Firewall"],
+    a: 1,
+    exp: "Microsoft Entra ID（原 Azure AD）是 Microsoft 的雲端身分識別和存取管理服務。它支援單一登入（SSO）、多因素驗證（MFA），並透過 B2B（企業對企業）協作功能，允許外部合作夥伴或被併購公司的用戶以其現有身分存取您的資源，無需另建帳號。"
+  },
+  {
+    topic: "身分識別與安全",
+    scene: "Fourth Coffee 的 Azure 環境中有一台生產環境的虛擬機器，儲存了關鍵業務資料。有幾次，工程師不小心刪除了測試環境的資源，公司擔心這台重要的生產 VM 也會遭到意外刪除。",
+    q: "哪個 Azure 功能可以防止資源被意外刪除，且這個保護對所有用戶有效，即使是具有較高 RBAC 權限的人員也無法繞過？",
+    opts: ["Azure 原則（Azure Policy）", "資源鎖定（Resource Lock）", "Azure RBAC 角色指派", "Azure 藍圖（Blueprints）"],
+    a: 1,
+    exp: "資源鎖定（Resource Lock）可套用「刪除（Delete）」或「唯讀（ReadOnly）」鎖定到資源、資源群組或訂閱。鎖定優先於所有 RBAC 指派，即使是「擁有者（Owner）」也無法刪除已鎖定的資源（除非先移除鎖定）。這是防止意外刪除關鍵資源最直接有效的方式。"
+  },
+  {
+    topic: "身分識別與安全",
+    scene: "Lamna Healthcare 的應用程式需要在程式碼中連接資料庫，過去工程師習慣將資料庫連線字串和 API 金鑰直接寫在設定檔中，或以環境變數傳遞。安全團隊希望有一個集中管理的地方存放這些機密資訊，且只有獲授權的應用程式才能讀取。",
+    q: "哪個 Azure 服務可以集中且安全地儲存和管理機密（secrets）、金鑰（keys）和憑證（certificates）？",
+    opts: ["Azure Blob Storage（以私人容器儲存）", "Azure Key Vault", "Microsoft Defender for Cloud", "Azure Active Directory"],
+    a: 1,
+    exp: "Azure Key Vault 是專為安全儲存機密設計的服務，可集中管理 API 金鑰、資料庫連線字串、密碼和 TLS/SSL 憑證。透過 Managed Identity，應用程式無需在程式碼中存放任何憑據即可存取 Key Vault，大幅降低憑據外洩的風險。"
+  },
+  {
+    topic: "身分識別與安全",
+    scene: "一家電商公司的安全主管希望在一個集中的儀表板上看到所有 Azure 工作負載的安全狀態，了解哪些資源設定不夠安全，並收到優先處理的安全建議，以提升整體安全分數。",
+    q: "哪個 Azure 服務提供統一的安全態勢管理，顯示「安全分數」和可行動的安全建議？",
+    opts: ["Azure Monitor", "Microsoft Sentinel", "Microsoft Defender for Cloud", "Azure Advisor"],
+    a: 2,
+    exp: "Microsoft Defender for Cloud（原 Azure Security Center）提供統一的雲端安全態勢管理（CSPM），持續評估資源設定，給予每個訂閱一個「安全分數（Secure Score）」，並提供優先排序的安全建議和威脅保護。它能跨 Azure、地端和多雲環境提供可見性。"
+  },
+  {
+    topic: "Azure 管理",
+    scene: "Contoso 的 IT 管理員注意到每個月的 Azure 帳單不斷增加，但不清楚是哪些資源造成成本上升，也不知道哪些虛擬機器規格被過度佈建。他們希望有個服務能自動分析並提供省錢建議。",
+    q: "哪個 Azure 服務可以分析資源使用狀況，並提供包括成本優化在內的個人化建議？",
+    opts: ["Azure 成本管理（Azure Cost Management）", "Azure 定價計算機", "Azure Advisor", "Azure 監視器（Azure Monitor）"],
+    a: 2,
+    exp: "Azure Advisor 分析您的 Azure 資源設定和使用遙測，在五個面向提供個人化建議：成本（關閉閒置 VM、調整過大的 SKU）、安全性、可靠性、卓越營運和效能。對成本優化特別有用，可直接顯示預估的節省金額。"
+  },
+  {
+    topic: "Azure 管理",
+    scene: "Fabrikam 的 IT 治理部門要求所有新建立的 Azure 資源都必須附有 Environment 標籤（值為 dev/test/prod），且所有 VM 必須使用特定的 SKU 清單。他們希望這些規則能自動強制執行，不允許不符合規定的資源被建立。",
+    q: "哪個 Azure 功能可以定義並強制執行組織規則，防止不符合規定的資源被建立或修改？",
+    opts: ["Azure RBAC", "資源鎖定（Resource Locks）", "Azure 原則（Azure Policy）", "管理群組（Management Groups）"],
+    a: 2,
+    exp: "Azure Policy 可定義規則（稱為「原則定義」）來評估資源是否符合組織標準。透過「DeployIfNotExists」或「Deny」效果，可以自動拒絕不符合規定的資源建立，也可以自動補救（如自動加上標籤）。原則可套用至管理群組、訂閱或資源群組層級。"
+  },
+  {
+    topic: "Azure 管理",
+    scene: "Tailwind Traders 的財務長正在考慮是否值得將地端的老舊伺服器（100 台 Windows Server、50 台資料庫伺服器）遷移至 Azure。她希望有個工具能計算遷移後五年內的總持有成本（包含節省的電費、硬體維護費、IT 人員薪資）與地端成本的比較。",
+    q: "哪個工具可以幫助比較地端基礎架構和 Azure 的長期總持有成本（TCO）？",
+    opts: ["Azure 定價計算機（Pricing Calculator）", "Azure Advisor", "Azure 總持有成本計算機（TCO Calculator）", "Azure 成本管理（Cost Management）"],
+    a: 2,
+    exp: "Azure TCO Calculator 專門設計用來估算從地端遷移到 Azure 的成本節省。您輸入現有的地端基礎架構規格（伺服器、資料庫、儲存、網路），工具會計算包含硬體、軟體授權、電費、機房設施和 IT 人員在內的五年總持有成本對比，協助做出遷移決策。"
+  },
+  {
+    topic: "合規與 SLA",
+    scene: "Alpine Ski House 的 CTO 正在與法務部門討論 Azure SLA。他們想知道，如果將 Azure 虛擬機器部署在兩個以上的可用性區域（Availability Zones），Microsoft 承諾的最低正常運作時間百分比是多少？",
+    q: "跨多個可用性區域部署的 Azure VM，其 SLA 保證的最低正常運作時間百分比為何？",
+    opts: ["99.9%（每月最多約 43.8 分鐘停機）", "99.95%（每月最多約 21.9 分鐘停機）", "99.99%（每月最多約 4.4 分鐘停機）", "100%（零停機保證）"],
+    a: 2,
+    exp: "將 VM 部署到兩個或更多可用性區域，Azure 提供 99.99% 的連線 SLA，每月最多約 4.4 分鐘允許停機。若只在單一可用性集合（Availability Set）中部署多台 VM，SLA 為 99.95%；單一 VM 搭配進階 SSD，SLA 為 99.9%。"
+  },
+  {
+    topic: "雲端服務模型",
+    scene: "一家新創公司希望快速建立一個 CRM（客戶關係管理）系統，但沒有開發資源。他們直接採用 Microsoft 提供的 Dynamics 365 服務，透過瀏覽器即可使用，完全不需要安裝任何軟體，也不需要管理任何底層基礎架構或平台。",
+    q: "Dynamics 365 屬於哪種雲端服務模型？",
+    opts: ["基礎架構即服務（IaaS）", "平台即服務（PaaS）", "軟體即服務（SaaS）", "函數即服務（FaaS）"],
+    a: 2,
+    exp: "SaaS（軟體即服務）代表 Microsoft 管理一切，包括基礎架構、平台和應用程式本身。使用者只需透過瀏覽器或薄用戶端存取軟體即可，無需安裝、維護或更新。Dynamics 365、Microsoft 365（Office）、Salesforce 都是 SaaS 的典型例子。"
+  },
+  {
+    topic: "雲端服務模型",
+    scene: "Relecloud 的開發團隊需要一個環境來部署他們的 .NET 6 Web 應用程式，並使用 Azure SQL Database。他們不想管理作業系統或伺服器，但希望能控制應用程式框架版本和部署設定。",
+    q: "Relecloud 開發的這個情境最符合哪種雲端服務模型？",
+    opts: ["IaaS（開發團隊管理 VM 和 OS）", "PaaS（平台管理底層基礎架構，開發團隊管理應用程式）", "SaaS（所有內容由供應商管理）", "FaaS（只執行獨立函數）"],
+    a: 1,
+    exp: "PaaS（平台即服務）讓開發人員專注在應用程式和資料，而不必管理 OS 修補、伺服器硬體或網路基礎架構。Azure App Service + Azure SQL Database 是典型的 PaaS 組合，開發者控制應用程式框架和程式碼，Azure 管理底層的一切。"
+  },
+  {
+    topic: "Azure 架構",
+    scene: "Contoso 正在評估如何提高其 Azure 中關鍵業務應用程式的可靠性。他們的架構師提到了「區域配對（Region Pairs）」。CTO 希望了解這個概念對業務連續性的具體意義。",
+    q: "Azure 區域配對（Region Pairs）的主要業務連續性優勢是什麼？",
+    opts: ["減少跨區域資料傳輸費用", "允許在同一虛擬網路中合併兩個區域的資源", "在一個區域發生大規模故障時，配對區域可提供備援，且 Microsoft 確保不會同時更新兩個配對區域", "提供比可用性區域更低的網路延遲"],
+    a: 2,
+    exp: "每個 Azure 區域都與同一地理位置的另一個區域配對（例如東亞與東南亞）。區域配對的優勢包括：(1) 大規模 Azure 更新不會同時部署到配對的兩個區域，降低因更新導致同時停機的風險；(2) 區域性災難（如颱風、地震）影響範圍通常不會同時波及兩個配對區域；(3) 某些服務（如 GRS）自動複製到配對區域。"
+  }
+];
+
+let current = 0;
+let score = 0;
+let skipped = 0;
+let answered = new Array(QUESTIONS.length).fill(null);
+let shuffled = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  shuffled = shuffle(QUESTIONS.map((_, i) => i));
+  current = 0;
+  score = 0;
+  skipped = 0;
+  answered = new Array(QUESTIONS.length).fill(null);
+  document.getElementById('progressWrap').style.display = '';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const total = QUESTIONS.length;
+  const qi = shuffled[current];
+  const q = QUESTIONS[qi];
+
+  document.getElementById('progressText').textContent = `題目 ${current + 1} / ${total}`;
+  document.getElementById('scoreText').textContent = `得分：${score}`;
+  document.getElementById('progressFill').style.width = `${(current / total) * 100}%`;
+  document.getElementById('questionMeta').innerHTML = `題目 ${current + 1} &bull; ${q.topic}`;
+  document.getElementById('scenarioText').textContent = q.scene;
+  document.getElementById('questionText').textContent = q.q;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    container.appendChild(btn);
+  });
+
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('skipBtn').style.display = '';
+}
+
+function selectAnswer(idx) {
+  const qi = shuffled[current];
+  const q = QUESTIONS[qi];
+  const buttons = document.querySelectorAll('.option-btn');
+
+  buttons.forEach(btn => btn.disabled = true);
+
+  const isCorrect = idx === q.a;
+  if (isCorrect) score++;
+  answered[current] = idx;
+
+  buttons[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) buttons[q.a].classList.add('correct');
+
+  const exp = document.getElementById('explanation');
+  exp.innerHTML = `<strong>${isCorrect ? '✓ 答對了！' : '✗ 答錯了'}</strong>${q.exp}`;
+  exp.className = 'explanation visible';
+
+  document.getElementById('nextBtn').style.display = '';
+  document.getElementById('skipBtn').style.display = 'none';
+  document.getElementById('scoreText').textContent = `得分：${score}`;
+}
+
+function skipQuestion() {
+  skipped++;
+  answered[current] = -1;
+  nextQuestion();
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= QUESTIONS.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  const total = QUESTIONS.length;
+  const pct = Math.round((score / total) * 100);
+  const pass = pct >= 70;
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = '全部完成';
+  document.getElementById('scoreText').textContent = `得分：${score}`;
+
+  const card = document.getElementById('quizCard');
+  card.innerHTML = `
+    <div class="results">
+      <div class="score-ring ${pass ? 'pass' : 'fail'}">
+        <span class="pct">${pct}%</span>
+        <span class="label">${pass ? '通過' : '未通過'}</span>
+      </div>
+      <h2>${pass ? '太棒了！' : '繼續加油！'}</h2>
+      <p class="subtitle">${pass ? '您對 Azure 情境題有很好的掌握！' : '建議複習 Azure Fundamentals 學習路徑後再試一次。'}</p>
+      <div class="stats">
+        <div class="stat-box green">
+          <div class="num">${score}</div>
+          <div class="desc">答對</div>
+        </div>
+        <div class="stat-box red">
+          <div class="num">${total - score - skipped}</div>
+          <div class="desc">答錯</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">${skipped}</div>
+          <div class="desc">略過</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">${total}</div>
+          <div class="desc">總題數</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startQuiz()">再練一次</button>
+        <a class="btn btn-secondary" href="index.html" style="text-decoration:none;">回標準題型</a>
+      </div>
+      <p class="disclaimer">AZ-900 及格分數約 700/1000（約 70%）。題目每次隨機排序。本題庫僅供練習參考。</p>
+    </div>
+  `;
+}
+
+startQuiz();
+</script>
+</body>
+</html>
