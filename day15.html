@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 15 — Blob Storage &amp; Tiers</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <span class="day-badge">DAY 15</span>
+  <h1>Blob Storage &amp; Tiers</h1>
+  <p>Storage Account → Container → Blob、Hot/Cool/Cold/Archive、備援策略 LRS/ZRS/GRS/GZRS</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day14.html">← DAY 14</a>
+    <a class="nav-link" href="day16.html">DAY 16 →</a>
+  </nav>
+</header>
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 13</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <span class="qtype-badge" id="qtypeBadge"></span>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Access Tier",
+    scene: "Titan 科技將一批仍可能被查詢、但平常很少讀取的備份放入 Blob Storage。CTO 要求資料仍能立即取回，並接受比 Hot 高的讀取費。",
+    q: "應選哪一個 Access Tier？",
+    opts: ["A. Hot", "B. Cool", "C. Archive", "D. Page Blob"],
+    a: 1,
+    exp: "Cool 是 online tier，可立即讀取但儲存費低於 Hot。Archive 是 offline tier，讀取前需要先 rehydrate（可能要數小時）。Page Blob 是 Blob 類型而非 Access Tier。"
+  },
+  {
+    type: "單選題",
+    topic: "Cold Tier 與早期刪除費",
+    scene: "Titan 把很少存取但仍需快速取回的資料放在 Cold tier，並計劃在 60 天後刪除這批資料。",
+    q: "架構師應如何評估這個計劃的成本影響？",
+    opts: [
+      "A. 沒有額外影響，Cold 沒有最低保存期",
+      "B. 60 天後刪除會觸發剩餘 30 天的按比例早期刪除費",
+      "C. Cold 必須先 rehydrate 才能讀取",
+      "D. Cold 只能搭配 GZRS 備援"
+    ],
+    a: 1,
+    exp: "Cold tier 的最低保存期是 90 天；在第 60 天刪除，可能按剩餘 30 天計算早期刪除費。Cold 仍是 online tier，不需要 rehydrate。Cold 與備援類型無強制關聯。"
+  },
+  {
+    type: "單選題",
+    topic: "Archive Rehydration",
+    scene: "Titan 將舊稽核資料放入 Archive tier。事故發生時，工程師直接執行下載，卻無法取得 Blob 內容。",
+    q: "正確的下一步是什麼？",
+    opts: [
+      "A. 直接讀取 Archive，它只是容量較便宜的 Hot",
+      "B. 用 Set Blob Tier 或 Copy Blob 取回到 Hot、Cool 或 Cold",
+      "C. 將 Storage Account 改成 ZRS，資料就會自動可讀",
+      "D. 只要讀取 metadata 就能取得完整內容"
+    ],
+    a: 1,
+    exp: "Archive 是 offline tier，資料本體不可直接讀寫；必須先用 Set Blob Tier 或 Copy Blob 執行 rehydration，把資料帶回 Hot、Cool 或 Cold 等 online tier。改變備援類型（ZRS）不會讓 offline 資料變為可讀。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Files vs Blob",
+    scene: "Titan 要讓多台 Windows 工作站掛載共享路徑來讀取影像檔。",
+    q: "哪一項 Azure 資源最符合需求？",
+    opts: [
+      "A. Azure SQL Database",
+      "B. Virtual machine data disk",
+      "C. Files service in a Storage Account",
+      "D. Blobs service in a Storage Account"
+    ],
+    a: 2,
+    exp: "Azure Files 提供可由 Windows 掛載的雲端檔案共用（SMB）。Blob 是物件儲存，無法直接當成 SMB 網路磁碟掛載。Azure SQL 是關聯式資料庫，VM data disk 是區塊裝置，兩者都不符合多工作站共用掛載的需求。"
+  },
+  {
+    type: "單選題",
+    topic: "ZRS 備援範圍",
+    scene: "CTO 啟用跨 Availability Zone 的資料複本（ZRS）。",
+    q: "ZRS（Zone-Redundant Storage）主要防禦哪一種故障？",
+    opts: [
+      "A. 單一實體伺服器故障",
+      "B. 整個 Azure Region 故障",
+      "C. 儲存體服務軟體故障",
+      "D. 單一資料中心（Zone）故障"
+    ],
+    a: 3,
+    exp: "ZRS 在主要 Region 內跨至少三個 Availability Zones 同步複寫，主要防禦單一 Zone 或資料中心故障。它不等於跨 Region 災備，Region 整體失效時仍需要 GRS/GZRS。"
+  },
+  {
+    type: "單選題",
+    topic: "備援策略選型",
+    scene: "Titan 科技醫療影像平台：最近 30 天診斷影像需立即查詢；五年稽核原檔依法保存，平常幾乎不讀，稽核事件時需取回。CTO 要求主要 Region Zone 故障不中斷寫入，Region 災難時有異地副本。",
+    q: "哪個方案最符合需求？",
+    opts: [
+      "A. 所有 Blob 放 Hot + LRS，單一設定最容易維護",
+      "B. 影像用 ZRS 帳戶（Hot tier）；歸檔用 GRS 帳戶（Archive tier）",
+      "C. 所有 Blob 放 Archive + GZRS，最省費用且防 Zone 與 Region 故障",
+      "D. 最近影像用 Cold + LRS；稽核檔用 Cool + ZRS"
+    ],
+    a: 1,
+    exp: "方案 B 正確：影像帳戶 ZRS 可防 Zone 故障；Archive tier + GRS 帳戶適合長期保存稽核資料。Archive 目前只支援 LRS、GRS、RA-GRS，不支援 GZRS（C 錯）。LRS 無法抵禦整個資料中心災害（A 錯）。Cold 不適合長期歸檔（D 錯）。"
+  },
+  {
+    type: "單選題",
+    topic: "Archive Tier 最低保存期",
+    scene: null,
+    q: "Archive tier 的最低保存期是多少天？提前刪除或換層可能產生早期刪除費。",
+    opts: ["A. 30 天", "B. 90 天", "C. 180 天", "D. 365 天"],
+    a: 2,
+    exp: "Archive tier 的最低保存期是 180 天。Cool 是 30 天，Cold 是 90 天。在最低保存期前刪除、覆寫或換層，可能按剩餘天數比例計算早期刪除費。速記：Cool/Cold/Archive = 30/90/180 天。"
+  },
+  {
+    type: "單選題",
+    topic: "RA-GRS",
+    scene: null,
+    q: "RA-GRS 相較於 GRS，額外提供什麼功能？",
+    opts: [
+      "A. 更快的跨 Region 同步速度",
+      "B. 次要 Region 端點的唯讀存取",
+      "C. 主要 Region 內更多 Zone 的複本",
+      "D. 更高的 IOPS 與吞吐量上限"
+    ],
+    a: 1,
+    exp: "RA-GRS（Read-Access GRS）在 GRS 的跨 Region 非同步複寫基礎上，額外提供次要端點的唯讀存取（RA = Read-Access）。讀取次要端的資料可能尚未追上主要端（eventual consistency），不是即時一致。"
+  },
+  {
+    type: "單選題",
+    topic: "Cool Tier 最低保存期",
+    scene: null,
+    q: "Cool tier 的最低保存期是多少天？提前刪除可能有早期刪除費。",
+    opts: ["A. 7 天", "B. 30 天", "C. 90 天", "D. 180 天"],
+    a: 1,
+    exp: "Cool tier 的最低保存期是 30 天。提前刪除、覆寫或換層可能觸發按剩餘天數計算的早期刪除費。三個有最低保存期的層級：Cool=30天、Cold=90天、Archive=180天。"
+  },
+  {
+    type: "單選題",
+    topic: "Archive Tier 特性",
+    scene: null,
+    q: "下列關於 Archive tier 的描述，哪一項正確？",
+    opts: [
+      "A. Archive 是 online tier，可立即讀寫資料本體",
+      "B. Archive 是 offline tier，讀寫前需要 rehydrate 到線上層",
+      "C. Archive 支援 GZRS 備援類型",
+      "D. Archive 的存取費用低於 Hot tier"
+    ],
+    a: 1,
+    exp: "Archive 是 offline tier，資料本體處於離線狀態；讀寫前必須先執行 rehydration（Set Blob Tier 或 Copy Blob）。Archive 目前只支援 LRS、GRS、RA-GRS，不支援 GZRS。Archive 的儲存費最低，但存取費（取回費）最高。"
+  },
+  {
+    type: "單選題",
+    topic: "LRS 備援範圍",
+    scene: null,
+    q: "LRS（Locally-Redundant Storage）將資料複本放在哪裡？",
+    opts: [
+      "A. 跨多個 Azure Region",
+      "B. 主要 Region 的多個 Availability Zone",
+      "C. 主要 Region 的單一實體資料中心內",
+      "D. 全球多個資料中心"
+    ],
+    a: 2,
+    exp: "LRS 在主要 Region 的單一實體資料中心內維護多份複本，可抵禦磁碟、伺服器、機架故障，但整個資料中心災害可能導致資料全部遺失。成本最低，但故障邊界最小。"
+  },
+  {
+    type: "單選題",
+    topic: "Blob Storage 三層架構",
+    scene: null,
+    q: "下列關於 Azure Blob Storage 三層架構的描述，哪一項正確？",
+    opts: [
+      "A. Container 是備援設定的邊界，Redundancy 設定套用到 Container 層級",
+      "B. Storage Account 是備援設定的邊界，Container 是邏輯群組，Blob 是物件本體",
+      "C. Blob 可以直接掛載為 Windows 網路磁碟（SMB）",
+      "D. 一個 Storage Account 只能放 Blob，不能同時放 Files 或 Queue"
+    ],
+    a: 1,
+    exp: "Storage Account 是管理端點、命名空間、網路與備援的邊界；Container 是 Blob 的邏輯群組與授權範圍；Blob 是實際物件本體。Redundancy 設定在 Storage Account 層級。Blob 不能直接 SMB 掛載（需要 Azure Files）。一般用途 v2 帳戶可同時承載 Blob、Files、Queue、Table。"
+  },
+  {
+    type: "單選題",
+    topic: "Hot Tier 特性",
+    scene: null,
+    q: "下列哪一項最準確描述 Hot tier 的特性？",
+    opts: [
+      "A. 儲存費最低，適合長期封存",
+      "B. 讀取需要 rehydration，延遲可達數小時",
+      "C. 儲存費最高，存取費最低，適合頻繁讀寫",
+      "D. 最低保存期 30 天，提前刪除有早期刪除費"
+    ],
+    a: 2,
+    exp: "Hot tier 的儲存費最高，但存取費最低，適合頻繁讀寫的資料。Hot 是 online tier，可立即讀寫，沒有最低保存期的限制。Archive 才需要 rehydration（B 錯）；Cool 有 30 天最低保存期（D 錯）；Archive 的儲存費最低（A 錯）。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  const nextDayHtml="day16.html";
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("quizCard").innerHTML=
+    "<div class=\"results\">"+
+    "<div class=\"score-ring "+(pass?"pass":"fail")+"\">"+
+    "<span class=\"pct\">"+pct+"%</span>"+
+    "<span class=\"label\">"+(pass?"通過":"未通過")+"</span>"+
+    "</div>"+
+    "<h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2>"+
+    "<p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p>"+
+    "<div class=\"stats\">"+
+    "<div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div>"+
+    "<div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div>"+
+    "<div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div>"+
+    "<div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div>"+
+    "</div>"+
+    "<div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\">"+
+    "<button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button>"+
+    "<a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a>"+
+    "</div>"+
+    "<p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p>"+
+    "</div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
