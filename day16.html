@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 16 — Azure Files &amp; Managed Disks</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <span class="day-badge">DAY 16</span>
+  <h1>Azure Files &amp; Managed Disks</h1>
+  <p>SMB/NFS 檔案共享、磁碟效能層級、IOPS 與吞吐量、快照與備份、AWS EFS/EBS 對照</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day15.html">← DAY 15</a>
+    <a class="nav-link" href="day17.html">DAY 17 →</a>
+  </nav>
+</header>
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <span class="qtype-badge" id="qtypeBadge"></span>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <div id="scenarioText"></div>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Azure Files",
+    scene: "Titan 需要讓多台 Azure VM 同時存取同一組檔案，並希望使用受控服務而不管理自己的檔案伺服器。",
+    q: "應選哪項 Azure 服務？",
+    opts: [
+      "A. Azure Managed Disk",
+      "B. Azure Files",
+      "C. Azure Queue Storage",
+      "D. Azure Table Storage"
+    ],
+    a: 1,
+    exp: "Azure Files 提供可掛載的雲端檔案共用（SMB/NFS），多台 VM 可同時存取同一份資料。Managed Disk 是 VM 的區塊裝置（通常不能多台 VM 共用）；Queue 是訊息佇列；Table 是 NoSQL 儲存，三者都不提供共享目錄與檔案鎖語意。"
+  },
+  {
+    type: "單選題",
+    topic: "Managed Disks 效能選型",
+    scene: "Titan 的資料庫執行個體需要高 IOPS、低延遲的區塊儲存，且不需要多台 VM 共同掛載。",
+    q: "哪項設計最符合需求？",
+    opts: [
+      "A. Azure Files Standard",
+      "B. Azure Queue Storage",
+      "C. Premium SSD 或符合需求的 Ultra Disk",
+      "D. Azure Blob Archive"
+    ],
+    a: 2,
+    exp: "資料庫需要高 IOPS、低延遲的區塊儲存，應選 Managed Disk 的高效能層級（Premium SSD 或 Ultra Disk）。Azure Files 是檔案介面；Queue 沒有磁碟語意；Blob Archive 是低成本封存，無法承載線上交易。"
+  },
+  {
+    type: "單選題",
+    topic: "儲存服務配對",
+    scene: null,
+    q: "下列需求配對哪一項正確？① 多台 VM 透過 SMB 掛載共同目錄　② VM 的 OS 可開機區塊磁碟　③ 長期保存大量非結構化物件",
+    opts: [
+      "A. ①Azure Files；②Managed Disk；③Blob Storage",
+      "B. ①Managed Disk；②Azure Files；③Queue Storage",
+      "C. ①Blob Storage；②Queue Storage；③Managed Disk",
+      "D. ①Azure SQL；②Blob Storage；③Azure Files"
+    ],
+    a: 0,
+    exp: "① SMB 掛載共同目錄→Azure Files；② 可開機 OS 磁碟→Managed Disk；③ 非結構化物件→Blob Storage。SMB 掛載與可開機磁碟的抽象層完全不同，不可互換。這是 AZ-900 常見的三選一配對陷阱。"
+  },
+  {
+    type: "單選題",
+    topic: "Disk Snapshot",
+    scene: "Titan 希望在部署前保留 Managed Disk 的某一時間點複本，日後用來建立測試磁碟。",
+    q: "應使用哪項功能？",
+    opts: [
+      "A. Disk snapshot",
+      "B. Network Security Group",
+      "C. Virtual Network peering",
+      "D. Azure DNS"
+    ],
+    a: 0,
+    exp: "Disk snapshot 是磁碟在某一時間點的複本，可用來建立新磁碟或還原測試環境。NSG 控制流量、Peering 處理網路互連、DNS 處理名稱解析，均無法複製區塊資料。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Files 協定",
+    scene: "Titan 的 Windows Server 應用程式要把 Azure 上的 file share 掛載為網路磁碟。",
+    q: "哪項協定最符合一般 Windows 檔案共享需求？",
+    opts: [
+      "A. SMB",
+      "B. SMTP",
+      "C. ICMP",
+      "D. BGP"
+    ],
+    a: 0,
+    exp: "SMB（Server Message Block）是 Windows 常見的網路檔案共享協定。Azure Files 支援 SMB 3.x，可由 Windows 掛載為網路磁碟（TCP 445）。SMTP 是郵件協定、ICMP 是診斷封包、BGP 是路由協定，均不提供檔案系統介面。"
+  },
+  {
+    type: "單選題",
+    topic: "共享儲存綜合選型",
+    scene: "Titan 的訂單平台：六台 Windows VM 要把 PDF 報表寫入共享目錄；後端 SQL VM 需要低延遲隨機 I/O。",
+    q: "哪個設計方案最符合需求？",
+    opts: [
+      "A. 建立 Azure Files file share 給報表；SQL VM 使用獨立 Premium SSD 或 Ultra Disk，資料與 OS 分離",
+      "B. 把同一顆 Managed Disk 同時附掛到六台 VM，用 OS 本機帳號控制權限",
+      "C. 全部放 Standard HDD，靠增加 VM CPU 解決儲存延遲",
+      "D. 使用 Azure Files，但用公用端點與共享金鑰存取，以單一快照代替跨區 DR"
+    ],
+    a: 0,
+    exp: "方案 A 正確：Azure Files 提供共享目錄與檔案鎖語意；Premium SSD/Ultra Disk 提供 SQL 所需的低延遲區塊 I/O；OS 與資料分離降低 Blast Radius。Managed Disk 不能當作一般多主機共享（B 錯）；增加 CPU 不能提高磁碟 IOPS（C 錯）；公用端點與共享金鑰是安全風險，單一快照無法替代跨區 DR（D 錯）。"
+  },
+  {
+    type: "單選題",
+    topic: "Ultra Disk / Premium SSD v2 限制",
+    scene: null,
+    q: "關於 Azure Managed Disk 的使用限制，下列哪一項正確？",
+    opts: [
+      "A. Ultra Disk 可用作 OS disk，讓 VM 開機速度更快",
+      "B. Premium SSD v2 與 Ultra Disk 僅能作為 Data Disk，不支援 OS disk（不能開機）",
+      "C. Standard HDD 無法用作 OS disk",
+      "D. Premium SSD 不支援 VM 作業系統開機"
+    ],
+    a: 1,
+    exp: "Premium SSD v2 與 Ultra Disk 僅能作為 Data Disk，不支援 OS disk（不能開機）。OS Disk 可使用 Standard HDD、Standard SSD 與 Premium SSD。Ultra Disk 雖然效能最高，但受此限制，架構設計時需注意。"
+  },
+  {
+    type: "單選題",
+    topic: "AWS 對照",
+    scene: null,
+    q: "Azure Files 與 Managed Disks 分別對應哪些 AWS 服務（方向性對照）？",
+    opts: [
+      "A. Azure Files → Amazon S3；Managed Disks → Amazon EFS",
+      "B. Azure Files → Amazon EFS；Managed Disks → Amazon EBS",
+      "C. Azure Files → Amazon EBS；Managed Disks → Amazon S3",
+      "D. Azure Files → Amazon RDS；Managed Disks → Amazon EFS"
+    ],
+    a: 1,
+    exp: "Azure Files 對應 Amazon EFS（都是受控檔案介面）；Managed Disks 對應 Amazon EBS（都是 VM 的區塊儲存）。但這是方向性對照，協定（SMB vs NFS）、網路整合、SKU 與計費各有不同，不能直接一對一替換。"
+  },
+  {
+    type: "單選題",
+    topic: "IOPS vs 吞吐量",
+    scene: null,
+    q: "下列哪一種工作負載最可能受 IOPS（每秒 I/O 次數）限制？",
+    opts: [
+      "A. 大型影片檔的循序讀取（GB 等級）",
+      "B. 資料倉儲的批次全表掃描",
+      "C. OLTP 資料庫的大量小型隨機讀寫交易",
+      "D. 備份檔案的大量連續寫入"
+    ],
+    a: 2,
+    exp: "OLTP 資料庫的特點是大量小型隨機 I/O，每次操作的資料量小但頻率高，因此常受 IOPS（每秒 I/O 次數）限制。大型循序傳輸（影片讀取、批次掃描、備份寫入）通常先撞到吞吐量（MB/s）瓶頸。"
+  },
+  {
+    type: "單選題",
+    topic: "Disk Snapshot vs Azure Backup",
+    scene: null,
+    q: "關於 Disk snapshot 與 Azure Backup 的差異，下列哪一項最正確？",
+    opts: [
+      "A. Disk snapshot 自動提供跨 Region 排程備份，Azure Backup 只能做本機快照",
+      "B. Disk snapshot 是時間點複本，適合短期還原；Azure Backup 提供排程、保留、應用程式一致性與跨區復原",
+      "C. Disk snapshot 自動具備應用程式一致性，不需要額外設定",
+      "D. Azure Backup 無法保護 Managed Disk"
+    ],
+    a: 1,
+    exp: "Disk snapshot 是磁碟在某一時間點的複本，適合測試、複製或短期還原；但它不是自動排程的跨區 DR 方案，且與來源磁碟在同一故障邊界時不能視為完整 DR。Azure Backup 提供排程、保留期、應用程式一致性與跨區副本，適合長期 RPO/RTO 需求。"
+  },
+  {
+    type: "單選題",
+    topic: "Azure Files NFS 支援",
+    scene: null,
+    q: "在 Azure Files 中，若 Linux 應用程式需要 NFS 4.1 協定，必須使用哪種帳戶類型？",
+    opts: [
+      "A. General Purpose v2（GPv2）Standard 帳戶",
+      "B. Premium FileStorage 帳戶（SSD）",
+      "C. Blob Storage 帳戶",
+      "D. Archive tier 帳戶"
+    ],
+    a: 1,
+    exp: "Azure Files 的 NFS 4.1 支援需要使用 Premium FileStorage（SSD）帳戶，Standard GPv2 不支援 NFS 4.1。Premium FileStorage 以 SSD 為基礎，提供較低延遲。若來源是 Linux/Unix NFS 應用，需先確認此條件再規劃遷移。"
+  },
+  {
+    type: "單選題",
+    topic: "檔案介面 vs 區塊介面選型",
+    scene: null,
+    q: "題幹出現「多台 VM 共同掛載目錄」時，應優先考慮哪種 Azure 儲存服務？",
+    opts: [
+      "A. Azure Managed Disks（區塊儲存）",
+      "B. Azure Blob Storage（物件儲存）",
+      "C. Azure Files（檔案共用）",
+      "D. Azure Queue Storage（訊息佇列）"
+    ],
+    a: 2,
+    exp: "「多台 VM 共同掛載目錄」明確指向檔案系統介面，應選 Azure Files。Azure Managed Disks 是 VM 的區塊裝置（預設單台 VM 使用）；Blob 是物件儲存；Queue 是訊息佇列。考場口訣：共享目錄→Files；OS disk/DB IOPS→Managed Disks；物件資料→Blob。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  const nextDayHtml="day17.html";
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("quizCard").innerHTML=
+    "<div class=\"results\">"+
+    "<div class=\"score-ring "+(pass?"pass":"fail")+"\">"+
+    "<span class=\"pct\">"+pct+"%</span>"+
+    "<span class=\"label\">"+(pass?"通過":"未通過")+"</span>"+
+    "</div>"+
+    "<h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2>"+
+    "<p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p>"+
+    "<div class=\"stats\">"+
+    "<div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div>"+
+    "<div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div>"+
+    "<div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div>"+
+    "<div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div>"+
+    "</div>"+
+    "<div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\">"+
+    "<button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button>"+
+    "<a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a>"+
+    "</div>"+
+    "<p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p>"+
+    "</div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
