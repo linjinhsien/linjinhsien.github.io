@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 22 Quiz – Microsoft Entra ID &amp; Conditional Access</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 22</div>
+  <h1>Microsoft Entra ID &amp; Conditional Access</h1>
+  <p>身分驗證・授權・SSO・MFA・Zero Trust 條件式存取</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day21.html">← day21.html</a>
+    <a class="nav-link" href="day23.html">day23.html →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 10</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <span id="scenarioText"></span>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type:"觀念判斷",topic:"Authentication vs Authorization",
+    scene:"Titan 科技的員工成功登入 Azure Portal（帳號密碼正確），但無法修改任何正式環境的資源。",
+    q:"這個問題出在哪個環節？",
+    opts:["Authentication（驗證）失敗","Authorization（授權）不足","需要重建 Entra ID Tenant","Resource Group 被刪除"],
+    a:1,
+    exp:"帳密正確且成功登入代表 Authentication 已通過。無法修改資源代表缺少足夠的 RBAC 角色權限，屬於 Authorization（授權）不足。Authentication 失敗的話使用者根本無法登入，連 Portal 首頁都看不到。"
+  },
+  {
+    type:"場景推理",topic:"Conditional Access",
+    scene:"Titan 科技要確保管理員從公司網路以外的位置登入 Azure Portal 時，系統自動要求 MFA。",
+    q:"應使用什麼機制？",
+    opts:["Azure Policy","Conditional Access Policy","Network Security Group（NSG）","Azure Advisor"],
+    a:1,
+    exp:"Conditional Access 是 Microsoft 的 Zero Trust 策略引擎，根據使用者群組、IP 位置、裝置狀態等訊號動態決策。Azure Policy 管資源合規；NSG 做網路層流量過濾，無法根據身分情境動態升級驗證要求；Advisor 提供最佳化建議，不做存取控制。"
+  },
+  {
+    type:"服務選型",topic:"Entra Domain Services vs Entra ID",
+    scene:"Titan 科技有一批舊系統必須使用 LDAP 繫結與 Kerberos 驗證，但不想在 Azure VM 上自行部署與維護網域控制器。",
+    q:"應使用什麼服務？",
+    opts:["Microsoft Entra ID","Microsoft Entra Domain Services","Azure Key Vault","Azure Virtual Network"],
+    a:1,
+    exp:"Entra Domain Services 提供受控傳統網域服務（LDAP、Kerberos、NTLM、Group Policy、domain join），由 Microsoft 部署與維護 DC，無需客戶自建。Entra ID 是雲端原生現代身分服務（OAuth 2.0 / OIDC / SAML），不直接提供 LDAP 繫結或 Kerberos 驗證，這是最常見的名稱陷阱。"
+  },
+  {
+    type:"觀念判斷",topic:"Single Sign-On（SSO）",
+    scene:"Titan 科技希望員工只需登入一次就能存取 Microsoft 365、Azure Portal 與自訂的內部 SaaS 應用。",
+    q:"這種做法稱為？",
+    opts:["Multi-Factor Authentication（MFA）","Single Sign-On（SSO）","Role-Based Access Control（RBAC）","Azure Policy"],
+    a:1,
+    exp:"SSO（單一登入）讓使用者驗證一次即可存取所有已整合的應用程式，降低密碼疲勞與弱密碼重用風險。MFA 是增加驗證強度；RBAC 是授權機制，控制能做什麼；Azure Policy 管資源合規。"
+  },
+  {
+    type:"觀念判斷",topic:"MFA 驗證因素分類",
+    scene:"Titan 科技為管理員啟用 MFA。",
+    q:"以下哪一組是 MFA 的兩個有效驗證因素（屬於不同類別）？",
+    opts:["密碼 + 安全問題","密碼 + 手機驗證碼","兩組不同的密碼","使用者名稱 + Email 地址"],
+    a:1,
+    exp:"MFA 要求兩個不同類別的因素：你知道的（密碼）+ 你擁有的（手機驗證碼）。密碼與安全問題都屬於「你知道的」同一類別；兩組密碼也是同一類別；使用者名稱與 Email 不是獨立的驗證因素。"
+  },
+  {
+    type:"架構設計",topic:"Tenant 與 Subscription 的關係",
+    scene:"Titan 科技有一個 Microsoft Entra ID 租用戶，三個部門各需要獨立的計費。",
+    q:"正確做法是？",
+    opts:["為每個部門建立一個 Tenant","在同一個 Tenant 下建立三個 Subscriptions","建立三個 Resource Groups 來區分帳單","使用 Azure Advisor 分割費用"],
+    a:1,
+    exp:"Subscription 是 Azure 的計費與管理邊界，一個 Tenant（身分目錄）下可有多個 Subscriptions。為每個部門建立 Tenant 會讓身分管理碎片化，跨部門協作困難；Resource Group 不是計費邊界；Advisor 提供建議，不分割費用。"
+  },
+  {
+    type:"觀念判斷",topic:"Passwordless 驗證",
+    scene:"Titan 科技要從根本降低密碼洩漏風險。",
+    q:"以下哪種做法最有效？",
+    opts:["要求每 30 天更換一次密碼","採用 Passwordless 驗證（FIDO2 / Windows Hello）","把密碼長度加到 32 字元","用 Azure Blob Storage 加密儲存所有密碼"],
+    a:1,
+    exp:"Passwordless 從根本移除密碼，攻擊者無密碼可竊。頻繁更換密碼反而促使使用者選弱密碼；加長密碼增加記憶負擔但不消除洩漏風險；Blob Storage 是物件儲存，不是密碼管理工具（密碼管理應用 Azure Key Vault）。"
+  },
+  {
+    type:"服務選型",topic:"外部身分管理",
+    scene:"Titan 科技要讓合作夥伴使用他們自己的 Google 帳號登入 Titan 的 Azure 資源，不需要為他們建立新帳號。",
+    q:"應使用什麼功能？",
+    opts:["Microsoft Entra External ID","Azure Key Vault","Azure ExpressRoute","Azure Managed Disks"],
+    a:0,
+    exp:"Entra External ID 支援外部合作夥伴使用自己的身分識別（Google、Facebook、其他企業 Entra ID）直接登入，無需在 Titan 的 Tenant 建立新帳號。Key Vault 管祕密；ExpressRoute 做私有網路連線；Managed Disks 是 VM 磁碟。"
+  },
+  {
+    type:"觀念判斷",topic:"Conditional Access 觸發時間點",
+    scene:null,
+    q:"Conditional Access Policy 在身分驗證流程的哪個時間點觸發？",
+    opts:["在使用者輸入密碼前（替代密碼驗證）","在第一因素驗證通過後（動態評估訊號）","在 Azure RBAC 角色指派完成後","在建立新 Subscription 時自動套用"],
+    a:1,
+    exp:"Conditional Access 在第一因素驗證（帳號密碼）通過後才觸發，根據使用者、位置、裝置、風險等訊號動態決策（允許 / 要求 MFA / 封鎖）。它不是取代密碼的防線，而是根據登入情境動態升級安全要求的策略引擎。"
+  },
+  {
+    type:"觀念判斷",topic:"Microsoft Entra ID 定位",
+    scene:null,
+    q:"Microsoft Entra ID（原 Azure Active Directory）的主要功能是什麼？",
+    opts:["提供 VM 的 OS 修補與自動更新","提供雲端身分驗證、SSO 與存取管理","管理 Azure 訂用帳戶的計費與資源配額","部署 Azure 虛擬網路與子網路路由"],
+    a:1,
+    exp:"Microsoft Entra ID 是 Microsoft 的雲端身分與存取管理服務（IAM），提供使用者/群組管理、SSO、MFA、Conditional Access 等功能（對標 AWS IAM + IAM Identity Center）。它不負責 VM OS 管理（App Service 負責 PaaS OS）、帳單（Subscription 負責）或網路基礎設施（VNet 負責）。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day23.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
