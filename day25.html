@@ -2,8 +2,8 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AZ-900 Day 25 Quiz - Azure Key Vault &amp; Sentinel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-900 Day 25 Quiz｜Azure Key Vault &amp; Sentinel</title>
 <style>
 :root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -67,22 +67,26 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
 <header>
   <div class="day-badge">DAY 25</div>
   <h1>Azure Key Vault &amp; Sentinel</h1>
-  <p>AZ-900 考題練習｜金鑰機密管理與 SIEM 縱深防禦</p>
-  <div class="nav-links">
-    <a class="nav-link" href="day24.html">← day24.html</a>
-    <a class="nav-link" href="day26.html">day26.html →</a>
-  </div>
+  <p>金鑰機密管理、HSM、SIEM/SOAR 縱深防禦實戰</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day24.html">&#8592; Day 24</a>
+    <a class="nav-link" href="day26.html">Day 26 &#8594;</a>
+  </nav>
 </header>
+
 <div class="progress-wrap">
   <div class="progress-label">
-    <span id="progressText">題目 1 / 13</span>
+    <span id="progressText">題目 1 / 12</span>
     <span id="scoreText">得分：0</span>
   </div>
-  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
 </div>
+
 <div class="card" id="quizCard">
   <div class="question-meta" id="questionMeta"></div>
-  <div class="qtype-badge" id="qtypeBadge"></div>
+  <span class="qtype-badge" id="qtypeBadge"></span>
   <div class="scenario-box" id="scenarioBox" style="display:none">
     <div class="scene-label">情境</div>
     <div id="scenarioText"></div>
@@ -95,22 +99,179 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
     <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題</button>
   </div>
 </div>
+
 <script>
-const QUESTIONS=[
-  {type:"單選題",topic:"Azure Key Vault 應用場景",scene:"",q:"Titan 科技計畫部署新服務，需要存取外部支付 Gateway 的 API Key 與加密憑證，希望避免將 API Key 儲存在設定檔中，並能集中控管憑證的存取權限與自動續訂，應使用哪項 Azure 服務？",opts:["Azure Key Vault","Microsoft Defender for Cloud","Azure Advisor","Azure Application Gateway"],a:0,exp:"Azure Key Vault 是唯一專門用於集中管理 Secrets（API Key）、Keys（金鑰）與 Certificates（TLS 憑證）的雲端服務，並支援自動續訂與存取控管。Defender for Cloud 負責資源安全姿態評估；Advisor 提供最佳化建議；Application Gateway 是 L7 負載平衡器，三者皆無法取代 Key Vault 的機密管理功能。"},
-  {type:"單選題",topic:"Microsoft Sentinel SIEM/SOAR",scene:"",q:"資安團隊需要收集 Azure 訂用帳戶、AWS 帳號以及 Palo Alto 防火牆的安全日誌，利用 AI 機器學習分析跨系統進階威脅，並在偵測到勒索軟體行為時自動執行腳本阻擋攻擊，應選擇哪項服務？",opts:["Azure Key Vault","Microsoft Defender for Cloud","Microsoft Sentinel","Azure Service Health"],a:2,exp:"Microsoft Sentinel 是雲端原生的 SIEM（跨系統日誌收集與 AI 威脅分析）與 SOAR（自動化事故回應 Playbooks）平台，支援多雲與地端 Data Connectors。Defender for Cloud 著重於資源姿態評估（CSPM/CWPP）；Key Vault 管理機密；Service Health 提供 Azure 服務健康狀態通知，三者皆無法取代 Sentinel 的全域 SIEM/SOAR 功能。"},
-  {type:"單選題",topic:"Defender for Cloud Secure Score",scene:"",q:"IT 主管在 Azure 入口網站中看到名為 Secure Score（安全比分）的百分比指標，並希望透過完成系統建議的改善事項（如開啟 VM 雙重認證、關閉不必要的對外埠）來提升此分數，此 Secure Score 功能由哪個 Azure 服務提供？",opts:["Microsoft Defender for Cloud","Azure Cost Management","Azure Key Vault","Azure Policy"],a:0,exp:"Secure Score 是 Microsoft Defender for Cloud（CSPM）的核心量化指標，持續審查資源安全狀況並計算分數。分數越高代表雲端資源配置越符合微軟資安最佳實踐。Cost Management 管理費用；Key Vault 管理機密；Azure Policy 管理合規規則，三者均不提供 Secure Score 功能。"},
-  {type:"判斷組合題",topic:"Key Vault 機密存取與保護機制",scene:"",q:"判斷以下關於 Azure Key Vault 的三項描述：① Key Vault 可用來安全儲存密碼與資料庫連線字串。② 存取 Key Vault 時，應用程式必須將 Key Vault 的主密碼明碼寫在程式碼中。③ Key Vault 支援 Soft Delete 功能，能防止機密被誤刪後無法復原。",opts:["① 是、② 是、③ 否","① 是、② 否、③ 是","① 否、② 否、③ 是","① 否、② 是、③ 否"],a:1,exp:"① 正確：Key Vault Secrets 專門用於儲存密碼、API Key 與連線字串（最大 25KB）。② 錯誤：應用程式應搭配 Entra ID Managed Identity（受控識別）無密碼認證存取 Key Vault，程式碼中零明碼！③ 正確：Soft Delete 是現代 Key Vault 強制預設啟用的功能，保留期預設 90 天，被刪除的物件可在保留期內還原。"},
-  {type:"服務配對題",topic:"Defender for Cloud vs Microsoft Sentinel",scene:"",q:"Titan 科技需要配對正確服務：[ 聲明 1 ] 提供雲端資源資安建議並計算 Secure Score 的平台；[ 聲明 2 ] 具備 SIEM 與 SOAR 功能，可進行跨雲與地端日誌威脅分析及自動化回應的平台。",opts:["聲明 1：Microsoft Sentinel；聲明 2：Microsoft Defender for Cloud","聲明 1：Microsoft Defender for Cloud；聲明 2：Microsoft Sentinel","聲明 1：Azure Key Vault；聲明 2：Microsoft Defender for Cloud","聲明 1：Azure Policy；聲明 2：Azure Key Vault"],a:1,exp:"Defender for Cloud（CSPM/CWPP）負責資源安全姿態評估與 Secure Score；Microsoft Sentinel（SIEM/SOAR）負責全域企業日誌收集、AI 關聯分析與 Logic Apps 自動化劇本回應。兩者各司其職，不可混淆。"},
-  {type:"單選題",topic:"Key Vault 物件類型",scene:"",q:"在 Azure Key Vault 中，應使用哪種物件類型來儲存資料庫連線字串和第三方服務 API Key？",opts:["Keys（金鑰）","Secrets（機密）","Certificates（憑證）","Policies（原則）"],a:1,exp:"Secrets（機密）是 Key Vault 中儲存字串型態敏感資料的物件類型，適用於資料庫連線字串、API Key、Redis 存取密碼等（最大 25KB）。Keys 用於密碼學加密解密運算；Certificates 用於 TLS/SSL 憑證管理；Policies 並非 Key Vault 物件類型。"},
-  {type:"單選題",topic:"HSM 安全標準",scene:"",q:"Azure Key Vault Premium 與 Managed HSM 使用專用單租戶硬體模組，符合哪個 FIPS 安全標準等級？",opts:["FIPS 140-2 Level 1","FIPS 140-2 Level 2","FIPS 140-2 Level 3","FIPS 140-3 Level 2"],a:2,exp:"Azure Key Vault Premium/Managed HSM 使用專用硬體模組，符合 FIPS 140-2 Level 3（甚至 FIPS 140-3 Level 3）標準，金鑰在 HSM 內部硬體生成，即便微軟工程師也無法提取明碼。標準級（Standard）Key Vault 使用共用硬體，符合 FIPS 140-2 Level 2。HSM 適用於金融、醫療等高度監管合規情境。"},
-  {type:"單選題",topic:"Key Vault Soft Delete 保留期",scene:"",q:"Azure Key Vault 的 Soft Delete 預設保留期（Retention Period）為多少天？",opts:["7 天","30 天","90 天","365 天"],a:2,exp:"Soft Delete 預設保留期為 90 天（可自訂 7 到 90 天）。現代 Azure Key Vault 已強制預設啟用 Soft Delete 且不可停用。在保留期內，被刪除的 Key Vault 或其物件處於可還原狀態，有效防止誤刪造成的機密遺失。"},
-  {type:"情境題",topic:"Key Vault + Sentinel 架構決策",scene:"Titan 科技將核心支付系統微服務化。資安審計發現兩大問題：① 生產環境 SQL 資料庫密碼明文寫死在 App Service 的 web.config 與 GitHub 程式碼庫中；② 企業擁有多個 Azure 訂用帳戶與地端機房，VM 遭受攻擊時，維運團隊需數小時手動比對各系統 Log，無法快速聯動封鎖攻擊源 IP。",q:"下列哪項架構方案最符合「程式碼零明文憑證」且「能自動化跨系統安全事件回應」的需求？",opts:["使用 Defender for Cloud 儲存資料庫密碼，並以 Azure Monitor 執行 SIEM 警報與自動封鎖","使用 Azure Key Vault + Entra ID Managed Identity 實現無密碼存取，並部署 Microsoft Sentinel 進行跨雲 SIEM 與 Logic Apps 自動化 SOAR 回應","使用 Azure Policy 強制加密程式碼中的密碼，並用 Azure Advisor 進行日誌分析與警報","使用 NSG 儲存資料庫憑證，並用 Application Gateway 收集跨系統資安日誌"],a:1,exp:"正確架構：Key Vault 集中安全管理 Secrets/Keys/Certificates，配合 Managed Identity 達成程式碼零明文憑證；Microsoft Sentinel 是雲端原生 SIEM/SOAR，負責跨雲與地端 Log 關聯分析與 Logic Apps 自動化事故回應。Defender for Cloud 無法儲存機密；Azure Monitor 缺乏 SIEM/SOAR 能力；Azure Policy 是合規規則工具而非密碼加密工具；NSG 是 L4 網路過濾，Application Gateway 是 L7 負載平衡，兩者均不適用此場景。"},
-  {type:"單選題",topic:"Sentinel SOAR 自動化劇本",scene:"",q:"Microsoft Sentinel 的 SOAR 自動化劇本（Playbooks）是基於哪個 Azure 服務構建的？",opts:["Azure Functions","Azure Logic Apps","Azure Automation Runbooks","Azure DevOps Pipelines"],a:1,exp:"Microsoft Sentinel 的 Playbooks 是基於 Azure Logic Apps 構建的。當 Sentinel 偵測到可疑暴力破解攻擊時，Logic Apps Playbook 可自動在 Entra ID 封鎖可疑帳號、在 NSG/Azure Firewall 新增 IP 阻擋規則，或在 Teams/Slack 資安頻道發送事件告警通知，實現自動化 SOAR 回應。"},
-  {type:"單選題",topic:"Key Vault Purge Protection",scene:"",q:"關於 Azure Key Vault 的 Purge Protection（清除保護）功能，下列何者正確？",opts:["Purge Protection 是預設啟用的，無需手動開啟","Purge Protection 啟用後可以隨時由訂用帳戶擁有者關閉","Purge Protection 一旦啟用便無法關閉，防止在 Soft Delete 保留期內強制銷毀 Key Vault","Purge Protection 只保護 Keys，不保護 Secrets 和 Certificates"],a:2,exp:"Purge Protection 一旦啟用便無法關閉（這是其安全設計的核心）。它能防止任何角色（包括訂用帳戶擁有者或勒索軟體攻擊者）在 Soft Delete 保留期內強制徹底銷毀 Key Vault 及其中的 Secrets/Keys/Certificates。Purge Protection 是選用功能，但生產環境強烈建議啟用。"},
-  {type:"單選題",topic:"Sentinel 資料收集機制",scene:"",q:"Microsoft Sentinel 使用哪種機制來收集來自 Azure、AWS、地端防火牆等各種來源的安全日誌？",opts:["Azure Active Directory 連線設定","Data Connectors（資料連接器）","API Management 閘道器","VPN Gateway 站對站連線"],a:1,exp:"Microsoft Sentinel 使用 Data Connectors（資料連接器）收集多雲與地端日誌，內建數百種連接器，可一鍵導入 Azure 服務（Entra ID、Defender for Cloud、Key Vault）、Microsoft 365（Office 365、Teams）、AWS CloudTrail/GuardDuty、GCP 稽核日誌、Palo Alto/Cisco 地端設備等來源。"},
-  {type:"單選題",topic:"AWS 雙雲機密管理對照",scene:"",q:"Azure Key Vault 的 Secrets 功能（儲存密碼、API Key 並支援自動輪替）與下列哪項 AWS 服務最接近？",opts:["AWS CloudHSM","AWS KMS（Key Management Service）","AWS Secrets Manager","AWS Certificate Manager（ACM）"],a:2,exp:"AWS Secrets Manager 負責儲存資料庫密碼、API Key 等機密字串並支援自動輪替，對應 Azure Key Vault 的 Secrets 功能。AWS KMS 對應 Key Vault 的 Keys（加密金鑰管理）；AWS Certificate Manager（ACM）對應 Key Vault 的 Certificates（TLS 憑證管理）；AWS CloudHSM 對應 Azure Managed HSM（專用硬體安全模組）。"}
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "Key Vault 應用場景",
+    scene: "Titan 科技計畫部署新服務，需要存取外部支付 Gateway 的 API Key 與加密憑證。為符合 PCI-DSS 資安規範，希望避免將 API Key 儲存在應用程式設定檔中，並集中控管憑證存取與自動續訂。",
+    q: "應該推薦使用哪一項 Azure 服務？",
+    opts: [
+      "Azure Key Vault",
+      "Microsoft Defender for Cloud",
+      "Azure Advisor",
+      "Azure Application Gateway"
+    ],
+    a: 0,
+    exp: "關鍵字「避免將 API Key 儲存在設定檔中」、「集中控管憑證存取與自動續訂」直接指向 Azure Key Vault。Key Vault 是唯一專門用於集中管理 Secrets（機密）、Keys（金鑰）與 Certificates（憑證）的雲端服務。Defender for Cloud 是資源安全姿態評估工具；Advisor 提供成本與效能建議；Application Gateway 是 L7 負載平衡器與 WAF。ExamTopics 社群投票：A 100%。"
+  },
+  {
+    type: "單選題",
+    topic: "Microsoft Sentinel 定位",
+    scene: "Titan 科技資安團隊需要雲端原生工具，能從 Azure 訂用帳戶、AWS 帳號及地端 Palo Alto 防火牆收集資安日誌，利用 AI 機器學習分析跨系統進階威脅，並在偵測到勒索軟體行為時自動執行腳本阻擋攻擊。",
+    q: "應選擇下列哪項服務？",
+    opts: [
+      "Azure Key Vault",
+      "Microsoft Defender for Cloud",
+      "Microsoft Sentinel",
+      "Azure Service Health"
+    ],
+    a: 2,
+    exp: "「收集跨雲與地端日誌」、「AI 機器學習分析跨系統威脅 (SIEM)」、「自動執行腳本阻擋攻擊 (SOAR)」是 Microsoft Sentinel 的標誌特徵。Defender for Cloud 提供資源防衛與 Secure Score，但不具備全域多源 Log 整合與 SOAR 自動化 Playbooks 的大腦。Key Vault 是機密管理；Service Health 是服務狀態通知。ExamTopics 社群投票：C 98%。"
+  },
+  {
+    type: "單選題",
+    topic: "Secure Score 歸屬",
+    scene: "Titan 科技 IT 主管在 Azure 入口網站看到名為「Secure Score」的百分比指標，希望透過完成建議的改善事項（開啟 VM 雙重認證、關閉不必要的對外埠）來提升此分數。",
+    q: "這個 Secure Score 功能是由哪一個 Azure 服務提供的？",
+    opts: [
+      "Microsoft Defender for Cloud",
+      "Azure Cost Management",
+      "Azure Key Vault",
+      "Azure Policy"
+    ],
+    a: 0,
+    exp: "Secure Score 是 Microsoft Defender for Cloud (CSPM) 的核心量化指標，持續審查資源安全狀況並計算分數。分數越高代表雲端資源配置符合微軟資安最佳實踐的比率越高。Cost Management 管成本；Key Vault 管機密；Policy 管合規規則。ExamTopics 社群投票：A 100%。"
+  },
+  {
+    type: "多概念判斷題",
+    topic: "Key Vault 特性辨析",
+    scene: null,
+    q: "判斷下列關於 Azure Key Vault 的三個描述，哪個組合正確？\n1. Azure Key Vault 可以安全地儲存密碼與資料庫連線字串。\n2. 應用程式必須將 Key Vault 的主密碼明碼寫在程式碼中才能存取機密。\n3. Azure Key Vault 支援軟刪除 (Soft Delete)，能防止機密被誤刪後無法復原。",
+    opts: [
+      "1 是、2 是、3 否",
+      "1 是、2 否、3 是",
+      "1 否、2 否、3 是",
+      "1 否、2 是、3 否"
+    ],
+    a: 1,
+    exp: "描述 1【正確】：Key Vault 的 Secrets 專門儲存密碼、API Key 與連線字串。描述 2【錯誤】：應用程式應搭配 Entra ID Managed Identity（受控識別）認證存取 Key Vault，無需在程式碼中硬編碼任何密碼——這正是 Key Vault 的核心價值「程式碼零明文憑證」。描述 3【正確】：Key Vault 內建 Soft Delete 與 Purge Protection，被刪除的物件會進入保留期（預設 90 天）可進行還原。"
+  },
+  {
+    type: "配對題",
+    topic: "Defender vs Sentinel 職責分工",
+    scene: null,
+    q: "請配對正確的服務：\n【聲明 1】提供雲端資源資安建議並計算 Secure Score 的平台是？\n【聲明 2】具備 SIEM 與 SOAR 功能，可進行跨雲與地端日誌威脅分析及自動化回應的平台是？",
+    opts: [
+      "[1] Microsoft Sentinel；[2] Microsoft Defender for Cloud",
+      "[1] Microsoft Defender for Cloud；[2] Microsoft Sentinel",
+      "[1] Azure Key Vault；[2] Microsoft Defender for Cloud",
+      "[1] Azure Policy；[2] Azure Key Vault"
+    ],
+    a: 1,
+    exp: "聲明 1（Secure Score、資源姿態評估）→ Microsoft Defender for Cloud (CSPM/CWPP)。聲明 2（跨多雲日誌收集、SIEM 關聯分析、SOAR 自動化劇本）→ Microsoft Sentinel。兩者協同工作：Defender 負責「預防資源設定錯誤與主機弱點」；Sentinel 負責「收集日誌、關聯分析攻擊事件與自動化警報」。"
+  },
+  {
+    type: "情境決策題",
+    topic: "資安架構選型",
+    scene: "Titan 科技資安審計發現：(1) 開發團隊將生產 SQL 資料庫帳密以明文寫死在 web.config 與 GitHub。(2) 當 VM 遭受密碼猜測攻擊時，維運團隊需數小時手動比對各系統 Log，無法即時聯動封鎖攻擊源 IP。",
+    q: "CTO 要求以現代化方案解決以上兩大問題，應選擇哪個架構方案？",
+    opts: [
+      "使用 Defender for Cloud 作為機密儲存庫存放資料庫密碼，並使用 Azure Monitor 執行 SIEM 警報與自動封鎖",
+      "使用 Azure Key Vault 配合 Entra ID Managed Identity 實現無密碼存取；同時部署 Microsoft Sentinel 集中收集跨雲日誌，實現 SIEM 偵測與 Logic Apps SOAR 自動化回應",
+      "使用 Azure Policy 強制加密程式碼中的密碼，並利用 Azure Advisor 當作 SIEM/SOAR 平台",
+      "使用 Network Security Group 儲存資料庫憑證，並利用 Application Gateway 收集跨系統資安日誌"
+    ],
+    a: 1,
+    exp: "選項 B 完全符合微軟最佳實踐：Key Vault 集中保護 Secrets/Keys/Certificates，配合 Managed Identity 達成程式碼零明文憑證；Sentinel 是標準雲端原生 SIEM/SOAR，負責跨來源 Log 關聯分析與 Logic Apps 自動化警報回應。選項 A 錯誤：Defender for Cloud 無法作為機密儲存庫，Azure Monitor 缺乏 Sentinel 的進階 SIEM 威脅情報關聯。選項 C 錯誤：Policy 是合規工具不能加密程式碼，Advisor 是建議工具絕非 SIEM/SOAR。選項 D 錯誤：NSG 是 L4 網路過濾容器，Application Gateway 是 L7 負載平衡器，兩者都完全不適用。"
+  },
+  {
+    type: "單選題",
+    topic: "Key Vault 三大物件類型",
+    scene: null,
+    q: "Azure Key Vault 提供哪三大類型的物件管理？",
+    opts: [
+      "Secrets（機密）、Passwords（密碼）、Certificates（憑證）",
+      "Secrets（機密）、Keys（金鑰）、Certificates（憑證）",
+      "Passwords（密碼）、Keys（金鑰）、Tokens（令牌）",
+      "Secrets（機密）、Keys（金鑰）、Tokens（令牌）"
+    ],
+    a: 1,
+    exp: "Azure Key Vault 三大物件：(1) Secrets（機密）— 儲存 DB 密碼、API Key、連線字串等最大 25KB 敏感字串；(2) Keys（金鑰）— 用於密碼學加密/解密/簽章的 RSA/ECC 金鑰，可由 HSM 託管；(3) Certificates（憑證）— X.509 TLS/SSL 憑證管理，支援自動申購、續訂與部署。這是 AZ-900 高頻考點，請務必記住這三個英文名詞。"
+  },
+  {
+    type: "單選題",
+    topic: "HSM 硬體安全模組",
+    scene: null,
+    q: "下列關於 Azure Key Vault 中 HSM (Hardware Security Module) 的描述，何者最正確？",
+    opts: [
+      "HSM 是符合 FIPS 140 驗證的專用硬體安全模組，提供最高等級的金鑰實體防護",
+      "HSM 是高速記憶體模組，用於加速資料庫查詢運算",
+      "HSM 是混合雲儲存管理 (Hybrid Storage Management) 解決方案",
+      "HSM 是主機安全管理 (Host Security Management)，用於 VM 安全監控"
+    ],
+    a: 0,
+    exp: "HSM (Hardware Security Module) 是符合 FIPS 140 驗證的專用硬體安全模組，提供最高等級的金鑰實體防護。Key Vault Standard 層使用 FIPS 140-2 Level 2；進階的 Managed HSM 使用 FIPS 140-2/3 Level 3 單租戶專用硬體，即便微軟工程師也無法提取明碼金鑰。適用於金融、醫療等高度監管合規情境。AWS 對照服務為 CloudHSM / KMS Custom Key Store。"
+  },
+  {
+    type: "單選題",
+    topic: "Soft Delete 機制",
+    scene: null,
+    q: "關於 Azure Key Vault 的 Soft Delete（軟刪除）功能，哪個描述最正確？",
+    opts: [
+      "Soft Delete 是選用功能，預設未啟用，需手動開啟",
+      "Soft Delete 是選用功能，預設已啟用，但可手動停用",
+      "Soft Delete 已強制預設啟用且不可停用，被刪除物件進入保留期（預設 90 天）可還原",
+      "Soft Delete 僅適用於 Premium 等級的 Key Vault，Standard 等級不支援"
+    ],
+    a: 2,
+    exp: "現代 Azure Key Vault 已強制預設啟用 Soft Delete 且不可停用。當 Key Vault 或其中的機密被刪除時，系統保留保留期（預設 90 天，可自訂 7 到 90 天），在此期間物件處於可還原狀態。配合 Purge Protection（清除保護）可進一步防止勒索軟體在保留期內強制徹底銷毀機密。所有等級的 Key Vault 都支援此功能。"
+  },
+  {
+    type: "單選題",
+    topic: "SOAR 功能與工具",
+    scene: null,
+    q: "Microsoft Sentinel 的 SOAR 功能完整名稱是什麼，並使用哪個 Azure 服務執行自動化 Playbooks？",
+    opts: [
+      "Security Operations and Analysis Review；使用 Azure Functions",
+      "Security Orchestration, Automation, and Response；使用 Azure Logic Apps",
+      "System Operations and Resource Allocation；使用 Azure DevOps",
+      "Security Organization and Audit Reporting；使用 Azure Automation Runbooks"
+    ],
+    a: 1,
+    exp: "SOAR = Security Orchestration, Automation, and Response（安全協調、自動化與回應）。Microsoft Sentinel 的 SOAR 功能透過基於 Azure Logic Apps 的 Playbooks（自動化劇本）執行：當偵測到可疑攻擊時，可自動在 Entra ID 封鎖可疑帳號、在 NSG 新增 IP 阻擋規則、在 Teams/Slack 發送告警通知。AWS 對照：EventBridge + Step Functions / Lambda。"
+  },
+  {
+    type: "單選題",
+    topic: "Purge Protection 功能",
+    scene: null,
+    q: "Azure Key Vault 中 Purge Protection（清除保護）的主要作用是什麼？",
+    opts: [
+      "防止建立名稱重複的 Secrets",
+      "防止未授權的應用程式存取 Keys",
+      "防止任何角色（包括訂用帳戶擁有者）在軟刪除保留期內強制徹底銷毀 Key Vault 或機密",
+      "防止 Keys 從 HSM 硬體匯出到應用程式記憶體"
+    ],
+    a: 2,
+    exp: "Purge Protection（清除保護）選用但強烈建議啟用，且一旦啟用便無法關閉。它能防止任何角色——包括訂用帳戶擁有者甚至勒索軟體——在 Soft Delete 保留期內強制徹底銷毀 Key Vault 或其中的機密，確保機密無法被惡意即時抹除。這與 Soft Delete 是互補的防護機制：Soft Delete 提供還原窗口；Purge Protection 確保這個窗口不被繞過。"
+  },
+  {
+    type: "單選題",
+    topic: "KQL 查詢語言",
+    scene: null,
+    q: "Microsoft Sentinel 底層建立在 Azure Log Analytics 之上，使用哪種查詢語言進行日誌關聯分析？",
+    opts: [
+      "SQL（Structured Query Language）",
+      "KQL（Kusto Query Language）",
+      "SPL（Search Processing Language，Splunk 專用）",
+      "OQL（Object Query Language）"
+    ],
+    a: 1,
+    exp: "Microsoft Sentinel 與 Log Analytics 使用 KQL (Kusto Query Language) 進行極速的大數據查詢與資安關聯分析。KQL 語法簡潔，特別適合時間序列日誌分析——這是 AZ-900 與 SC-200 常見考點。Sentinel 的四大運作步驟：Collect（資料連接器）→ Detect（KQL 規則）→ Investigate（圖形化調查）→ Respond（Logic Apps Playbooks）。"
+  }
 ];
+
 let current=0,score=0,skipped=0,answered,shuffled;
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
