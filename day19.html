@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 19 Quiz – Cosmos DB</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 19</div>
+  <h1>Cosmos DB</h1>
+  <p>全球分散式 NoSQL・一致性層級・Partition Key・RU 計費</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day18.html">← DAY 18</a>
+    <a class="nav-link" href="day20.html">DAY 20 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境</div>
+    <span id="scenarioText"></span>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS=[
+  {
+    type:"單選題",topic:"Cosmos DB 服務定位",scene:"Titan 科技需要一個能在全球多個 Azure 區域同時並行寫入 JSON 遙測資料，並提供個位數毫秒延遲的資料庫服務。",
+    q:"請問應推薦哪一項 Azure 服務？",
+    opts:["A. Azure SQL Database","B. Azure Cosmos DB","C. Azure Files","D. Azure Blob Storage"],
+    a:1,
+    exp:"Azure Cosmos DB 是全球分散式、多模型 NoSQL 資料庫，原生支援多區域寫入（Multi-region writes）與個位數毫秒低延遲。Azure SQL Database 是單區域寫入的關聯式資料庫；Azure Files 是檔案共享；Blob Storage 是物件儲存，均不具備全球並行寫入的資料庫能力。"
+  },
+  {
+    type:"單選題",topic:"Cosmos DB 服務模型",scene:"",
+    q:"關於 Azure Cosmos DB 的雲端服務模型，下列哪一項敘述正確？",
+    opts:["A. 屬於 IaaS，客戶可調配 CPU 核心與記憶體","B. 屬於 PaaS，微軟負責底層硬體、OS 修補與跨區資料複寫","C. 屬於 SaaS，終端使用者可直接透過瀏覽器使用","D. 與 VM 上安裝 MongoDB 屬於相同的服務模型"],
+    a:1,
+    exp:"Azure Cosmos DB 是完全託管的平台即服務（PaaS）。微軟負責底層硬體、作業系統修補、資料庫引擎維護與跨區資料複寫。VM 上自建資料庫屬於 IaaS，客戶需自行維護 OS 與資料庫軟體。"
+  },
+  {
+    type:"單選題",topic:"一致性層級 – 預設值",scene:"",
+    q:"Azure Cosmos DB 的預設一致性層級為何？",
+    opts:["A. Strong（強一致性）","B. Bounded Staleness（界限性過期）","C. Session（工作階段）","D. Eventual（最終一致性）"],
+    a:2,
+    exp:"Session（工作階段一致性）是 Cosmos DB 的預設值。它保證單一使用者在自己的 Session 內享有「讀己之寫入（Read-your-writes）」，同時跨使用者間保持低延遲與高擴展性，是絕大多數 Web 與行動應用的性價比首選。"
+  },
+  {
+    type:"單選題",topic:"邏輯分割區上限",scene:"",
+    q:"Azure Cosmos DB 中，單一邏輯分割區（Logical Partition）的儲存空間硬性上限為多少？",
+    opts:["A. 1 GB","B. 10 GB","C. 20 GB","D. 100 GB"],
+    a:2,
+    exp:"單一邏輯分割區的儲存空間上限為 20 GB。若選取低基數的 Partition Key（例如 gender = 'M'），單一分割區可能迅速超過此上限，Cosmos DB 將直接拒絕寫入。因此必須選取高基數且均勻分佈的屬性作為 Partition Key。"
+  },
+  {
+    type:"單選題",topic:"多區域寫入 – 一致性限制",scene:"架構師在 Cosmos DB 帳戶啟用「多區域寫入（Multi-region writes）」後，發現 Strong 一致性選項呈現灰色無法選取。",
+    q:"這是因為什麼架構機制？",
+    opts:["A. 訂用帳戶配額不足，需向微軟申請提升","B. 多區域寫入帳戶下，平台硬性不支援 Strong 一致性；最強可選 Bounded Staleness","C. 必須先切換為 MongoDB API 才能解鎖","D. Strong 一致性僅限無伺服器容量模式使用"],
+    a:1,
+    exp:"這是 Cosmos DB 的硬性架構限制。當帳戶啟用多區域寫入時，跨大洲多點同時強寫入需要分散式鎖定，物理上造成不可接受的高延遲。因此平台明確禁止在多區域寫入架構下使用 Strong 一致性；多區寫入下能提供的最強保證是 Bounded Staleness。"
+  },
+  {
+    type:"單選題",topic:"Request Unit（RU）基準",scene:"",
+    q:"在 Azure Cosmos DB 中，「1 個 RU（Request Unit）」的官方基準量化定義為何？",
+    opts:["A. 執行一次跨區域資料複寫所需的運算成本","B. 透過項目 ID 與 Partition Key 點讀取（Point Read）1 KB JSON 文件所需的資源量","C. 寫入 1 KB 項目所需的固定資源量","D. 新增一個實體分割區的費用"],
+    a:1,
+    exp:"微軟官方基準：透過項目 ID 與 Partition Key 執行一次點讀取（Point Read），取得一份大小為 1 KB 的 JSON 文件所需的運算、記憶體與 I/O 綜合成本定義為 1 RU。寫入 1 KB 項目約需 5～10 RU（需寫入多個 Quorum 複本並建立自動索引）。"
+  },
+  {
+    type:"單選題",topic:"一致性層級 – 讀己之寫入",scene:"玩家在 Titan 科技遊戲商城購買裝備後，必須立刻在背包介面看到剛購入的道具；但其他大洲的好友看到該玩家成就稍微延遲幾秒是可接受的。",
+    q:"哪種 Cosmos DB 一致性層級最符合此需求？",
+    opts:["A. Strong（強一致性）","B. Session（工作階段一致性）","C. Consistent Prefix（一致前置詞）","D. Eventual（最終一致性）"],
+    a:1,
+    exp:"Session 一致性保證在單一使用者的工作階段內「讀己之寫入（Read-your-writes）」——玩家購買後立刻看到自己背包中的道具。跨使用者之間則享有低延遲與高擴展性，完全符合需求。Strong 一致性延遲最高且不支援多區域寫入；Eventual 無法保證讀己之寫入。"
+  },
+  {
+    type:"單選題",topic:"熱點分割區（Hot Partition）",scene:"",
+    q:"在 Cosmos DB 中，「熱點分割區（Hot Partition）」最精確的描述為何？",
+    opts:["A. 資料複本在多個區域之間複寫時產生的延遲積壓問題","B. 大量請求集中在單一實體分割區，導致其達到 10,000 RU/s 上限並觸發 HTTP 429 限流","C. 使用 Strong 一致性時因 Quorum 讀取造成的高延遲現象","D. 資料湖溫層資料被頻繁存取導致的費用異常"],
+    a:1,
+    exp:"熱點分割區指大量請求集中在單一實體分割區，使其達到 10,000 RU/s 上限，系統回傳 HTTP 429（Too Many Requests）。更嚴重的是，Cosmos DB 單一邏輯分割區有 20 GB 儲存上限；熱點分割區寫滿後將完全無法再寫入。解決方法是選取高基數且存取模式均勻的 Partition Key。"
+  },
+  {
+    type:"配對題",topic:"Azure 資料服務識別",scene:"",
+    q:"請判斷下列哪一組配對最正確：1=全球分散式多模型 NoSQL 資料庫；2=整合式企業資料倉儲與巨量資料分析平台；3=以開源 Apache Hadoop/Spark 為基礎的受控叢集分析服務",
+    opts:["A. 1→Cosmos DB；2→Synapse Analytics；3→HDInsight","B. 1→SQL Database；2→Databricks；3→Data Factory","C. 1→Cosmos DB；2→Data Lake Storage；3→Event Hubs","D. 1→Table Storage；2→Stream Analytics；3→Synapse Analytics"],
+    a:0,
+    exp:"正確配對：全球分散式多模型 NoSQL → Azure Cosmos DB；企業資料倉儲與整合式分析 → Azure Synapse Analytics；開源 Hadoop/Spark 受控叢集 → Azure HDInsight。其餘選項均混淆了服務定位：Data Lake Storage 是儲存體、Event Hubs 是串流擷取、Stream Analytics 是串流處理服務。"
+  },
+  {
+    type:"單選題",topic:"Cosmos DB 服務邊界",scene:"Titan 的實習工程師提議使用 Azure Cosmos DB 來儲存 Git 程式碼版本與管理分支合併。",
+    q:"架構師應如何正確糾正？",
+    opts:["A. 建議正確，Cosmos DB 是文件資料庫，可以儲存任何程式碼檔案","B. 建議錯誤；版本控制屬於 Azure Repos 的功能邊界，Cosmos DB 是全球分散式 NoSQL 資料庫","C. 建議錯誤，應改用 Azure DevTest Labs 管理程式碼版本","D. 建議錯誤，應改用 Azure Monitor Application Insights 管理分支版本"],
+    a:1,
+    exp:"Cosmos DB 雖可儲存 JSON，但不是版本控制系統，缺乏 Git 協作、PR 審查與 Commit 追蹤功能。版本控制應使用 Azure Repos（Azure DevOps 的一部分）。Azure DevTest Labs 用於建置測試沙箱；Application Insights 是 APM 監控工具，均非程式碼存放庫。"
+  },
+  {
+    type:"單選題",topic:"OLTP vs OLAP – Cosmos DB 選型",scene:"Titan 計劃將 20 TB 歷史日誌存放在 Azure，存取頻率極低，但需要定期以 Power BI 進行大範圍彙總分析。",
+    q:"架構師為何不應推薦使用 Azure Cosmos DB 作為此情境的主要儲存？",
+    opts:["A. 因為 Cosmos DB 完全不支援與 Power BI 進行任何形式的資料串接","B. 因為 Cosmos DB 專為高併發 OLTP 設計；儲存巨量低頻冷資料會持續產生高額 RU 閒置成本，此情境應選 ADLS + Synapse Analytics","C. 因為 Cosmos DB 儲存空間上限為 10 TB，無法容納 20 TB","D. 因為 Cosmos DB 只能在單一區域運行，無法跨區域支援 Power BI"],
+    a:1,
+    exp:"Cosmos DB 是為高吞吐毫秒級操作型（OLTP）工作負載設計的資料庫。將 20 TB 巨量冷資料常駐 Cosmos DB 會造成高額儲存與無謂的 RU 閒置開銷。巨量分析型冷資料的標準解法是存入 Azure Data Lake Storage Gen2，再以 Azure Synapse Analytics 執行分析查詢。選項 A、C、D 均為虛假技術描述。"
+  },
+  {
+    type:"單選題",topic:"Cosmos DB 容量模式",scene:"",
+    q:"Azure Cosmos DB 的哪種容量模式在零流量時幾乎不產生運算費用（Zero traffic = Zero compute fee）？",
+    opts:["A. 佈建吞吐量（Provisioned Throughput）","B. 自動調整規模吞吐量（Autoscale Throughput）","C. 無伺服器模式（Serverless）","D. 專用 SQL Pool（Dedicated SQL Pool）"],
+    a:2,
+    exp:"無伺服器模式（Serverless）完全按實際執行的 RU 消耗量計費，零流量時幾乎不產生運算費用，適合開發測試環境、間歇性工作負載或初期輕量應用。佈建模式不論有無請求均按佈建量計費；自動調整模式最低會收取 10% 上限的費用。Dedicated SQL Pool 是 Synapse Analytics 的概念，非 Cosmos DB 容量模式。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day20.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>

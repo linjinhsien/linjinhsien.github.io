@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AZ-900 Day 13 | ExpressRoute & VPN Gateway</title>
+<style>
+:root{--azure:#0078d4;--azure-dark:#005a9e;--azure-light:#d0e8f8;--correct:#107c10;--correct-bg:#dff6dd;--wrong:#c50f1f;--wrong-bg:#fde7e9;--neutral:#605e5c;--bg:#f3f2f1;--card:#fff;--text:#201f1e;--border:#d2d0ce;--radius:8px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 48px;}
+header{width:100%;max-width:800px;margin-bottom:8px;text-align:center;}
+header h1{font-size:1.8rem;font-weight:700;color:var(--azure);letter-spacing:-.3px;}
+.day-badge{display:inline-block;background:var(--azure);color:#fff;font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:6px;}
+header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
+.nav-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.nav-link{display:inline-block;font-size:.82rem;color:var(--azure);text-decoration:none;border:1px solid var(--azure);border-radius:var(--radius);padding:4px 12px;}
+.nav-link:hover{background:var(--azure-light);}
+.progress-wrap{width:100%;max-width:800px;margin:16px 0 20px;}
+.progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--neutral);margin-bottom:6px;}
+.progress-bar-track{background:var(--border);border-radius:99px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--azure);border-radius:99px;transition:width .3s ease;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;width:100%;max-width:800px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.question-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--azure);font-weight:600;margin-bottom:10px;}
+.qtype-badge{display:inline-block;background:#e6f0fa;color:var(--azure-dark);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;}
+.scenario-box{background:#f0f6fc;border-left:4px solid var(--azure);border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;margin-bottom:16px;font-size:.93rem;line-height:1.65;}
+.scenario-box .scene-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--azure-dark);margin-bottom:6px;}
+.question-text{font-size:1.03rem;line-height:1.6;margin-bottom:18px;font-weight:600;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:2px solid var(--border);border-radius:var(--radius);background:#faf9f8;cursor:pointer;font-size:.93rem;line-height:1.5;text-align:left;transition:border-color .15s,background .15s;width:100%;}
+.option-btn:hover:not(:disabled){border-color:var(--azure);background:var(--azure-light);}
+.option-btn .letter{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s,color .15s;}
+.option-btn:hover:not(:disabled) .letter{border-color:var(--azure);color:var(--azure);}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-bg);}
+.option-btn.correct .letter{background:var(--correct);border-color:var(--correct);color:#fff;}
+.option-btn.wrong{border-color:var(--wrong);background:var(--wrong-bg);}
+.option-btn.wrong .letter{background:var(--wrong);border-color:var(--wrong);color:#fff;}
+.option-btn:disabled{cursor:default;}
+.explanation{margin-top:18px;padding:14px 16px;border-radius:var(--radius);background:#fffbe6;border-left:4px solid #f9c53b;font-size:.88rem;line-height:1.6;display:none;}
+.explanation strong{display:block;margin-bottom:4px;color:#7a5700;}
+.explanation.visible{display:block;}
+.actions{margin-top:22px;display:flex;justify-content:flex-end;gap:12px;}
+.btn{padding:10px 22px;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;border:none;transition:background .15s,transform .1s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--azure);color:#fff;}
+.btn-primary:hover{background:var(--azure-dark);}
+.btn-secondary{background:transparent;color:var(--azure);border:2px solid var(--azure);}
+.btn-secondary:hover{background:var(--azure-light);}
+.results{text-align:center;padding:40px 32px;}
+.score-ring{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;}
+.score-ring.pass{background:var(--correct-bg);border:5px solid var(--correct);color:var(--correct);}
+.score-ring.fail{background:var(--wrong-bg);border:5px solid var(--wrong);color:var(--wrong);}
+.score-ring .pct{font-size:2rem;line-height:1;}
+.score-ring .label{font-size:.75rem;margin-top:2px;}
+.results h2{font-size:1.4rem;margin-bottom:8px;}
+.results .subtitle{color:var(--neutral);font-size:.9rem;margin-bottom:24px;}
+.stats{display:flex;gap:16px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.stat-box{padding:12px 20px;border-radius:var(--radius);border:1px solid var(--border);min-width:100px;}
+.stat-box .num{font-size:1.5rem;font-weight:700;}
+.stat-box .desc{font-size:.78rem;color:var(--neutral);margin-top:2px;}
+.stat-box.green .num{color:var(--correct);}
+.stat-box.red .num{color:var(--wrong);}
+.disclaimer{font-size:.75rem;color:var(--neutral);margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;}
+@media(max-width:500px){.card{padding:20px 16px;}header h1{font-size:1.4rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="day-badge">DAY 13</div>
+  <h1>ExpressRoute &amp; VPN Gateway</h1>
+  <p>混合雲連線雙雄：站對站 VPN、專屬私有專線與 GatewaySubnet 配置精要</p>
+  <nav class="nav-links">
+    <a class="nav-link" href="day12.html">← Day 12</a>
+    <a class="nav-link" href="day14.html">Day 14 →</a>
+  </nav>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="progressText">題目 1 / 12</span>
+    <span id="scoreText">得分：0</span>
+  </div>
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="card" id="quizCard">
+  <div class="question-meta" id="questionMeta"></div>
+  <div class="qtype-badge" id="qtypeBadge"></div>
+  <div class="scenario-box" id="scenarioBox" style="display:none">
+    <div class="scene-label">情境說明</div>
+    <span id="scenarioText"></span>
+  </div>
+  <div class="question-text" id="questionText"></div>
+  <div class="options" id="optionsContainer"></div>
+  <div class="explanation" id="explanation"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "單選題",
+    topic: "混合雲連線選型",
+    scene: "Titan 科技的金融帳務系統需要連接地端機房與 Azure。資安長要求：封包絕對不能穿越公開網際網路，且需要毫秒級低延遲與 99.95% 以上的連線 SLA。",
+    q: "針對「封包絕對不能穿越公開網際網路、低延遲、高可靠 SLA」的需求，應選擇哪項 Azure 服務作為主幹連線？",
+    opts: [
+      "A. Azure VPN Gateway（Site-to-Site VPN），強制使用 IPsec/IKE 加密，公認最安全",
+      "B. Azure ExpressRoute，透過電信夥伴建立私有連線，完全不經過公開網際網路，並提供 99.95% SLA",
+      "C. VNet Peering，走微軟私有骨幹且速度最快，可以直接把地端機房當作另一個 VNet 連接",
+      "D. 為 Azure VM 配置 Public IP，並在 NSG 中限制來源 IP 直連"
+    ],
+    a: 1,
+    exp: "ExpressRoute 透過電信合作夥伴（如 Equinix、中華電信）直連微軟骨幹，完全繞過公網，提供穩定低延遲與 99.95% SLA。VPN Gateway（A）底層仍走公網；VNet Peering（C）只能連接兩個 Azure VNet，無法連接實體地端機房；Public IP（D）仍走公網且有資安風險。"
+  },
+  {
+    type: "單選題",
+    topic: "ExpressRoute vs VPN 特性辨識",
+    scene: "Titan 科技大數據團隊每天需上傳超過 50 TB 歷史交易日誌從地端到 Azure。要求：專屬私有通道、完全不穿越公網、10 Gbps 高頻寬、高可用 SLA。",
+    q: "架構師應推薦採用哪一項服務？",
+    opts: [
+      "A. 點對站虛擬私人網路（Point-to-Site VPN）",
+      "B. 站對站虛擬私人網路（Site-to-Site VPN）",
+      "C. Azure 專用通道（Azure ExpressRoute）",
+      "D. 虛擬網路對等互連（Virtual Network Peering）"
+    ],
+    a: 2,
+    exp: "關鍵字：「專屬私有通道、不穿越公網、10 Gbps 高頻寬」—— 這正是 ExpressRoute 的核心定義。P2S VPN（A）與 S2S VPN（B）封包雖加密，但物理上仍走公網；VNet Peering（D）無法連接地端機房。正解為 C。"
+  },
+  {
+    type: "單選題",
+    topic: "ExpressRoute 技術特性",
+    scene: "",
+    q: "下列關於 Azure ExpressRoute 的描述，哪一項是正確的？",
+    opts: [
+      "A. ExpressRoute 運作於 OSI 第 7 層（應用層），提供主機名稱導向的 URL 路由功能",
+      "B. ExpressRoute 透過電信夥伴提供私有連接，運作於第 3 層並使用 BGP 動態路由交換路由資訊",
+      "C. ExpressRoute 在專屬線路上傳輸的所有封包，預設由微軟自動啟用 AES-256 全程加密",
+      "D. ExpressRoute 所有從 Azure 傳出到地端的資料（Outbound）皆為永久免費"
+    ],
+    a: 1,
+    exp: "ExpressRoute 是 Layer 3 IP 連線，使用 BGP 協定交換路由資訊。A 混淆了 Application Gateway 的 L7 功能；C 是最高頻的考試陷阱：ExpressRoute 預設不加密（明文傳輸），需要加密須另配置 MACsec 或疊加 IPsec VPN；D 雲端資料傳出（Egress）通常需收費。正解為 B。"
+  },
+  {
+    type: "單選題",
+    topic: "ExpressRoute Global Reach",
+    scene: "Titan 科技在美國芝加哥與英國倫敦各有一座地端機房，兩處皆已拉了獨立的 ExpressRoute 連入 Azure。現在希望「芝加哥機房直接與倫敦機房互通數據」，且不自建跨大西洋跨國專線。",
+    q: "架構師應啟用哪一項 ExpressRoute 功能以達成此目標？",
+    opts: [
+      "A. Azure ExpressRoute Global Reach",
+      "B. Azure 流量管理員（Azure Traffic Manager）",
+      "C. Azure 虛擬網路對等互連（VNet Peering）",
+      "D. Azure 應用程式閘道（Application Gateway）"
+    ],
+    a: 0,
+    exp: "ExpressRoute Global Reach 正是微軟專為「跨國地端資料中心互通」設計的解決方案，讓多條 ExpressRoute 線路透過微軟全球私有光纖骨幹互聯，地端機房數據可直接在微軟網路上跨洋傳輸。Traffic Manager 是 DNS 導流；VNet Peering 只管雲端 VNet；Application Gateway 是 Web 反向代理。正解為 A。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "ExpressRoute 加密特性（高頻陷阱）",
+    scene: "",
+    q: "陳述：Azure ExpressRoute 透過電信商提供專屬私有連線，預設對線路上所有傳輸的資料封包自動啟用加密。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（僅對特定區域適用）",
+      "D. 資訊不足，需查看電信商合約"
+    ],
+    a: 1,
+    exp: "這是 AZ-900 最高頻考試陷阱！ExpressRoute 是電信商提供的私有二/三層線路，預設完全未對封包 payload 加密（明文傳輸）。若法規要求加密，需另行配置 MACsec（點對點硬體加密）或在 ExpressRoute 上疊加 IPsec VPN 隧道。AWS Direct Connect 同樣預設不加密，兩雲行為一致。正解為 B（No）。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "GatewaySubnet 命名規範",
+    scene: "",
+    q: "陳述：在 Azure 虛擬網路中部署 VPN Gateway 或 ExpressRoute Gateway，其所在子網路必須嚴格命名為「GatewaySubnet」（大小寫精確相符）。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（僅 VPN Gateway 需要，ExpressRoute 不需要）",
+      "D. 資訊不足，需查閱 Azure Portal 設定頁面"
+    ],
+    a: 0,
+    exp: "GatewaySubnet 是 Azure 的強制命名規範。無論是 VPN Gateway 還是 ExpressRoute Gateway，落地 VNet 時都必須部署在精確命名為「GatewaySubnet」的專屬子網路中，且大小寫不得有誤。此外，嚴禁在此子網路內建立任何一般 VM 或工作負載，也不可掛載自訂 NSG。正解為 A（Yes）。"
+  },
+  {
+    type: "多選配對題",
+    topic: "VPN 連線前置資源",
+    scene: "Titan 科技希望讓地端辦公室員工的電腦能透過 VPN 與 Azure 上的虛擬機器安全通訊。架構師需要在 Azure VNet 端建立兩項資源。",
+    q: "在 Azure 虛擬網路端，架構師必須建立哪兩項資源？（選出正確的組合）",
+    opts: [
+      "A. 虛擬網路閘道（Virtual Network Gateway）＋ 閘道子網路（GatewaySubnet）",
+      "B. 虛擬網路閘道（Virtual Network Gateway）＋ 負載平衡器（Load Balancer）",
+      "C. 閘道子網路（GatewaySubnet）＋ 應用程式閘道（Application Gateway）",
+      "D. 負載平衡器（Load Balancer）＋ 流量管理員設定檔（Traffic Manager Profile）"
+    ],
+    a: 0,
+    exp: "部署 Azure VPN 閘道的兩大先決條件：① Virtual Network Gateway（代表 VPN 硬體/軟體終端）；② GatewaySubnet（閘道必須部署於此專屬子網路）。負載平衡器（B）、Application Gateway（C）、Traffic Manager（D）均非 VPN 站對站/點對站連線的必要元件。正解為 A 組合。"
+  },
+  {
+    type: "複合陳述題",
+    topic: "混合雲概念辨析",
+    scene: "",
+    q: "請評估以下三項陳述的正確性：\n①企業必須先建立完備的私有雲，才能與 Azure 建立混合雲。\n②可透過 VPN Gateway 或 ExpressRoute 使用公有雲擴展內部運算能力。\n③混合雲中企業機房與 Azure 之間的所有傳輸，皆必須經由公開網際網路。\n\n哪組判斷正確？",
+    opts: [
+      "A. 陳述①：是 ｜ 陳述②：是 ｜ 陳述③：否",
+      "B. 陳述①：否 ｜ 陳述②：是 ｜ 陳述③：否",
+      "C. 陳述①：否 ｜ 陳述②：是 ｜ 陳述③：是",
+      "D. 陳述①：是 ｜ 陳述②：否 ｜ 陳述③：否"
+    ],
+    a: 1,
+    exp: "①否：企業不需要專屬私有雲（如 OpenStack），只要能透過 VPN 或專線互通地端機房，即為混合雲。②是：這正是混合雲的核心價值（Cloud Bursting），本地算力不足時動態利用 Azure VM。③否：因為有 ExpressRoute，混合雲流量可完全不經公開網際網路。最終判定：否、是、否。正解為 B。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "VPN Gateway 網路路徑",
+    scene: "",
+    q: "陳述：Azure VPN Gateway（Site-to-Site VPN）的封包傳輸路徑會穿越公開網際網路（Public Internet）。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（僅非加密流量穿越公網）",
+      "D. 資訊不足，需查看 VPN 閘道 SKU"
+    ],
+    a: 0,
+    exp: "VPN Gateway 的運作機制是在公開網際網路上建立 IPsec/IKE 加密隧道。雖然封包全程加密，但物理傳輸路徑確實穿越公共 ISP 路由（Public Internet）。這是 VPN Gateway 與 ExpressRoute 最根本的區別：ExpressRoute 完全繞過公網；VPN Gateway 走公網但強制加密。正解為 A（Yes）。"
+  },
+  {
+    type: "單選題",
+    topic: "Local Network Gateway 定位",
+    scene: "",
+    q: "在 Azure 混合雲 VPN 架構中，Local Network Gateway（LNG，本地網路閘道）代表什麼？",
+    opts: [
+      "A. Azure 端的虛擬網路閘道（Virtual Network Gateway）本身",
+      "B. 地端防火牆/路由器的公網 IP 位址與地端私有網段（CIDR）的定義物件",
+      "C. ExpressRoute 的全球互連節點（Global Reach 中繼點）",
+      "D. GatewaySubnet 中的內部路由表資源"
+    ],
+    a: 1,
+    exp: "Local Network Gateway (LNG) 是 Azure 中的一個虛擬物件，代表「地端（On-Premises）防火牆或路由器」的公網 IP 位址與地端私有網段（CIDR）定義。它是建立 Site-to-Site VPN 連線時，Azure 端識別地端裝置的參照物件。對應 AWS 的概念是 Customer Gateway（CGW）。正解為 B。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "VNet Peering 適用邊界",
+    scene: "",
+    q: "陳述：Azure VNet Peering（虛擬網路對等互連）可以用來將地端實體機房（On-Premises Data Center）直接與 Azure VNet 互通。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（僅限 Azure Stack 環境）",
+      "D. 資訊不足，需查看機房規格"
+    ],
+    a: 1,
+    exp: "VNet Peering 的核心限制是：只能連接「Azure 虛擬網路（VNet）」與「另一個 Azure 虛擬網路」。地端機房是實體機房與實體交換機，並非 Azure 雲端上的 VNet 資源，因此物理上無法對地端發起 VNet Peering。連接地端機房需使用 VPN Gateway 或 ExpressRoute。正解為 B（No）。"
+  },
+  {
+    type: "Yes / No 題",
+    topic: "GatewaySubnet VM 限制",
+    scene: "",
+    q: "陳述：可以在 GatewaySubnet 中部署一般的 Azure 虛擬機器（VM）來執行業務工作負載。此陳述是否正確？",
+    opts: [
+      "A. Yes（正確）",
+      "B. No（錯誤）",
+      "C. 部分正確（僅在子網路空間充足時允許）",
+      "D. 資訊不足，需查看 VNet 配置"
+    ],
+    a: 1,
+    exp: "GatewaySubnet 是嚴格的保留子網路，專供 VPN Gateway 與 ExpressRoute Gateway 的內部虛擬機器實體部署使用。微軟原廠規範明確禁止在此子網路內建立任何一般 VM 或其他工作負載，也不可在此掛載自訂 NSG。建議子網路大小至少 /27 以確保未來擴充空間。正解為 B（No）。"
+  }
+];
+
+let current=0,score=0,skipped=0,answered,shuffled;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
+function renderQuestion(){
+  const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
+  document.getElementById("scoreText").textContent="得分："+score;
+  document.getElementById("progressFill").style.width=((current/total)*100)+"%";
+  document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
+  document.getElementById("qtypeBadge").textContent=q.type;
+  const sb=document.getElementById("scenarioBox");
+  if(q.scene){sb.style.display="";document.getElementById("scenarioText").textContent=q.scene;}else{sb.style.display="none";}
+  document.getElementById("questionText").textContent=q.q;
+  const letters=["A","B","C","D"],container=document.getElementById("optionsContainer");
+  container.innerHTML="";
+  q.opts.forEach((opt,i)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML="<span class=\"letter\">"+letters[i]+"</span><span>"+opt+"</span>";btn.onclick=()=>selectAnswer(i);container.appendChild(btn);});
+  document.getElementById("explanation").className="explanation";document.getElementById("explanation").innerHTML="";
+  document.getElementById("nextBtn").style.display="none";document.getElementById("skipBtn").style.display="";
+}
+function selectAnswer(idx){
+  const q=QUESTIONS[shuffled[current]],buttons=document.querySelectorAll(".option-btn");
+  buttons.forEach(b=>b.disabled=true);const ok=idx===q.a;if(ok)score++;answered[current]=idx;
+  buttons[idx].classList.add(ok?"correct":"wrong");if(!ok)buttons[q.a].classList.add("correct");
+  const exp=document.getElementById("explanation");exp.innerHTML="<strong>"+(ok?"✓ 答對了！":"✗ 答錯了")+"</strong>"+q.exp;exp.className="explanation visible";
+  document.getElementById("nextBtn").style.display="";document.getElementById("skipBtn").style.display="none";
+  document.getElementById("scoreText").textContent="得分："+score;
+}
+function skipQuestion(){skipped++;answered[current]=-1;nextQuestion();}
+function nextQuestion(){current++;if(current>=QUESTIONS.length)showResults();else renderQuestion();}
+function showResults(){
+  const total=QUESTIONS.length,pct=Math.round((score/total)*100),pass=pct>=70;
+  document.getElementById("progressFill").style.width="100%";
+  document.getElementById("progressText").textContent="全部完成";
+  document.getElementById("scoreText").textContent="得分："+score;
+  const nextDayHtml="day14.html";
+  document.getElementById("quizCard").innerHTML="<div class=\"results\"><div class=\"score-ring "+(pass?"pass":"fail")+"\"><span class=\"pct\">"+pct+"%</span><span class=\"label\">"+(pass?"通過":"未通過")+"</span></div><h2>"+(pass?"太棒了！完成！":"繼續加油！")+"</h2><p class=\"subtitle\">"+(pass?"掌握很好！":"建議複習後再試。")+"</p><div class=\"stats\"><div class=\"stat-box green\"><div class=\"num\">"+score+"</div><div class=\"desc\">答對</div></div><div class=\"stat-box red\"><div class=\"num\">"+(total-score-skipped)+"</div><div class=\"desc\">答錯</div></div><div class=\"stat-box\"><div class=\"num\">"+skipped+"</div><div class=\"desc\">略過</div></div><div class=\"stat-box\"><div class=\"num\">"+total+"</div><div class=\"desc\">總題數</div></div></div><div style=\"display:flex;gap:12px;justify-content:center;flex-wrap:wrap;\"><button class=\"btn btn-primary\" onclick=\"startQuiz()\">再練一次</button><a class=\"btn btn-secondary\" href=\""+nextDayHtml+"\" style=\"text-decoration:none;\">下一天 →</a></div><p class=\"disclaimer\">AZ-900 及格約 70%。題目每次隨機排序。本題庫僅供練習參考。</p></div>";
+}
+startQuiz();
+</script>
+</body>
+</html>
