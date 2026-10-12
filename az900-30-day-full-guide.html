@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AZ-900 30 天全詳解｜微軟認證核心知識點與考題全解析</title>
+  <meta name="description" content="Microsoft Azure AZ-900 30 天全教材單頁版，涵蓋核心架構、可用性區域、儲存體備援、SLA 官方依據與完整重點題型詳解。" />
+  <meta property="og:title" content="AZ-900 30 天全詳解單頁完整版" />
+  <meta property="og:description" content="包含 Day 1 至 Day 30 完整 30 天教材、技術勘誤、跨雲避坑與官方 Microsoft Learn 參考來源。" />
+  <style>
+    :root {
+      --azure: #0078d4;
+      --azure-dark: #005a9e;
+      --azure-light: #eef6fc;
+      --azure-border: #c7e0f4;
+      --correct: #107c10;
+      --correct-bg: #dff6dd;
+      --wrong: #c50f1f;
+      --wrong-bg: #fde7e9;
+      --neutral: #605e5c;
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --text: #201f1e;
+      --border: #d2d0ce;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    /* Top Banner / Nav */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .top-nav .brand {
+      font-weight: 700;
+      color: var(--azure);
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .top-nav .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      font-size: 0.82rem;
+      padding: 5px 12px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--azure);
+      border: 1px solid var(--azure);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .btn-nav:hover { background: var(--azure-light); }
+    .btn-nav.primary { background: var(--azure); color: #fff; }
+    .btn-nav.primary:hover { background: var(--azure-dark); }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    /* Hero Header */
+    header.hero {
+      text-align: center;
+      margin-bottom: 24px;
+      background: #fff;
+      padding: 32px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    header.hero h1 {
+      font-size: 2rem;
+      color: var(--azure);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    header.hero p {
+      color: var(--neutral);
+      font-size: 1rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Core Knowledge Matrix & Errata Box */
+    .clarification-box {
+      background: #fff;
+      border: 2px solid var(--azure);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 12px rgba(0,120,212,0.08);
+    }
+    .clarification-box h2 {
+      color: var(--azure-dark);
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 14px;
+      margin-bottom: 14px;
+    }
+    table.matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    table.matrix-table th, table.matrix-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    table.matrix-table th {
+      background: var(--azure-light);
+      color: var(--azure-dark);
+      font-weight: 700;
+    }
+    table.matrix-table tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    /* Quick Jump Directory */
+    .jump-nav {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 32px;
+    }
+    .jump-nav h3 {
+      font-size: 1rem;
+      color: var(--neutral);
+      margin-bottom: 12px;
+    }
+    .jump-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 8px;
+    }
+    .jump-item {
+      display: block;
+      padding: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.15s ease;
+    }
+    .jump-item:hover {
+      background: var(--azure-light);
+      border-color: var(--azure);
+      color: var(--azure-dark);
+    }
+    .jump-item .d-num {
+      font-weight: 700;
+      color: var(--azure);
+      display: block;
+    }
+
+    /* Day Card Styles */
+    .day-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      scroll-margin-top: 70px;
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--azure-light);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .day-badge {
+      background: var(--azure);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 99px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    .day-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--azure-dark);
+    }
+
+    .day-domain {
+      font-size: 0.8rem;
+      color: var(--neutral);
+      background: #f0f0f0;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .content-block {
+      margin-bottom: 18px;
+    }
+    .content-block h4 {
+      font-size: 1.05rem;
+      color: var(--azure-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    ul.point-list {
+      padding-left: 20px;
+      font-size: 0.92rem;
+    }
+    ul.point-list li {
+      margin-bottom: 6px;
+    }
+
+    /* Question Box in Guide */
+    .quiz-sample {
+      background: #faf9f8;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-top: 14px;
+    }
+    .quiz-sample .q-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .quiz-sample .q-opts {
+      list-style: none;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      padding-left: 0;
+    }
+    .quiz-sample .q-opts li {
+      padding: 4px 0;
+    }
+    .quiz-sample .q-ans {
+      background: #eef6fc;
+      border-left: 4px solid var(--azure);
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      border-radius: 0 4px 4px 0;
+      line-height: 1.55;
+    }
+
+    .official-ref {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.82rem;
+      color: var(--neutral);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .official-ref a {
+      color: var(--azure);
+      text-decoration: underline;
+    }
+
+    /* Back to Top Floating Button */
+    #backToTop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--azure);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      transition: opacity 0.2s;
+    }
+    #backToTop:hover { background: var(--azure-dark); }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="index.html" class="brand">
+    <span>☁️</span>
+    <span>AZ-900 30 天全詳解</span>
+  </a>
+  <div class="nav-actions">
+    <a href="index.html" class="btn-nav">← 標準練習測驗</a>
+    <a href="scenario.html" class="btn-nav">情境題 50 題</a>
+    <a href="day29.html" class="btn-nav">Day 29 模擬戰</a>
+    <a href="day30.html" class="btn-nav">Day 30 終局戰</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <h1>Microsoft Azure AZ-900 30 天全教材詳解</h1>
+    <p>嚴謹釐清跨雲混淆、官方 Availability Zones 考點、Region Pairs 運作機制、SLA 條件與儲存體備援架構。</p>
+  </header>
+
+  <!-- Technical Clarification Box -->
+  <section class="clarification-box" id="errata">
+    <h2>🎯 核心觀念釐清與避坑矩陣（避免以 AWS 思維誤套 Azure）</h2>
+    <p style="font-size:0.92rem;color:var(--neutral);">在備考 AZ-900 時，許多考生容易將其他雲端平台（如 AWS）的架構習慣直接套用，或將典型情境誤當成無例外的鐵律。以下彙整官方規範：</p>
+    
+    <div class="table-container">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th style="width:24%;">常見誤解與混淆</th>
+            <th style="width:38%;">Microsoft Learn 官方正確架構</th>
+            <th style="width:38%;">考試關鍵重點與答題原則</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>「Availability Zones 是 AWS 專屬，Azure 沒有 AZ」</strong></td>
+            <td><strong>不正確！</strong>Azure 具備 Availability Zones，且為 AZ-900 重要核心考點。支援的 Region 通常有 3 個獨立 AZ。</td>
+            <td>AZ 提供<strong>資料中心級別</strong>容錯（獨立電力、冷卻與網路）。但請注意：<strong>並非所有 Azure Region 都有 AZ</strong>，不同服務或 SKU 的支援狀態也不同。</td>
+          </tr>
+          <tr>
+            <td><strong>「Region Pairs 距離固定至少 300 英哩，且自動完成全系統 DR」</strong></td>
+            <td><strong>不準確！</strong>微軟在設計多數 Region Pairs 時以相距約 300 英哩為設計目標，但並非全無例外之固定鐵律；且<strong>配對絕不會自動替所有資源完成災難復原</strong>。</td>
+            <td>Region Pairs 提供：循序滾動更新、大規模事故優先循序復原，以及特定服務（如 GRS）預設異步複寫。但應用層 DR 與 VM 容錯移轉<strong>必須由使用者自行設計規劃</strong>。</td>
+          </tr>
+          <tr>
+            <td><strong>「只要跨 Availability Zones 部署，就無條件保證 99.99% SLA」</strong></td>
+            <td><strong>需滿足前提！</strong>需在支援 AZ 的 Region、支援的 VM SKU，並在 2 個或以上 AZ 各部署至少 1 個 VM，才符合微軟 99.99% 連線 SLA 條件。</td>
+            <td>單一 VM (Premium SSD) = 99.9%；Availability Set = 99.95%；符合資格的跨 AZ 部署 = 99.99%。考試時不能將固定 zones 部署視為任意區域任意 SKU 的萬靈丹。</td>
+          </tr>
+          <tr>
+            <td><strong>「RA-GRS 代表主要區域有跨可用性區域 (AZ) 備援」</strong></td>
+            <td><strong>混淆！</strong>RA-GRS 的主要區域採用 <strong>LRS</strong>（單一資料中心 3 份副本）。主要區域跨 3 個 AZ 的是 <strong>RA-GZRS</strong>。</td>
+            <td>記憶口訣：帶 <strong>Z</strong> 的（ZRS / GZRS / RA-GZRS）主要區域才跨 3 個 AZ；單純 GRS / RA-GRS 主要區域只有單一資料中心 LRS 備援。</td>
+          </tr>
+          <tr>
+            <td><strong>「Azure 會自動將客戶資料跨國備援至其他國家」</strong></td>
+            <td><strong>違背資料主權原則！</strong>Azure 保證預設情況下，資料只會在同一個 <strong>Geography（地理邊界）</strong> 內進行複寫與備援，不會未經授權跨國傳送。</td>
+            <td>Geography 定義資料駐留（Data Residency）與法規遵循邊界（例如 Asia Pacific 內的 East Asia 與 Southeast Asia 配對）。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="font-size:0.85rem;color:var(--azure-dark);background:var(--azure-light);padding:10px 14px;border-radius:4px;">
+      🔗 <strong>微軟官方文件連結：</strong>
+      <a href="https://learn.microsoft.com/zh-tw/azure/reliability/availability-zones-overview" target="_blank" style="color:var(--azure);">可用性區域概觀</a> ｜
+      <a href="https://learn.microsoft.com/en-us/azure/reliability/regions-paired" target="_blank" style="color:var(--azure);">Azure 區域配對說明</a> ｜
+      <a href="https://learn.microsoft.com/zh-tw/azure/storage/common/storage-redundancy" target="_blank" style="color:var(--azure);">Azure 儲存體備援選項</a>
+    </div>
+  </section>
+
+  <!-- Quick Directory Navigator -->
+  <section class="jump-nav">
+    <h3>📑 30 天教材目錄快速導覽（點選跳轉）</h3>
+    <div class="jump-grid">
+      <a class="jump-item" href="#day1"><span class="d-num">Day 1</span>責任共擔與雲端模型</a>
+      <a class="jump-item" href="#day2"><span class="d-num">Day 2</span>Azure 基礎架構全解析</a>
+      <a class="jump-item" href="#day3"><span class="d-num">Day 3</span>Sovereign Clouds 主權雲</a>
+      <a class="jump-item" href="#day4"><span class="d-num">Day 4</span>Azure 管理工具選型</a>
+      <a class="jump-item" href="#day5"><span class="d-num">Day 5</span>ARM Templates & Bicep</a>
+      <a class="jump-item" href="#day6"><span class="d-num">Day 6</span>Advisor & Service Health</a>
+      <a class="jump-item" href="#day7"><span class="d-num">Day 7</span>階段總複習① 架構篇</a>
+      <a class="jump-item" href="#day8"><span class="d-num">Day 8</span>虛擬機器 VM & VMSS</a>
+      <a class="jump-item" href="#day9"><span class="d-num">Day 9</span>App Service & Functions</a>
+      <a class="jump-item" href="#day10"><span class="d-num">Day 10</span>ACI & AKS 容器服務</a>
+      <a class="jump-item" href="#day11"><span class="d-num">Day 11</span>虛擬網路 VNet & Subnet</a>
+      <a class="jump-item" href="#day12"><span class="d-num">Day 12</span>NSG & ASG 網路安全</a>
+      <a class="jump-item" href="#day13"><span class="d-num">Day 13</span>ExpressRoute & VPN</a>
+      <a class="jump-item" href="#day14"><span class="d-num">Day 14</span>負載平衡器選型</a>
+      <a class="jump-item" href="#day15"><span class="d-num">Day 15</span>Blob Storage 存取層級</a>
+      <a class="jump-item" href="#day16"><span class="d-num">Day 16</span>Azure Files & Managed Disks</a>
+      <a class="jump-item" href="#day17"><span class="d-num">Day 17</span>Storage Explorer & AzCopy</a>
+      <a class="jump-item" href="#day18"><span class="d-num">Day 18</span>Azure SQL Database</a>
+      <a class="jump-item" href="#day19"><span class="d-num">Day 19</span>Azure Cosmos DB</a>
+      <a class="jump-item" href="#day20"><span class="d-num">Day 20</span>Synapse & Databricks</a>
+      <a class="jump-item" href="#day21"><span class="d-num">Day 21</span>階段總複習② 服務篇</a>
+      <a class="jump-item" href="#day22"><span class="d-num">Day 22</span>Microsoft Entra ID</a>
+      <a class="jump-item" href="#day23"><span class="d-num">Day 23</span>RBAC 角色型存取控制</a>
+      <a class="jump-item" href="#day24"><span class="d-num">Day 24</span>零信任 & Defender for Cloud</a>
+      <a class="jump-item" href="#day25"><span class="d-num">Day 25</span>Key Vault & Sentinel</a>
+      <a class="jump-item" href="#day26"><span class="d-num">Day 26</span>Azure Policy & Blueprints</a>
+      <a class="jump-item" href="#day27"><span class="d-num">Day 27</span>成本管理與計價工具</a>
+      <a class="jump-item" href="#day28"><span class="d-num">Day 28</span>AZ-900 特有題型破解</a>
+      <a class="jump-item" href="#day29"><span class="d-num">Day 29</span>50 題跨網域綜合模擬戰</a>
+      <a class="jump-item" href="#day30"><span class="d-num">Day 30</span>終局戰：儲存備援與 SLA</a>
+    </div>
+  </section>
+
+  <!-- DAY 1 -->
+  <article class="day-section" id="day1">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 1</span>
+        <h2 class="day-title">雲端概念、雲端模型與責任共擔模型 (Shared Responsibility)</h2>
+      </div>
+      <span class="day-domain">Domain 1: 描述雲端概念 (25–30%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>雲端服務類型比較：</strong>
+          <ul>
+            <li><strong>IaaS (基礎結構即服務)：</strong>客戶管理 OS、中介軟體、Runtime、應用程式、資料。雲端商只負責實體伺服器、網路與虛擬化（如 Azure VM）。最具彈性、控制權最大。</li>
+            <li><strong>PaaS (平台即服務)：</strong>客戶只需負責應用程式與資料，OS 更新與修補由微軟全權管理（如 Azure App Service、Azure SQL Database）。</li>
+            <li><strong>SaaS (軟體即服務)：</strong>使用者只需關注端點使用與身分存取，其餘所有底層由供應商提供（如 Microsoft 365）。</li>
+          </ul>
+        </li>
+        <li><strong>責任共擔模型：</strong>無論在任何模型中，<strong>資訊與資料（Data）、身分識別與目錄（Identity）、使用者端裝置（Endpoints）</strong>永遠由客戶負擔最終管理責任！</li>
+        <li><strong>財務模型：</strong>CapEx（資本支出，需前期大量購買硬體設備並攤提折舊）vs OpEx（營運支出，依用量隨用隨付 Consumption-based，無預付費用，敏捷彈性）。</li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：責任共擔模型邊界</div>
+      <ul class="q-opts">
+        <li>題目：某公司正將其在地端執行的自建虛擬機器遷移至 Azure IaaS 虛擬機器。在此架構下，誰負責為虛擬機器中的客體作業系統 (Guest OS) 安裝安全性更新修補程式？</li>
+        <li>A. Microsoft</li>
+        <li>B. 客戶（使用者自身）</li>
+        <li>C. 伺服器硬體廠商</li>
+        <li>D. 雙方平分責任</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：在 IaaS 模型中，Microsoft 僅負責維護實體主機 (Hypervisor) 與底層基礎架構；客體作業系統 (Guest OS) 的更新、防毒軟體與系統配置完全屬於客戶的責任。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/security/fundamentals/shared-responsibility" target="_blank">雲端中的共擔責任模型</a>
+    </div>
+  </article>
+
+  <!-- DAY 2 -->
+  <article class="day-section" id="day2">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 2</span>
+        <h2 class="day-title">Azure 基礎架構全解析：Region, AZ, Region Pairs 與 SLA</h2>
+      </div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務 (35–40%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構與避坑指南</h4>
+      <ul class="point-list">
+        <li><strong>Azure Region（區域）：</strong>由一個或多個透過低延遲專用網路互聯的資料中心群所組成的地理範疇。</li>
+        <li><strong>Availability Zones（可用性區域）：</strong>
+          <ul>
+            <li>一個 Region 內實體隔離的資料中心，擁有<strong>獨立的電力 (Power)、冷卻 (Cooling) 與網路 (Networking)</strong>。</li>
+            <li><strong>考點修正：</strong>AZ 亦為 Azure 核心功能（並非 AWS 獨有）。支援 AZ 的區域通常提供至少 3 個獨立可用性區域。</li>
+            <li><strong>防護範圍：</strong>AZ 能抵禦<strong>「單一整座資料中心」</strong>完全故障。</li>
+          </ul>
+        </li>
+        <li><strong>Region Pairs（區域配對）：</strong>
+          <ul>
+            <li>每個 Azure 區域會在同一 Geography 內與另一個區域配對（例如 East Asia 配對 Southeast Asia）。</li>
+            <li><strong>機制優勢：</strong>(1) 循序滾動更新（微軟絕不會同時更新配對中的兩個區域）；(2) 大規模天災時優先復原其中一個區域；(3) GRS 預設複製至配對區域。</li>
+            <li><strong>重要觀念：</strong>配對距離設計目標通常約 300 英哩，但並非全無例外之絕對鐵律；且<strong>配對不會自動替應用程式接管故障</strong>，應用層 DR 需自行規劃。</li>
+          </ul>
+        </li>
+        <li><strong>SLA 保證條件：</strong>
+          <ul>
+            <li>單一 VM（搭配 Premium SSD）：SLA 為 99.9%</li>
+            <li>同一資料中心 Availability Set：SLA 為 99.95%</li>
+            <li>跨 Availability Zones 部署（至少 2 個 VM 分散於 2 個 AZ，且符合 SKU/Region 支援）：SLA 為 99.99%</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：Region Pairs 與更新行為</div>
+      <ul class="q-opts">
+        <li>題目：關於 Azure Region Pairs 的特性，下列哪一項敘述是正確的？</li>
+        <li>A. 當微軟進行計畫性平台更新時，會同時在配對的兩個區域部署更新以節省維護時間</li>
+        <li>B. 當發生波及多個區域的廣泛重大災害時，Azure 會確保所有配對組中至少有一個區域獲得優先復原處理</li>
+        <li>C. 啟用配對後，所有在主要區域建立的 VM 都會無條件自動在次要區域即時鏡像備份</li>
+        <li>D. 使用者可以隨時在 Azure 入口網站中自由更改區域配對對象</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：Region Pairs 採用「循序更新 (Sequenced Updates)」，絕不會同時更新兩者（A 錯）；配對不會自動替所有 VM 做應用層鏡像切換（C 錯）；配對關係為 Azure 底層預先定義固定，客戶無法自行變更（D 錯）。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/reliability/availability-zones-overview" target="_blank">Azure 可用性區域概觀</a> ｜ <a href="https://learn.microsoft.com/en-us/azure/reliability/regions-paired" target="_blank">Azure 跨區域複寫與配對區域</a>
+    </div>
+  </article>
+
+  <!-- DAY 3 -->
+  <article class="day-section" id="day3">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 3</span>
+        <h2 class="day-title">Sovereign Clouds 主權雲與合規性 (Azure Government & China)</h2>
+      </div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理 (30–35%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>Azure Government (美國政府雲)：</strong>專為美國聯邦、州、地方政府及其合約承包商打造，實體與邏輯上完全隔離於全球 Azure 公有雲，員工需通過美國背景篩選。</li>
+        <li><strong>Azure China (世紀互聯營運)：</strong>根據中國法規要求，由第三方本地公司「世紀互聯 (21Vianet)」獨立營運與維護，與全球公有雲完全物理隔離。</li>
+        <li><strong>Microsoft Purview & Compliance Manager：</strong>協助組織持續追蹤法規標準（如 ISO 27001、GDPR、HIPAA），提供合規分數與改善建議。</li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：主權雲隔離特性</div>
+      <ul class="q-opts">
+        <li>題目：某美國國防承包商需要部署處理嚴格受控非機密資訊 (CUI) 的系統。哪種 Azure 雲端環境能夠滿足其專屬的實體隔離與嚴格法規遵循需求？</li>
+        <li>A. Azure Public Cloud（一般全球公有雲）</li>
+        <li>B. Azure Government（美國主權政府雲）</li>
+        <li>C. 僅能在內部私有資料中心執行，不可使用任何雲端</li>
+        <li>D. Azure Commercial Cloud 配合隨選 VPN</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：Azure Government 是專為美國政府機構及其供應商設立的主權獨立雲端實例，與一般公有雲完全實體與網路隔離。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/azure-government/documentation-government-welcome" target="_blank">Azure Government 概觀</a>
+    </div>
+  </article>
+
+  <!-- DAY 4 -->
+  <article class="day-section" id="day4">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 4</span>
+        <h2 class="day-title">Azure 管理工具選型：Portal, CLI, PowerShell, Cloud Shell, Arc</h2>
+      </div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理 (30–35%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>Azure Portal：</strong>基於網頁瀏覽器的圖形化介面 (GUI)，適合初學者、視覺化監控與單一資源手動配置。</li>
+        <li><strong>Azure CLI：</strong>跨平台命令列工具（Windows, macOS, Linux），語法以 <code>az</code> 開頭（例如 <code>az group create</code>），特別適合 Bash 腳本。</li>
+        <li><strong>Azure PowerShell：</strong>基於 PowerShell 的模組，語法採用「動詞-名詞」格式（例如 <code>New-AzResourceGroup</code>）。</li>
+        <li><strong>Azure Cloud Shell：</strong>直接在瀏覽器中執行的互動式終端機，免本機安裝，自動驗證身分，可自由切換 Bash 或 PowerShell。</li>
+        <li><strong>Azure Arc：</strong>將 Azure Resource Manager (ARM) 管理平面的治理與安全能力，延伸至<strong>地端資料中心、邊緣裝置或其他公有雲 (AWS/GCP)</strong>！</li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：管理工具跨雲延伸</div>
+      <ul class="q-opts">
+        <li>題目：某企業在地端機房擁有數百台 Windows 與 Linux 伺服器，同時在 AWS 上也有 VM。管理者希望使用 Azure Policy 和 Azure Monitor 來「統一管理」所有平台上的伺服器。應使用哪項服務？</li>
+        <li>A. Azure DevOps</li>
+        <li>B. Azure Arc</li>
+        <li>C. Azure Migrate</li>
+        <li>D. Azure Traffic Manager</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：Azure Arc 能簡化跨環境治理，將地端伺服器、Kubernetes 叢集與多雲資源投影成 Azure 中的資源，以套用 Azure 原生原則與合規設定。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/azure-arc/overview" target="_blank">Azure Arc 概觀</a>
+    </div>
+  </article>
+
+  <!-- DAY 5 -->
+  <article class="day-section" id="day5">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 5</span>
+        <h2 class="day-title">基礎架構即程式碼 (IaC)：ARM Templates 與 Bicep</h2>
+      </div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理 (30–35%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>宣告式語法 (Declarative Syntax)：</strong>「宣告結果，而非定義步驟」。告訴 Azure「我需要什麼狀態」，系統自動推算相依性並完成佈建。</li>
+        <li><strong>冪等性 (Idempotency)：</strong>重複執行相同範本多次，只要設定未變，結果保持一致且不會造成資源重複建立或損毀。</li>
+        <li><strong>ARM Templates (JSON)：</strong>傳統標準宣告式範本，但 JSON 括號複雜且缺乏型別安全檢查。</li>
+        <li><strong>Bicep：</strong>微軟官方開發的 Azure 原生領域特定語言 (DSL)，語法簡潔乾淨、支援模組化與 VS Code 程式碼自動完成，編譯後會自動轉換為 ARM JSON 執行。</li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：宣告式 IaC 工具</div>
+      <ul class="q-opts">
+        <li>題目：團隊需要一種微軟原生推薦的基礎架構即程式碼 (IaC) 語言，具有比 JSON 範本更簡潔易讀的語法，且能保證重複部署的一致性（冪等性）。應選擇？</li>
+        <li>A. Azure Bicep</li>
+        <li>B. Azure Automation Runbooks</li>
+        <li>C. PowerShell DSC 手動腳本</li>
+        <li>D. Azure Logic Apps</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：A</strong><br>
+        詳解：Bicep 是微軟原生設計的宣告式 IaC 語言，直接編譯成 ARM 範本，提供簡潔語法與宣告式冪等性保證。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/azure-resource-manager/bicep/overview" target="_blank">什麼是 Bicep？</a>
+    </div>
+  </article>
+
+  <!-- DAY 6 -->
+  <article class="day-section" id="day6">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 6</span>
+        <h2 class="day-title">監控與健全狀況：Azure Advisor 與 Azure Service Health</h2>
+      </div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理 (30–35%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>Azure Advisor (顧問)：</strong>分析資源設定與遙測數據，依據五大主軸提供個人化最佳做法建議：<strong>成本 (Cost)、安全性 (Security)、可靠性 (Reliability)、效能 (Performance)、卓越營運 (Operational Excellence)</strong>。</li>
+        <li><strong>Azure Service Health (服務健全狀況)：</strong>包含三大視圖：
+          <ul>
+            <li><strong>Azure Status (全局狀態)：</strong>全網頁公開檢視所有 Azure 服務的宏觀運作狀態。</li>
+            <li><strong>Service Health (服務健康狀態)：</strong>針對<strong>「您目前訂用帳戶中所使用到的服務與區域」</strong>進行個人化影響通知。</li>
+            <li><strong>Resource Health (資源健康狀態)：</strong>針對<strong>「特定單一資源實例」</strong>（如某台特定 VM）診斷是否正常運行。</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：服務中斷通知工具選型</div>
+      <ul class="q-opts">
+        <li>題目：Azure 某個區域發生網路光纖切斷事故，影響了您訂用帳戶中的部分虛擬機器。應使用哪項服務來獲取「專門針對您受影響資源」的最新官方事件報告與 RCA 根本原因分析？</li>
+        <li>A. Azure Monitor</li>
+        <li>B. Azure Service Health</li>
+        <li>C. Azure Advisor</li>
+        <li>D. Azure Security Center</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：Azure Service Health 提供客製化的健康儀表板，專注於您的特定訂用帳戶資源是否遭受微軟基礎設施事件影響，並提供後續修正報告。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/service-health/overview" target="_blank">Azure 服務健康狀態概觀</a>
+    </div>
+  </article>
+
+  <!-- DAY 7 -->
+  <article class="day-section" id="day7">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 7</span>
+        <h2 class="day-title">階段總複習①：核心架構與治理觀念整合檢驗</h2>
+      </div>
+      <span class="day-domain">綜合階段評量 (Domain 1 & 3)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心觀念統整回顧</h4>
+      <p style="font-size:0.92rem;">完成第一週基礎後，請確保能熟練回答下列核心心智圖分支：</p>
+      <ul class="point-list">
+        <li><strong>CapEx vs OpEx：</strong>地端購買伺服器為 CapEx；Azure 隨用隨付、無預付費用為 OpEx。</li>
+        <li><strong>彈性 (Elasticity) vs 可調整延展性 (Scalability)：</strong>水平擴充 (Scale-out) 加機器；垂直調整 (Scale-up) 升級 CPU/RAM；彈性是指系統能夠依即時負載<strong>「自動放大與縮小」</strong>。</li>
+        <li><strong>敏捷性 (Agility)：</strong>幾分鐘內即可快速佈建或銷毀資源，大幅縮短上市時間。</li>
+        <li><strong>災難復原 (Disaster Recovery)：</strong>專注於毀滅性災害後快速恢復資料與應用（RTO / RPO）。</li>
+      </ul>
+    </div>
+    <div class="official-ref">
+      📖 進入互動練習：<a href="day7.html">前往 Day 7 階段總複習測驗頁面</a>
+    </div>
+  </article>
+
+  <!-- DAY 8 -->
+  <article class="day-section" id="day8">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 8</span>
+        <h2 class="day-title">運算服務：虛擬機器 VM、VMSS 與可用性機制</h2>
+      </div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務 (35–40%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>Azure Virtual Machines (VM)：</strong>IaaS 代表性服務，完整控制作業系統，適用自訂軟體與直接遷移 (Lift-and-Shift)。</li>
+        <li><strong>Virtual Machine Scale Sets (VMSS)：</strong>部署與管理一組完全相同的負載平衡 VM，支援排程或計量指標（如 CPU 75%）<strong>自動水平縮放 (Autoscale)</strong>。</li>
+        <li><strong>Availability Set (可用性設定組)：</strong>
+          <ul>
+            <li>在<strong>「同一資料中心內」</strong>分散實體機架：<strong>Fault Domain (容錯網域，隔離電源與交換器)</strong> 與 <strong>Update Domain (更新網域，隔離微軟維護重開機)</strong>。</li>
+            <li>SLA 保證為 <strong>99.95%</strong>。</li>
+          </ul>
+        </li>
+        <li><strong>跨 Availability Zones 部署：</strong>
+          <ul>
+            <li>將 VMSS 或個別 VM 分散部署於多個 AZ，抵禦整個資料中心層級故障。</li>
+            <li>符合條件下 SLA 可達 <strong>99.99%</strong>（注意：需為支援 AZ 的區域與支援的 SKU，且在 2 個或以上 AZ 各部署至少 1 台 VM）。</li>
+          </ul>
+        </li>
+        <li><strong>Spot Virtual Machines：</strong>以極高折扣（最高達 90%）租借 Azure 閒置運算容量，但當 Azure 需要資源時會隨時收回中斷，無可用性 SLA 保證，僅適合中斷不影響結果的批次運算。</li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：自動水平伸縮服務選型</div>
+      <ul class="q-opts">
+        <li>題目：某電商網站預期在促銷期間流量暴增，希望在 CPU 使用率超過 80% 時自動增加伺服器實體，在流量降溫時自動減少機器以降低成本。最合適的服務是？</li>
+        <li>A. Azure App Service 靜態方案</li>
+        <li>B. Azure Virtual Machine Scale Sets (VMSS)</li>
+        <li>C. 單一可用性設定組內的固定 5 台 VM</li>
+        <li>D. Azure Dedicated Host</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：VMSS 專為相同 VM 的自動水平彈性伸縮 (Autoscale) 設計，能根據計量規則動態增減實例數量。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/virtual-machine-scale-sets/overview" target="_blank">什麼是虛擬機器擴展集？</a>
+    </div>
+  </article>
+
+  <!-- DAY 9 -->
+  <article class="day-section" id="day9">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 9</span>
+        <h2 class="day-title">應用程式服務：Azure App Service 與 Serverless Functions</h2>
+      </div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務 (35–40%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>Azure App Service (PaaS)：</strong>完全受管的 Web 應用程式、RESTful API 與行動後端託管平台。支援 .NET, Java, Node.js, Python 等，提供自動延展、SSL 憑證管理與部署位置 (Deployment Slots)。</li>
+        <li><strong>Azure Functions (無伺服器 Serverless)：</strong>
+          <ul>
+            <li><strong>事件驅動 (Event-driven)：</strong>當事件發生時（如 HTTP 請求、佇列訊息到達、檔案上傳）才觸發執行程式碼區塊。</li>
+            <li><strong>依執行次數計費：</strong>在 Consumption 方案下，只有程式碼實際執行時才計費，閒置時完全零費用。</li>
+          </ul>
+        </li>
+        <li><strong>Azure Logic Apps (無伺服器整合)：</strong>低程式碼/無程式碼 (Low-code/No-code) 工作流程編排工具，提供數百個現成連接器整合 SaaS 與地端系統。</li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：事件驅動無伺服器程式碼</div>
+      <ul class="q-opts">
+        <li>題目：開發人員需要編寫一段簡短的程式碼，每當有新圖片上傳到 Azure Storage 時，自動縮小圖片尺寸，且希望「無任何圖片上傳時不需要支付任何伺服器費用」。應選用？</li>
+        <li>A. Azure Virtual Machines</li>
+        <li>B. Azure Functions (Consumption Plan)</li>
+        <li>C. Azure Container Instances</li>
+        <li>D. Azure App Service 獨立方案</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：Azure Functions 專為事件驅動程式碼設計，搭配 Consumption 方案可在無任務時完全不產生成本。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/azure-functions/functions-overview" target="_blank">Azure Functions 簡介</a>
+    </div>
+  </article>
+
+  <!-- DAY 10 -->
+  <article class="day-section" id="day10">
+    <div class="day-header">
+      <div>
+        <span class="day-badge">DAY 10</span>
+        <h2 class="day-title">容器服務：Azure Container Instances (ACI) 與 AKS</h2>
+      </div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務 (35–40%)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心知識架構</h4>
+      <ul class="point-list">
+        <li><strong>容器 vs 虛擬機器：</strong>VM 虛擬化整套硬體並包含獨立 Guest OS（較重）；容器共用主機 OS 核心，僅封裝應用程式與相依函式庫（輕量、秒級啟動）。</li>
+        <li><strong>Azure Container Instances (ACI)：</strong>最快速、最簡單在 Azure 執行單一容器的方式。<strong>無伺服器容器</strong>，免管理任何 VM，免配置 Kubernetes 叢集，按秒計費。</li>
+        <li><strong>Azure Kubernetes Service (AKS)：</strong>完全受管的企業級容器協調與編排 (Orchestration) 平台。適合複雜微服務架構、多容器服務發現、自我修復與自動負載平衡。微軟免費提供叢集主控節點 (Control Plane)。</li>
+      </ul>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：ACI vs AKS 適用情境</div>
+      <ul class="q-opts">
+        <li>題目：團隊需要執行一個短暫的資料處理容器任務，每天僅執行一次，執行時間約 5 分鐘，且團隊不想設定與管理任何 Kubernetes 叢集。最理想的服務是？</li>
+        <li>A. Azure Kubernetes Service (AKS)</li>
+        <li>B. Azure Container Instances (ACI)</li>
+        <li>C. Azure App Service 專用叢集</li>
+        <li>D. Azure Virtual Machine Scale Sets</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：ACI 支援無需管理伺服器或容器編排平台的按需即開即用容器執行環境，非常適合短期隔離任務。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/container-instances/container-instances-overview" target="_blank">Azure 容器執行個體概觀</a>
+    </div>
+  </article>
+
+  <!-- DAY 11 to DAY 30 Summary blocks -->
+  <article class="day-section" id="day11">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 11</span><h2 class="day-title">網路架構：Azure Virtual Network (VNet) 與 Subnet</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>VNet (虛擬網路)：</strong>Azure 私有網路隔離邊界。提供專屬 RFC 1918 私有 IP 位址區段。</li>
+        <li><strong>Subnet (子網路)：</strong>將 VNet 劃分成更小的邏輯區段（例如 Web Subnet, DB Subnet），每個子網內保留 5 個 IP 供 Azure 內部使用。</li>
+        <li><strong>VNet Peering (虛擬網路對等互連)：</strong>透過微軟高速骨幹私有網路直接串聯兩個 VNet（支援跨區域 Global VNet Peering），完全不走公共網際網路，延遲極低。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day12">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 12</span><h2 class="day-title">網路安全：網路安全群組 (NSG) 與應用程式安全性群組 (ASG)</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>NSG (Network Security Group)：</strong>第 4 層 (L4) 封包過濾防火牆，依來源/目的地 IP、連接埠與通訊協定控制流量。</li>
+        <li><strong>規則優先順序：</strong>範圍為 <strong>100 至 4096</strong>，<strong>數值越小優先權越高</strong>，只要符合第一條規則即停止比對。</li>
+        <li><strong>ASG (Application Security Group)：</strong>將具有相同角色的虛擬機器（例如 Web 伺服器）分組，讓 NSG 規則可直接指定 ASG 標籤，免維護龐大 IP 清單。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day13">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 13</span><h2 class="day-title">混合雲網路連線：VPN Gateway vs Azure ExpressRoute</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>VPN Gateway (站對站 VPN)：</strong>透過<strong>「公共網際網路」</strong>建立加密的 IPsec/IKE 通道，成本較低，但速度與延遲受公網流量影響。</li>
+        <li><strong>Azure ExpressRoute：</strong>透過電信服務商建立<strong>「專屬私有連線」</strong>，<strong>完全不經過公共網際網路</strong>！具備極高可靠性、最高頻寬與最低延遲，適合大型企業與金融核心。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day14">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 14</span><h2 class="day-title">負載平衡器選型：Azure Load Balancer vs Application Gateway</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure Load Balancer (第 4 層 L4)：</strong>傳輸層負載平衡器，僅根據 IP 與 TCP/UDP Port 轉發流量，極低延遲、超高輸送量。</li>
+        <li><strong>Application Gateway (第 7 層 L7)：</strong>應用層負載平衡器，支援 <strong>Cookie 關聯、URL 路徑路由（如 /images 轉發不同叢集）、SSL 終止 (SSL Offloading)</strong>，並可啟用 <strong>Web 應用程式防火牆 (WAF)</strong> 防禦 SQL Injection 與 XSS！</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day15">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 15</span><h2 class="day-title">儲存體：Azure Blob Storage 與存取層級 (Tiers)</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Hot Tier (常用層)：</strong>儲存成本最高，但存取 (讀寫) 費用最低。適合經常存取資料。</li>
+        <li><strong>Cool Tier (非常用層)：</strong>儲存成本較低，存取費用較高。適合存放至少 30 天且不常讀取的資料。</li>
+        <li><strong>Cold Tier (冷層)：</strong>介於 Cool 與 Archive 之間，存放至少 90 天。</li>
+        <li><strong>Archive Tier (封存層)：</strong>儲存費用極低，但<strong>處於離線狀態</strong>，存取費用最高且讀取前需耗費數小時解凍 (Rehydrate)。適合法規保存數年之備份。</li>
+        <li><strong>生命週期管理 (Lifecycle Management)：</strong>自動化規則，依據最後修改時間自動將 Blob 由 Hot 轉 Cool 轉 Archive 甚至刪除。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day16">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 16</span><h2 class="day-title">Azure Files 與受控磁碟 (Managed Disks)</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure Files：</strong>完全受管的雲端檔案共用服務，支援業界標準 <strong>SMB 與 NFS</strong> 通訊協定，可同時掛載至 Windows、macOS 與 Linux。</li>
+        <li><strong>Managed Disks (受控磁碟)：</strong>微軟負責管理磁碟底層儲存硬體。分為：
+          <ul>
+            <li>Standard HDD：最低成本，適合備份與非關鍵應用。</li>
+            <li>Standard SSD：具性價比的輕量工作負載。</li>
+            <li>Premium SSD：高效能與低延遲，生產環境與資料庫首選。</li>
+            <li>Ultra Disk：微軟頂級磁碟，支援亞毫秒延遲與超高 IOPS，適合重量級 SAP HANA 等交易資料庫。</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day17">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 17</span><h2 class="day-title">資料搬遷工具：Storage Explorer 與 AzCopy</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure Storage Explorer：</strong>跨平台 GUI 桌面軟體，方便視覺化上傳、下載與管理 Azure 儲存體資料。</li>
+        <li><strong>AzCopy：</strong>高速命令列公用程式，專門用於地端與 Azure 儲存體帳戶之間、或儲存體帳戶彼此之間的巨量資料高效複製。</li>
+        <li><strong>Azure Storage Migration Service：</strong>協助將舊有 Windows Server 檔案伺服器無縫遷移至 Azure Files。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day18">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 18</span><h2 class="day-title">關聯式資料庫：Azure SQL Database 系列</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure SQL Database (單一資料庫 / 彈性集區)：</strong>完全受管 PaaS，免管 OS 與 SQL 安裝修補，具 99.99% 原生可用性。</li>
+        <li><strong>Azure SQL Managed Instance：</strong>幾乎 100% 相容地端 SQL Server 企業功能（支援跨資料庫查詢、SQL Agent 等），是地端現有 SQL 應用搬遷至雲端 PaaS 的最佳途徑。</li>
+        <li><strong>SQL Server on Azure VM (IaaS)：</strong>保留完整 OS 與 SQL 控制權，適用需特定協力廠商外掛程式者。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day19">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 19</span><h2 class="day-title">全域資料庫：Azure Cosmos DB</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>全域分散式 (Globally Distributed)：</strong>原生支援跨全球多個區域一鍵複寫。</li>
+        <li><strong>多區域同時寫入 (Multi-region Writes)：</strong>全球各地的使用者均可在就近資料中心完成個位數毫秒 (Single-digit millisecond) 讀寫！</li>
+        <li><strong>可用性 SLA：</strong>高達 <strong>99.999% (五個九)</strong>。支援多種 API（NoSQL / MongoDB / Cassandra / Gremlin / Table）。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day20">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 20</span><h2 class="day-title">巨量資料與分析：Azure Synapse Analytics 與 Databricks</h2></div>
+      <span class="day-domain">Domain 2: 描述 Azure 架構與服務</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure Synapse Analytics：</strong>結合巨量資料與企業資料倉儲 (EDW) 的整合分析服務，支援大規模無伺服器 SQL 查詢與 Spark 串流分析。</li>
+        <li><strong>Azure Databricks：</strong>基於 Apache Spark 的資料分析平台，深度整合微軟安全性與 Python/Scala/R 機器學習工作流程。</li>
+        <li><strong>Azure HDInsight：</strong>託管開源分析架構（如 Hadoop、HBase、Kafka）。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day21">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 21</span><h2 class="day-title">階段總複習②：核心運算、網路、儲存與資料庫整合</h2></div>
+      <span class="day-domain">綜合階段評量 (Domain 2)</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 複習指南</h4>
+      <p style="font-size:0.92rem;">本章彙整了架構師最常選型的交叉矩陣：何時選 VMSS vs App Service？何時選 Cosmos DB vs Azure SQL？何時選 ExpressRoute vs VPN Gateway？請前往進行題庫檢測。</p>
+      <div class="official-ref">
+        📖 進入互動練習：<a href="day21.html">前往 Day 21 階段總複習測驗頁面</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="day-section" id="day22">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 22</span><h2 class="day-title">身分識別：Microsoft Entra ID 與條件式存取 (Conditional Access)</h2></div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Microsoft Entra ID (前身為 Azure Active Directory)：</strong>雲端原生身分識別與存取管理服務 (IDaaS)。管理使用者、群組、單一登入 (SSO) 與應用程式註冊。</li>
+        <li><strong>多重要素驗證 (MFA)：</strong>要求提供兩種或以上的驗證方式（密碼 + 手機 App 認證碼 / 簡訊）。</li>
+        <li><strong>條件式存取 (Conditional Access)：</strong>「如果...那麼...」政策引擎。例如：「如果使用者從不信任的 IP 或非公司註冊裝置登入，那麼強制要求 MFA 或封鎖存取」。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day23">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 23</span><h2 class="day-title">角色型存取控制 (RBAC) 與階層管理</h2></div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure 資源階層（上到下繼承）：</strong>
+          <ol style="padding-left:20px;margin:4px 0;">
+            <li><strong>管理群組 (Management Groups)：</strong>跨多個訂用帳戶管理政策與合規。</li>
+            <li><strong>訂用帳戶 (Subscriptions)：</strong>計費與配額邊界。</li>
+            <li><strong>資源群組 (Resource Groups)：</strong>邏輯管理容器。</li>
+            <li><strong>資源 (Resources)：</strong>VM、儲存庫、資料庫等實體。</li>
+          </ol>
+        </li>
+        <li><strong>權限繼承性：</strong>上層指派的權限會自動向下層繼承，無法被阻擋。</li>
+        <li><strong>核心內建角色：</strong>Owner (所有權人，可指派他人權限)、Contributor (參與者，可增刪改查資源但不能指派權限)、Reader (讀取者，僅能檢視)。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day24">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 24</span><h2 class="day-title">資安架構：零信任 (Zero Trust) 與 Microsoft Defender for Cloud</h2></div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>零信任三大指導原則：</strong>
+          <ul>
+            <li>明確驗證 (Verify explicitly)：一律根據所有可用數據點（身分、位置、裝置、服務）進行驗證。</li>
+            <li>使用最低權限 (Use least privilege)：僅授予完成任務所需的最小權限 (JIT / JEA)。</li>
+            <li>假設缺口 (Assume breach)：假設網路已經被滲透，採取微分割 (Micro-segmentation) 與端到端加密。</li>
+          </ul>
+        </li>
+        <li><strong>Microsoft Defender for Cloud：</strong>
+          <ul>
+            <li>雲端安全性狀態管理 (CSPM)：提供量化的 <strong>Secure Score (安全分數)</strong> 並列出改善建議。</li>
+            <li>雲端工作負載保護 (CWPP)：針對 VM、容器、SQL 即時偵測惡意威脅並發出安全警報。</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day25">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 25</span><h2 class="day-title">金鑰管理與威脅偵測：Azure Key Vault 與 Microsoft Sentinel</h2></div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure Key Vault：</strong>集中且安全地託管：<strong>密鑰 (Secrets，如資料庫密碼)、加密金鑰 (Keys，支援 FIPS 140-2 硬體 HSM) 與 SSL/TLS 憑證 (Certificates)</strong>。避免敏感資訊硬編碼在程式碼中！</li>
+        <li><strong>Microsoft Sentinel：</strong>雲端原生 <strong>SIEM (安全性資訊與事件管理) + SOAR (安全性協調流程、自動化與回應)</strong>。能跨多雲、地端與 Office 365 收集大數據日誌，利用 AI 自動偵測威脅並自動觸發 Playbook 應變阻擋！</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day26">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 26</span><h2 class="day-title">合規治理：Azure Policy、資源鎖定與標籤 (Tags)</h2></div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure Policy：</strong>評估並強制執行組織規則（例如：規定只能在 Japan East 建立資源、禁止使用特定規格 VM）。不合規時可選擇封鎖 (Deny) 或標記為不相符 (Audit)。</li>
+        <li><strong>Resource Locks (資源鎖定)：</strong>
+          <ul>
+            <li><strong>CanNotDelete (不可刪除)：</strong>授權使用者可讀寫修改，但無法刪除資源。</li>
+            <li><strong>ReadOnly (唯讀)：</strong>授權使用者僅能檢視，無法修改亦無法刪除。</li>
+          </ul>
+        </li>
+        <li><strong>Tags (標籤)：</strong>名稱/值配對中繼資料（如 <code>Department: Finance</code>），用於成本追蹤、會計分攤與資源分類。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day27">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 27</span><h2 class="day-title">成本管理：Pricing Calculator、TCO 與 Cost Management</h2></div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 核心重點</h4>
+      <ul class="point-list">
+        <li><strong>Azure Pricing Calculator (定價計算機)：</strong>在正式建立或遷移前，預估在 Azure 上運行各項資源的每月預期花費。</li>
+        <li><strong>TCO Calculator (總擁有成本計算機)：</strong>比較地端自建機房與遷移至 Azure 的長期總體擁有成本節省效益。</li>
+        <li><strong>成本節約機制：</strong>
+          <ul>
+            <li><strong>預留執行個體 (Reserved Instances / Savings Plan)：</strong>承諾使用 1 年或 3 年，最高可享 72% 費用折扣。</li>
+            <li><strong>Azure 混合式權益 (Azure Hybrid Benefit)：</strong>將地端具備軟體保證 (Software Assurance) 的 Windows Server 或 SQL Server 既有授權移轉至 Azure，免重複支付 OS 授權費！</li>
+          </ul>
+        </li>
+        <li><strong>Azure Cost Management：</strong>監控實際支出，設定<strong>預算警示 (Budget Alerts)</strong>，避免帳單超支。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day28">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 28</span><h2 class="day-title">考試秘笈：AZ-900 特有題型破解策略</h2></div>
+      <span class="day-domain">應試策略篇</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 官方特有題型應對原則</h4>
+      <ul class="point-list">
+        <li><strong>Hot Area (熱區下拉選單)：</strong>通常考「A服務還是B服務？」務必認清關鍵詞（如看到了「自動水平增減」選 VMSS；看到「專屬私有連線」選 ExpressRoute）。</li>
+        <li><strong>Repeated Scenario (連續重複情境題)：</strong>同一情境連續出現在方案 A、B、C 題中。<strong>重要特性：一旦點選 Next 進入下一題，就無法回上一題修改答案！</strong>因此每題必須獨立冷靜判斷是否達成核心目標。</li>
+        <li><strong>是非題陷阱：</strong>注意題目中的「一律 (Always)」、「無條件」、「自動為所有資源完成」等絕對字眼，在雲端架構通常為錯誤 (No)。</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day-section" id="day29">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 29</span><h2 class="day-title">50 題跨網域綜合模擬戰心法</h2></div>
+      <span class="day-domain">模擬實戰篇</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 衝刺重點</h4>
+      <p style="font-size:0.92rem;">AZ-900 考試總分為 1000 分，及格標準為 <strong>700 分 (約 70%)</strong>。題目隨機抽取 35-50 題。答錯不倒扣，因此務必回答每一題！請前往進行 Day 29 全真模擬戰。</p>
+      <div class="official-ref">
+        📖 進入互動練習：<a href="day29.html">前往 Day 29 50 題全真模擬戰</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- DAY 30 -->
+  <article class="day-section" id="day30">
+    <div class="day-header">
+      <div><span class="day-badge">DAY 30</span><h2 class="day-title">終局戰：儲存體備援 (Redundancy) 與高可用性 SLA 終極彙整</h2></div>
+      <span class="day-domain">全域統整篇</span>
+    </div>
+    <div class="content-block">
+      <h4>📌 儲存體備援完整對照表（必考題關鍵點）</h4>
+      <div class="table-container">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>備援選項</th>
+              <th>主要區域複寫方式</th>
+              <th>次要區域複寫方式</th>
+              <th>容錯防護層級</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>LRS (本地備援)</strong></td>
+              <td>同一資料中心內同步儲存 3 份副本</td>
+              <td>無跨區複製</td>
+              <td>防範磁碟與機架故障（無法承受整座資料中心損毀）</td>
+            </tr>
+            <tr>
+              <td><strong>ZRS (可用性區域備援)</strong></td>
+              <td>跨 3 個 Availability Zones 同步複寫</td>
+              <td>無跨區複製</td>
+              <td>防範單一整座資料中心完全中斷火災</td>
+            </tr>
+            <tr>
+              <td><strong>GRS (異地備援)</strong></td>
+              <td>主要區域採 LRS (單一資料中心 3 份)</td>
+              <td>非同步複寫至數百英哩外次要配對區域 (次要區域採 LRS)</td>
+              <td>防範重大區域性災難（但次要區域平時無法讀取，需容錯移轉後才可讀寫）</td>
+            </tr>
+            <tr>
+              <td><strong>RA-GRS (讀取存取異地備援)</strong></td>
+              <td>主要區域採 LRS (單一資料中心 3 份)</td>
+              <td>非同步複寫至次要區域，且<strong>次要端點隨時提供唯讀存取</strong></td>
+              <td>主區域掛掉時，可立即從次要區域持續讀取資料</td>
+            </tr>
+            <tr>
+              <td><strong>GZRS (異地區域備援)</strong></td>
+              <td>主要區域採 ZRS (跨 3 個 AZ 同步複寫)</td>
+              <td>非同步複寫至次要配對區域 (次要區域採 LRS)</td>
+              <td>兼具主區域 AZ 容錯 + 跨區域災難復原最高等級保護</td>
+            </tr>
+            <tr>
+              <td><strong>RA-GZRS</strong></td>
+              <td>主要區域採 ZRS (跨 3 個 AZ 同步複寫)</td>
+              <td>非同步複寫至次要區域，且<strong>次要端點隨時提供唯讀存取</strong></td>
+              <td>最高等級儲存體耐用性與業務連續性</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題：RA-GRS vs RA-GZRS 觀念區分</div>
+      <ul class="q-opts">
+        <li>題目：某商業銀行的核心存檔合規要求：資料在主要區域必須跨三個實體隔離的可用性區域 (AZ) 同步複製，同時還必須非同步複製到配對次要區域，且次要區域必須能即時提供唯讀查詢。應選擇何種備援方案？</li>
+        <li>A. Locally redundant storage (LRS)</li>
+        <li>B. Read-access geo-redundant storage (RA-GRS)</li>
+        <li>C. Read-access geo-zone-redundant storage (RA-GZRS)</li>
+        <li>D. Zone-redundant storage (ZRS)</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：C</strong><br>
+        詳解：RA-GZRS 結合了 ZRS（主要區域跨 3 個 AZ）與異地複寫及次要端點唯讀存取。RA-GRS 的主要區域只有 LRS，無法抵抗整座資料中心故障。
+      </div>
+    </div>
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/azure/storage/common/storage-redundancy" target="_blank">Azure Storage 備援選項完整說明</a>
+    </div>
+  </article>
+
+</div>
+
+<button id="backToTop" title="回到頂部">↑</button>
+
+<script>
+  // Back to top behavior
+  const btt = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      btt.style.display = 'flex';
+    } else {
+      btt.style.display = 'none';
+    }
+  });
+  btt.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

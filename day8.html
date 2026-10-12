@@ -223,7 +223,7 @@ const QUESTIONS = [
       "D. 20 台 VM 全放同一 Availability Set + 手動開關機 + 跨 Region Pair 部署 DB + 憑證寫進自訂映像"
     ],
     a: 1,
-    exp: "答案是 B。逐需求：(1) VMSS + Autoscale = 自動水平擴展，不中斷服務，Scale Set 本身免費；(2) zones:[1,2] + 最小 3 台 ≥ 2 台 ≥ 2 AZ = 99.99% SLA 最小配置；(3) Availability Set = 同資料中心內分散 FD(電源/網路交換器) / UD(維護重啟)，官方也記載其 VM 間延遲比 AZ 低；(4) Bastion = 免公有 IP 的 RDP/SSH over TLS，Managed Identity = 完全不需管理憑證。方案 C 的 regional VMSS 無法保證資料中心容錯，且 Spot VM 無 SLA 不適合生產。方案 D 的 Availability Set 最多只有 99.95%，手動管理違反彈性需求。"
+    exp: "答案是 B。逐需求解析：(1) VMSS + Autoscale = 自動水平擴展，不中斷服務，Scale Set 本身免費；(2) zones:[1,2] + 最小 3 台（≥ 2 台且跨 ≥ 2 個 AZ）= 滿足 Azure 虛擬機器 99.99% SLA 條件（注意：需部署在支援 AZ 的 Region、支援的 VM SKU，並在各 AZ 分散部署至少 1 個執行個體，不可將 zones 設定無條件套用於所有未支援區域）；(3) Availability Set = 同資料中心內分散 FD(電源/網路交換器) / UD(維護重啟)，VM 間延遲比跨 AZ 更低；(4) Bastion = 免公有 IP 的 RDP/SSH over TLS，Managed Identity = 完全不需在程式碼中管理憑證。方案 C 的 regional VMSS 無法保證資料中心容錯，且 Spot VM 無 SLA 不適合生產。方案 D 的 Availability Set 最多只有 99.95%，手動管理違反彈性需求。"
   }
 ];
 

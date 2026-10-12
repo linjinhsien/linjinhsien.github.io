@@ -337,16 +337,33 @@
 <header>
   <h1>AZ-900 Practice Quiz</h1>
   <p>Microsoft Azure Fundamentals &mdash; 30 questions covering all exam domains</p>
-  <div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-    <a href="scenario.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:4px 12px;">情境題 50 題 →</a>
-    <a href="day29.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:4px 12px;">Day 29 模擬戰 →</a>
-    <a href="day30.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:4px 12px;">Day 30 終局戰 →</a>
+  <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <a href="az900-30-day-full-guide.html" style="font-size:0.9rem;font-weight:700;background:#0078d4;color:#fff;text-decoration:none;border-radius:8px;padding:6px 16px;box-shadow:0 2px 4px rgba(0,120,212,0.3);">📖 30 天全詳解（單頁完整版）→</a>
+    <a href="scenario.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">情境題 50 題 →</a>
+    <a href="day29.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">Day 29 模擬戰 →</a>
+    <a href="day30.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">Day 30 終局戰 →</a>
   </div>
 </header>
+
+<div style="max-width:700px;width:100%;margin:0 auto 20px;padding:14px 18px;background:#eef6fc;border-left:4px solid #0078d4;border-radius:6px;font-size:0.85rem;line-height:1.6;color:#201f1e;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+  <div style="font-weight:700;color:#005a9e;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+    <span>⚡</span><span>AZ-900 官方架構考點重點提示與技術勘誤</span>
+  </div>
+  <ul style="padding-left:18px;margin:4px 0;">
+    <li><strong>可用性區域 (AZ)：</strong>非 AWS 專屬，Azure 同樣支援且為核心考點；並非所有 Region 都有 AZ，各 SKU 支援條件亦有差異。</li>
+    <li><strong>區域配對 (Region Pairs)：</strong>多數相距約 300 英哩但非絕對通用規則；<strong>配對不會自動為所有資源建立 DR 容錯移轉</strong>。</li>
+    <li><strong>SLA 99.99%：</strong>須在支援 AZ 區域中跨 2 個以上 AZ 部署至少 2 台 VM，且符合必要前提，非無條件保證。</li>
+    <li><strong>儲存備援差異：</strong>RA-GRS 主要區域採 LRS；RA-GZRS 主要區域才採跨 AZ 的 ZRS。</li>
+  </ul>
+  <div style="margin-top:6px;font-size:0.8rem;">
+    📘 查閱全章節精華整理：<a href="az900-30-day-full-guide.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">前往 AZ-900 30 天全詳解單頁版</a>
+  </div>
+</div>
 
 <section id="all-days" style="width:100%;max-width:900px;margin:20px auto 0;padding:0 16px;">
   <h2 style="color:#0078d4;font-size:1.1rem;font-weight:700;margin-bottom:12px;text-align:center;">所有學習日 — 點選練習</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:24px;">
+    <a href="az900-30-day-full-guide.html" style="display:block;padding:11px 6px;background:#0078d4;border:2px solid #005a9e;border-radius:8px;text-align:center;text-decoration:none;color:#ffffff;font-weight:700;font-size:.82rem;">📖 30天全詳解<br><span style="font-size:.7rem;font-weight:400;color:#d0e8f8;">全單元單頁版</span></a>
     <a href="scenario.html" style="display:block;padding:11px 6px;background:#e6f0fa;border:2px solid #0078d4;border-radius:8px;text-align:center;text-decoration:none;color:#005a9e;font-weight:700;font-size:.82rem;">情境題<br><span style="font-size:.7rem;font-weight:400;">綜合 50 題</span></a>
     <a href="day2.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 2<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">基礎架構</span></a>
     <a href="day3.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 3<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">主權雲</span></a>

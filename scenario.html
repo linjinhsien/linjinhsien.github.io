@@ -342,6 +342,7 @@
   <h1>AZ-900 情境題練習</h1>
   <p>Microsoft Azure Fundamentals &mdash; 50 道情境式選擇題（含 Day 29-30 定價與 SLA 專題）</p>
   <a class="nav-link" href="index.html">← 標準題</a>
+  <a class="nav-link" href="az900-30-day-full-guide.html" style="background:#e6f0fa;font-weight:700;">📖 30 天全詳解</a>
   <a class="nav-link" href="day29.html">Day 29 模擬戰</a>
   <a class="nav-link" href="day30.html">Day 30 終局戰</a>
 </header>
@@ -451,7 +452,7 @@ const QUESTIONS = [
     q: "哪種儲存冗餘選項最能滿足這家金融機構「跨資料中心 + 跨區域」的資料保護需求？",
     opts: ["本地備援儲存 (LRS)", "區域備援儲存 (ZRS)", "異地備援儲存 (GRS)", "讀取存取異地備援儲存 (RA-GRS)"],
     a: 3,
-    exp: "RA-GRS 在主要區域的 3 個 AZ 間複製資料（保護資料中心故障），同時非同步複製到次要區域（保護整個區域災難）。相比 GRS，RA-GRS 還允許從次要區域唯讀存取，在主要區域故障時仍可讀取資料，最符合這家金融機構的需求。"
+    exp: "RA-GRS（讀取存取異地備援儲存）在主要區域使用 LRS（單一資料中心 3 份複本）進行複寫，並非同步複製到數百英哩外的配對次要區域。與一般 GRS 相比，RA-GRS 隨時提供次要端點唯讀存取，當主要區域發生中斷時，業務仍可立即從次要區域持續讀取資料。（注意：若主要區域本身亦需具備跨可用性區域 ZRS 同步容錯，則應選擇 RA-GZRS）。"
   },
   {
     topic: "Azure 網路",

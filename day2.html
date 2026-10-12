@@ -70,9 +70,18 @@ header p{color:var(--neutral);margin-top:4px;font-size:.9rem;}
   <p>Region / Availability Zones / Region Pairs / SLA / Data Residency</p>
   <div class="nav-links">
     <a class="nav-link" href="index.html">← 首頁</a>
+    <a class="nav-link" href="az900-30-day-full-guide.html" style="background:#e6f0fa;font-weight:700;">📖 30 天全詳解</a>
     <a class="nav-link" href="day3.html">Day 3 →</a>
   </div>
 </header>
+
+<div style="max-width:800px;width:100%;margin:0 auto 16px;padding:12px 16px;background:#eef6fc;border-left:4px solid #0078d4;border-radius:4px;font-size:0.84rem;line-height:1.55;color:#201f1e;">
+  <strong>💡 官方觀念重要提醒：</strong><br>
+  • <strong>可用性區域（AZ）：</strong>並非 AWS 專屬，亦為 Azure 核心考點；並非所有 Azure Region 皆支援 AZ。<br>
+  • <strong>區域配對（Region Pairs）：</strong>通常相距約 300 英哩，但並非全無例外之固定規則；且配對<strong>不會自動替所有資源完成災難復原</strong>。<br>
+  • <strong>SLA 99.99%：</strong>須在支援 AZ 的區域將 2 個以上 VM 分散於 2 個以上 AZ，並符合特定條件，並非無條件承諾。<br>
+  官方參考：<a href="https://learn.microsoft.com/zh-tw/azure/reliability/availability-zones-overview" target="_blank" style="color:#0078d4;text-decoration:underline;">AZ 概觀</a> ｜ <a href="https://learn.microsoft.com/en-us/azure/reliability/regions-paired" target="_blank" style="color:#0078d4;text-decoration:underline;">Region Pairs</a>
+</div>
 <div class="progress-wrap" id="progressWrap">
   <div class="progress-label">
     <span id="progressText">題目 1 / 12</span>
@@ -195,21 +204,21 @@ const QUESTIONS = [
       "D. 99.5%"
     ],
     a: 2,
-    exp: "單一 VM 搭配 Premium SSD 的 SLA 為 99.9%。若要達到 99.99%，必須將 VM 跨 2 個以上的 Availability Zones 部署。這是 AZ-900 的高頻考點，務必記住兩個數字：單一 VM (Premium SSD) = 99.9%；跨 AZ 部署 = 99.99%。"
+    exp: "單一 VM 搭配 Premium SSD 的 SLA 為 99.9%。若要達到 99.99%，前提是該 Region 支援 Availability Zones，且必須將至少 2 個 VM 分散部署於 2 個以上的 AZ 中，並符合官方規定條件。這是 AZ-900 重要考點：單一 VM (Premium SSD) = 99.9%；Availability Set = 99.95%；跨 AZ 部署 = 99.99%（需滿足架構與支援條件）。"
   },
   {
     type: "單選題",
     topic: "Region Pairs",
     scene: "",
-    q: "Azure Region Pairs 中，兩個配對 Region 之間的最小距離要求為何？",
+    q: "關於 Azure 區域配對（Region Pairs）的距離設計考量與運作方式，下列何者敘述最為準確？",
     opts: [
-      "A. 至少 50 英哩（約 80 公里）",
-      "B. 至少 100 英哩（約 160 公里）",
-      "C. 至少 300 英哩（約 480 公里）",
-      "D. 至少 1,000 英哩（約 1,600 公里）"
+      "A. 所有配對 Region 之間都嚴格規定相距必須正好 300 英哩，無任何例外",
+      "B. 許多配對 Region 設計上相距約 300 英哩（約 480 公里）以防範廣域天災，但並非全無例外之固定規則，且配對不會自動替所有資源完成災難復原",
+      "C. 配對 Region 之間強制要求必須相距 1,000 英哩以上",
+      "D. Azure 會自動為使用者所有的 VM 與資料庫完成跨 Region 配對的自動故障切換"
     ],
-    a: 2,
-    exp: "Region Pairs 兩個 Region 之間距離至少 300 英哩（約 480 公里）。這個距離設計是為了確保在自然災害（如地震、颱風）或大規模電力事故時，兩個 Region 不會同時受到波及，從而保障跨區域的災難復原能力。"
+    a: 1,
+    exp: "正確答案是 B。微軟在設計多數 Region Pairs 時，目標相距至少約 300 英哩（約 480 公里），以避免單一自然災害（如颶風、地震）同時癱瘓兩者。但這並非所有區域無例外的鐵律（部分因地緣政治或資料主權限制而有例外，應以官方 Paired Regions 清單為準）。更重要的是：Region Pairs 並不會「自動」替所有使用者資源建立應用層災難復原，架構師仍需主動設定相應的備援策略。"
   },
   {
     type: "是非題",
@@ -223,7 +232,7 @@ const QUESTIONS = [
       "D. 題目資訊不足"
     ],
     a: 1,
-    exp: "答案為 No（False）。Region Pairs 是 Azure 的獨家特色（Azure 原生內建的 DR 機制）。在 AWS 中，若要實現跨 Region 備援，需要手動設定 Cross-Region Replication（CRR）、DynamoDB Global Tables 等，AWS 並未提供 Azure 式的固定配對與自動優先復原機制。"
+    exp: "答案為 No（False）。Region Pairs 是 Azure 的特色架構（包含循序滾動更新、大範圍中斷優先循序復原）。在 AWS 中並無固定的雙區域原生配對架構，跨區備援多需自行指定與配置。但需切記：Azure 的 Region Pairs 同樣不會自動為您所有工作負載無條件接管，架構師仍需自行規劃與啟用相應支援服務（如 GRS 或跨區容錯移轉）。"
   },
   {
     type: "單選題",
