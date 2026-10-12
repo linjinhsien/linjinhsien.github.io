@@ -1,0 +1,8 @@
+{
+  "name": "AZ-900 Practice Quiz",
+  "description": "Microsoft Azure Fundamentals practice quiz covering exam domains, daily quizzes, and scenario questions.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
