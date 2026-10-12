@@ -103,7 +103,7 @@ const QUESTIONS = [
     type: "單選題",
     topic: "Availability Zones / SLA",
     scene: "",
-    q: "您的公司計劃部署多台 Azure 虛擬機器 (VM)。若單一資料中心發生故障，需確保 VM 上的服務仍維持可用，且 SLA 保證至少達 99.99%。請問解決方案中應包含哪一項？",
+    q: "您的公司要部署 Azure VM，目標是在單一可用性區域故障時，仍有其他 VM 可提供服務。若要評估 99.99% VM 連線 SLA，哪項設計最符合常見的必要條件？",
     opts: [
       "A. 將 VM 部署在多個 Resource Groups 中",
       "B. 將 VM 部署在同一 Azure Region 內的多個 Availability Zones",
@@ -111,7 +111,7 @@ const QUESTIONS = [
       "D. 將 VM 部署在不同的 Azure Subscriptions 中"
     ],
     a: 1,
-    exp: "跨 2 個以上 Availability Zones 部署 VM，微軟官方保證 99.99% SLA。Resource Group（A）和 Subscription（D）只是邏輯管理邊界，無法防止實體資料中心等級的故障。單一 VM 搭配 Premium SSD（C）的 SLA 僅為 99.9%。"
+    exp: "Azure VM SLA 的 99.99% 條件涉及至少兩個 VM 執行個體部署於至少兩個 Availability Zones，並須符合現行 SLA 的其他適用條件。不同 Resource Groups 或 Subscriptions 不會自動形成跨資料中心容錯；單一 VM 搭配 Premium SSD 也不能直接視為 99.99%。",
   },
   {
     type: "多選題",
@@ -125,7 +125,7 @@ const QUESTIONS = [
       "D. 「Azure 同時推送維護更新至配對的兩個 Region」與「客戶可自行變更配對對象」"
     ],
     a: 1,
-    exp: "正確答案為 B。① 大範圍天災時，Azure 復原演算法確保每個配對組中至少有一個 Region 優先被拉起（正確）。② 為符合各國資料主權法規，絕大多數配對都在同一 Geography 內（正確）。Azure 採用「循序更新（Sequenced Updates）」而非同步更新（A/C 中的敘述錯誤）。Region Pairs 是 Azure 底層預設固定的，使用者無法自行變更（D 錯誤）。"
+    exp: "正確答案為 B。Microsoft 文件說明，在 Geography 範圍的大規模故障中，配對中的其中一個 Region 會被優先復原；Microsoft 也會盡量錯開配對區域的計畫性更新，但不是無條件保證。配對通常位於同一 Geography，但存在例外。並非所有 Region 都有配對，Region Pair 也不會自動替所有服務建立 DR。",
   },
   {
     type: "是非題",
@@ -139,7 +139,7 @@ const QUESTIONS = [
       "D. 題目資訊不足"
     ],
     a: 1,
-    exp: "答案為 No（False）。資料主權（Data Sovereignty / Residency）是核心原則：Azure 保證在預設情況下，資料只會在同一個 Geography 範圍內的 Region 進行複寫與備援，絕不會未經授權地將客戶資料跨國搬移。"
+    exp: "答案為 No。不能推論 Azure 會因資料中心中斷就自動把所有客戶資料移到另一個國家。資料駐留範圍取決於所選服務、備援設定、合約條款與法規要求；Geography 內的配對也有例外，且並非所有服務都使用 Region Pair。",
   },
   {
     type: "單選題",
@@ -181,7 +181,7 @@ const QUESTIONS = [
       "D. Resource Group（資源群組）"
     ],
     a: 2,
-    exp: "Azure Geography（地理位置）是最高層級的地理邊界，通常對應特定國家或地理管轄範圍（如 United States、Asia Pacific），並作為資料主權與合規邊界。Availability Zone（A）是 Region 內的容錯單元；Region（B）是計費與服務邊界；Resource Group（D）是邏輯管理邊界，三者均不負責跨國資料主權。"
+    exp: "Azure Geography 是由一個或多個 Region 組成的地理範圍，與資料駐留及合規要求相關；但不能只憑 Geography 名稱就保證所有服務、診斷資料或所有複本都絕不離開該範圍。必須依服務條款、資料位置文件及實際備援選項確認。Availability Zone 是 Region 內的故障隔離範圍，Resource Group 則是邏輯管理容器。",
   },
   {
     type: "單選題",
@@ -195,7 +195,7 @@ const QUESTIONS = [
       "D. 99.5%"
     ],
     a: 2,
-    exp: "單一 VM 搭配 Premium SSD 的 SLA 為 99.9%。若要達到 99.99%，必須將 VM 跨 2 個以上的 Availability Zones 部署。這是 AZ-900 的高頻考點，務必記住兩個數字：單一 VM (Premium SSD) = 99.9%；跨 AZ 部署 = 99.99%。"
+    exp: "此數值須以目前 Azure VM SLA 的服務條款與磁碟、部署設定為準。考題若以特定的單一 VM 搭配 Premium SSD 條件詢問，請按該題指定條件判斷；不要把這個數字泛化到所有 VM SKU 或所有組態。若目標是 99.99% VM 連線 SLA，通常需至少兩個 VM 執行個體部署於至少兩個 Availability Zones，並符合現行 SLA 條件。",
   },
   {
     type: "單選題",
@@ -223,7 +223,7 @@ const QUESTIONS = [
       "D. 題目資訊不足"
     ],
     a: 1,
-    exp: "答案為 No（False）。Region Pairs 是 Azure 的獨家特色（Azure 原生內建的 DR 機制）。在 AWS 中，若要實現跨 Region 備援，需要手動設定 Cross-Region Replication（CRR）、DynamoDB Global Tables 等，AWS 並未提供 Azure 式的固定配對與自動優先復原機制。"
+    exp: "答案為 No。Azure Region Pair 是 Microsoft 對部分 Azure Region 設定的配對關係，不等於已建立完整 DR，也不代表 Azure 會自動切換所有工作負載。AWS 與 Azure 都有跨區備援能力，但服務名稱、區域模型與組態方式不同，不能把一家雲端的預設行為直接套到另一家。",
   },
   {
     type: "單選題",
@@ -243,7 +243,7 @@ const QUESTIONS = [
     type: "是非題",
     topic: "Azure Geography",
     scene: "",
-    q: "判斷下列敘述是否正確：「Azure Geography 明確定義資料主權邊界，客戶資料在預設情況下不會離開所在的 Geography 範圍，例如部署在 Asia Pacific Geography 中的資料不會被複製至 Europe Geography。」",
+    q: "判斷下列敘述是否可無條件套用到所有 Azure 服務：「客戶資料在預設情況下只會留在所在 Geography，任何服務的複寫都不會跨 Geography。」",
     opts: [
       "A. Yes（正確）",
       "B. No（錯誤）",
@@ -251,7 +251,7 @@ const QUESTIONS = [
       "D. 題目資訊不足"
     ],
     a: 0,
-    exp: "答案為 Yes（True）。Azure Geography 的核心作用就是確保資料主權（Data Residency）與合規邊界。客戶資料在預設情況下只會在同一個 Geography 內的 Region 之間進行複寫與備援，不會跨 Geography 轉移。這對需要遵守 GDPR、各國隱私法規的企業至關重要。"
+    exp: "答案為 No，這是過度絕對的說法。資料駐留與複寫範圍要依服務、備援設定、合約條款及資料位置文件判斷；Region Pair 通常位於同一 Geography，但官方列有例外。題目若未指定服務及設定，不應推論所有資料永遠不會跨 Geography。",
   },
   {
     type: "單選題",
