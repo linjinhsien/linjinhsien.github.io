@@ -201,16 +201,16 @@ const QUESTIONS = [
     type: "單選題",
     topic: "Region Pairs",
     scene: "",
-    q: "Azure Region Pairs 中，兩個配對 Region 之間的最小距離要求為何？",
+    q: "下列哪一項是關於 Azure Region Pairs 的正確敘述？",
     opts: [
-      "A. 至少 50 英哩（約 80 公里）",
-      "B. 至少 100 英哩（約 160 公里）",
-      "C. 至少 300 英哩（約 480 公里）",
-      "D. 至少 1,000 英哩（約 1,600 公里）"
+      "A. 每個 Azure Region 都一定有配對 Region，且距離固定至少 300 英里",
+      "B. 部分 Region 有配對；配對本身不會自動替所有資源建立備援或故障切換",
+      "C. 選擇 Region Pair 後，所有 Azure 服務都會自動複寫資料",
+      "D. 客戶可以在 Portal 中任意變更 Microsoft 指定的 Region Pair"
     ],
-    a: 2,
-    exp: "Region Pairs 兩個 Region 之間距離至少 300 英哩（約 480 公里）。這個距離設計是為了確保在自然災害（如地震、颱風）或大規模電力事故時，兩個 Region 不會同時受到波及，從而保障跨區域的災難復原能力。"
-  },
+    a: 1,
+    exp: "正確答案為 B。部分 Azure Region 有配對，也有未配對的 Region；配對通常位於同一 Geography，但有例外。Microsoft 會盡量錯開配對區域的計畫性更新，特定服務（例如 Azure Storage GRS）可依服務規則複寫資料；但 Region Pair 本身不會自動複寫所有資源，也不保證應用程式自動故障切換。官方文件沒有通用的「至少 300 英里」規則。"
+  }
   {
     type: "是非題",
     topic: "Region Pairs / AWS 對照",
