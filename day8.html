@@ -119,7 +119,7 @@ const QUESTIONS = [
     q: "這個解決方案是否達成目標？",
     opts: ["A. Yes（達成）", "B. No（未達成）", "C. 部分正確", "D. 資訊不足"],
     a: 1,
-    exp: "答案是 No。Scale Set 可以被部署成單一 AZ 或 regional，官方原文：「Virtual machines in a scale set can also be deployed into multiple availability zones, a single availability zone, or regionally」。沒有明確指定跨 AZ，就無法保證資料中心級容錯。正確做法是明確設定 zones: ['1','2','3']，才能達成跨資料中心容錯與 99.99% SLA。"
+    exp: "答案是 No。Scale Set 可以被部署成單一 AZ 或 regional，官方原文：「Virtual machines in a scale set can also be deployed into multiple availability zones, a single availability zone, or regionally」。沒有明確指定跨 AZ，就無法保證資料中心級容錯。正確做法是依該 Region 與 VM SKU 支援情況，將至少兩個 VM 執行個體部署到至少兩個 Availability Zones，並核對現行 VM SLA 的全部條件；不要假設每個 Region／SKU 都支援相同的 zones 設定。"
   },
   {
     type: "Yes / No",
@@ -128,7 +128,7 @@ const QUESTIONS = [
     q: "這個解決方案是否達成目標？",
     opts: ["A. Yes（達成）", "B. No（未達成）", "C. 部分正確", "D. 資訊不足"],
     a: 0,
-    exp: "答案是 Yes。官方條件：「guarantee virtual machine connectivity to at least one instance at least 99.99% of the time when you have two or more instances deployed across two or more Availability Zones」。2 台 + 2 個 AZ 正好踩在最小門檻上，同時滿足「達成 99.99%」與「最少配置」兩個條件。注意：2 台都在同一 Availability Set 只能拿到 99.95%；1 台 VM（即使 Premium SSD）只有 99.9%。"
+    exp: "答案是 Yes（以題目指定的 VM SLA 條件成立為前提）。Microsoft 的 VM SLA 對至少兩個 VM 執行個體部署於至少兩個 Availability Zones 列有 99.99% 連線承諾；仍需確認所選 Region、VM SKU、磁碟與部署設定符合現行條款。Availability Set 的 SLA 條件不同，不能把不同架構的百分比當成所有情境通用。"
   },
   {
     type: "單選題",
@@ -155,7 +155,7 @@ const QUESTIONS = [
     q: "在 Azure 中，將 2 台以上虛擬機器放入同一個 Availability Set，可獲得多少 SLA 保證？",
     opts: ["A. 99.9%", "B. 99.95%", "C. 99.99%", "D. 100%"],
     a: 1,
-    exp: "答案是 B 99.95%。官方原文：「Using two or more VMs in an availability set helps keep applications highly available and meets the 99.95% Azure service-level agreement (SLA)」。單一 VM (Premium SSD) 是 99.9%；跨 2 個以上 Availability Zones 的 2 台以上 VM 才是 99.99%。Availability Set 防的是機櫃層級故障，擋不住資料中心級網路中斷。"
+    exp: "答案是 B（99.95% 為該 SLA 文件所列 Availability Set 情境的數值，考試或實際設計前請核對現行條款）。Availability Set 透過 Fault Domain 與 Update Domain 分散故障及維護影響；跨 AZ VM 則是不同部署選項。請勿將歷史或特定條件下的 SLA 數字套用到所有 VM 組態。"
   },
   {
     type: "單選題",
@@ -223,7 +223,7 @@ const QUESTIONS = [
       "D. 20 台 VM 全放同一 Availability Set + 手動開關機 + 跨 Region Pair 部署 DB + 憑證寫進自訂映像"
     ],
     a: 1,
-    exp: "答案是 B。逐需求：(1) VMSS + Autoscale = 自動水平擴展，不中斷服務，Scale Set 本身免費；(2) zones:[1,2] + 最小 3 台 ≥ 2 台 ≥ 2 AZ = 99.99% SLA 最小配置；(3) Availability Set = 同資料中心內分散 FD(電源/網路交換器) / UD(維護重啟)，官方也記載其 VM 間延遲比 AZ 低；(4) Bastion = 免公有 IP 的 RDP/SSH over TLS，Managed Identity = 完全不需管理憑證。方案 C 的 regional VMSS 無法保證資料中心容錯，且 Spot VM 無 SLA 不適合生產。方案 D 的 Availability Set 最多只有 99.95%，手動管理違反彈性需求。"
+    exp: "答案是 B。逐需求：(1) VMSS + Autoscale = 自動水平擴展，不中斷服務，Scale Set 本身免費；(2) 將至少兩個 VM 執行個體部署於至少兩個受支援的 AZ，並確認 VM SKU、區域及 SLA 條件；VMSS 的 zones 設定應依實際區域支援決定；(3) Availability Set = 同資料中心內分散 FD(電源/網路交換器) / UD(維護重啟)，官方也記載其 VM 間延遲比 AZ 低；(4) Bastion = 免公有 IP 的 RDP/SSH over TLS，Managed Identity = 完全不需管理憑證。方案 C 的 regional VMSS 無法保證資料中心容錯，且 Spot VM 無 SLA 不適合生產。方案 D 的 Availability Set 最多只有 99.95%，手動管理違反彈性需求。"
   }
 ];
 
