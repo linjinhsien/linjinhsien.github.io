@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,7 +40,7 @@
     header {
       width: 100%;
       max-width: 700px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       text-align: center;
     }
 
@@ -108,6 +108,13 @@
       font-size: 1.05rem;
       line-height: 1.6;
       margin-bottom: 24px;
+    }
+
+    .question-text .en-sub {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.92rem;
+      color: #484644;
     }
 
     .options {
@@ -335,73 +342,29 @@
 <body>
 
 <header>
-  <h1>AZ-900 Practice Quiz</h1>
-  <p>Microsoft Azure Fundamentals &mdash; 30 questions covering all exam domains</p>
+  <h1 id="heroTitle">AZ-900 模擬練習測驗 (Practice Quiz)</h1>
+  <p id="heroSubtitle">Microsoft Azure Fundamentals &mdash; 涵蓋所有考綱領域的 30 道核心練習題</p>
   <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-    <a href="az900-30-day-full-guide.html" style="font-size:0.9rem;font-weight:700;background:#0078d4;color:#fff;text-decoration:none;border-radius:8px;padding:6px 16px;box-shadow:0 2px 4px rgba(0,120,212,0.3);">📖 30 天全詳解（單頁完整版）→</a>
-    <a href="scenario.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">情境題 50 題 →</a>
-    <a href="day29.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">Day 29 模擬戰 →</a>
-    <a href="day30.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">Day 30 終局戰 →</a>
+    <a id="navFullGuide" href="az900-30-day-full-guide.html" style="font-size:0.9rem;font-weight:700;background:#0078d4;color:#fff;text-decoration:none;border-radius:8px;padding:6px 16px;box-shadow:0 2px 4px rgba(0,120,212,0.3);">📖 30 天全詳解（單頁完整版）→</a>
+    <a id="navScenario" href="scenario.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">情境題 50 題 →</a>
+    <a id="navDay29" href="day29.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">Day 29 模擬戰 →</a>
+    <a id="navDay30" href="day30.html" style="font-size:0.85rem;color:#0078d4;text-decoration:none;border:1px solid #0078d4;border-radius:8px;padding:6px 14px;">Day 30 終局戰 →</a>
   </div>
 </header>
 
-<div style="max-width:700px;width:100%;margin:0 auto 20px;padding:14px 18px;background:#eef6fc;border-left:4px solid #0078d4;border-radius:6px;font-size:0.85rem;line-height:1.6;color:#201f1e;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
-  <div style="font-weight:700;color:#005a9e;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
-    <span>⚡</span><span>AZ-900 官方架構考點重點提示與技術勘誤</span>
-  </div>
-  <ul style="padding-left:18px;margin:4px 0;">
-    <li><strong>可用性區域 (AZ)：</strong>非 AWS 專屬，Azure 同樣支援且為核心考點；並非所有 Region 都有 AZ，各 SKU 支援條件亦有差異。</li>
-    <li><strong>區域配對 (Region Pairs)：</strong>多數相距約 300 英哩但非絕對通用規則；<strong>配對不會自動為所有資源建立 DR 容錯移轉</strong>。</li>
-    <li><strong>SLA 99.99%：</strong>須在支援 AZ 區域中跨 2 個以上 AZ 部署至少 2 台 VM，且符合必要前提，非無條件保證。</li>
-    <li><strong>儲存備援差異：</strong>RA-GRS 主要區域採 LRS；RA-GZRS 主要區域才採跨 AZ 的 ZRS。</li>
-    <li><strong>Tenant 租戶登入（新增補充）：</strong>1 個 Tenant 可關聯多個 Subscriptions，但 1 個 Subscription 只能信任 1 個 Tenant（移轉租戶會重置 RBAC）；跨租戶 CLI 登入使用 <code>az login --tenant</code>。</li>
-  </ul>
-  <div style="margin-top:6px;font-size:0.8rem;">
-    📘 查閱全章節精華整理：<a href="az900-30-day-full-guide.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">前往 AZ-900 30 天全詳解單頁版</a> ｜ <a href="day22.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">練習 Day 22 租戶與身分識別 (16 題)</a>
-  </div>
+<div id="noticeBox" style="max-width:700px;width:100%;margin:0 auto 20px;padding:14px 18px;background:#eef6fc;border-left:4px solid #0078d4;border-radius:6px;font-size:0.85rem;line-height:1.6;color:#201f1e;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
 </div>
 
-<section id="all-days" style="width:100%;max-width:900px;margin:20px auto 0;padding:0 16px;">
-  <h2 style="color:#0078d4;font-size:1.1rem;font-weight:700;margin-bottom:12px;text-align:center;">所有學習日 — 點選練習</h2>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:24px;">
-    <a href="az900-30-day-full-guide.html" style="display:block;padding:11px 6px;background:#0078d4;border:2px solid #005a9e;border-radius:8px;text-align:center;text-decoration:none;color:#ffffff;font-weight:700;font-size:.82rem;">📖 30天全詳解<br><span style="font-size:.7rem;font-weight:400;color:#d0e8f8;">全單元單頁版</span></a>
-    <a href="scenario.html" style="display:block;padding:11px 6px;background:#e6f0fa;border:2px solid #0078d4;border-radius:8px;text-align:center;text-decoration:none;color:#005a9e;font-weight:700;font-size:.82rem;">情境題<br><span style="font-size:.7rem;font-weight:400;">綜合 50 題</span></a>
-    <a href="day2.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 2<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">基礎架構</span></a>
-    <a href="day3.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 3<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">主權雲</span></a>
-    <a href="day4.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 4<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">管理工具</span></a>
-    <a href="day5.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 5<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">ARM &amp; Bicep</span></a>
-    <a href="day6.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 6<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Advisor</span></a>
-    <a href="day7.html" style="display:block;padding:11px 6px;background:#fff3cd;border:1px solid #f9c53b;border-radius:8px;text-align:center;text-decoration:none;color:#7a5700;font-size:.82rem;font-weight:700;">Day 7<br><span style="font-size:.7rem;font-weight:400;">總複習①</span></a>
-    <a href="day8.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 8<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">VM &amp; VMSS</span></a>
-    <a href="day9.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 9<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">App Service</span></a>
-    <a href="day10.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 10<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">ACI &amp; AKS</span></a>
-    <a href="day11.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 11<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">VNet</span></a>
-    <a href="day12.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 12<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">NSG &amp; ASG</span></a>
-    <a href="day13.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 13<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">ExpressRoute</span></a>
-    <a href="day14.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 14<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Load Balancer</span></a>
-    <a href="day15.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 15<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Blob Storage</span></a>
-    <a href="day16.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 16<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Azure Files</span></a>
-    <a href="day17.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 17<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Storage Explorer</span></a>
-    <a href="day18.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 18<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">SQL Database</span></a>
-    <a href="day19.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 19<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Cosmos DB</span></a>
-    <a href="day20.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 20<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Synapse</span></a>
-    <a href="day21.html" style="display:block;padding:11px 6px;background:#fff3cd;border:1px solid #f9c53b;border-radius:8px;text-align:center;text-decoration:none;color:#7a5700;font-size:.82rem;font-weight:700;">Day 21<br><span style="font-size:.7rem;font-weight:400;">總複習②</span></a>
-    <a href="day22.html" style="display:block;padding:11px 6px;background:#e6f0fa;border:1px solid #0078d4;border-radius:8px;text-align:center;text-decoration:none;color:#005a9e;font-size:.82rem;font-weight:700;">Day 22<br><span style="font-size:.7rem;color:#005a9e;font-weight:600;">Entra &amp; 租戶登入</span></a>
-    <a href="day23.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 23<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">RBAC</span></a>
-    <a href="day24.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 24<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Zero Trust</span></a>
-    <a href="day25.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 25<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Key Vault</span></a>
-    <a href="day26.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 26<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Azure Policy</span></a>
-    <a href="day27.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 27<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">成本管理</span></a>
-    <a href="day28.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 28<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">特有題型</span></a>
-    <a href="day29.html" style="display:block;padding:11px 6px;background:#dff6dd;border:2px solid #107c10;border-radius:8px;text-align:center;text-decoration:none;color:#0b5a08;font-size:.82rem;font-weight:700;">Day 29<br><span style="font-size:.7rem;font-weight:400;">模擬戰① 50題</span></a>
-    <a href="day30.html" style="display:block;padding:11px 6px;background:#dff6dd;border:2px solid #107c10;border-radius:8px;text-align:center;text-decoration:none;color:#0b5a08;font-size:.82rem;font-weight:700;">Day 30<br><span style="font-size:.7rem;font-weight:400;">終局戰② 50題</span></a>
+<section id="all-days" style="width:100%;max-width:900px;margin:10px auto 0;padding:0 16px;">
+  <h2 id="allDaysHeading" style="color:#0078d4;font-size:1.1rem;font-weight:700;margin-bottom:12px;text-align:center;">所有學習日 — 點選練習</h2>
+  <div id="daysGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:8px;margin-bottom:24px;">
   </div>
 </section>
 
 <div class="progress-wrap" id="progressWrap">
   <div class="progress-label">
-    <span id="progressText">Question 1 of 30</span>
-    <span id="scoreText">Score: 0</span>
+    <span id="progressText">題目 1 / 30</span>
+    <span id="scoreText">得分：0</span>
   </div>
   <div class="progress-bar-track">
     <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
@@ -409,239 +372,403 @@
 </div>
 
 <div class="card" id="quizCard">
-  <div class="question-meta" id="questionMeta">Question 1 &bull; Cloud Concepts</div>
+  <div class="question-meta" id="questionMeta"></div>
   <div class="question-text" id="questionText"></div>
   <div class="options" id="optionsContainer"></div>
   <div class="explanation" id="explanation"></div>
   <div class="actions">
-    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">Skip</button>
-    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next →</button>
+    <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
   </div>
 </div>
 
+<script src="i18n.js"></script>
 <script>
+const DAYS_DATA = [
+  { href: "az900-30-day-full-guide.html", style: "background:#0078d4;border:2px solid #005a9e;color:#ffffff;", subColor: "#d0e8f8", titleZh: "📖 30天全詳解", subZh: "全單元單頁版", titleEn: "📖 30-Day Guide", subEn: "Full Single-Page" },
+  { href: "scenario.html", style: "background:#e6f0fa;border:2px solid #0078d4;color:#005a9e;", subColor: "#005a9e", titleZh: "情境題", subZh: "綜合 50 題", titleEn: "Scenarios", subEn: "50 Case Questions" },
+  { href: "day2.html", titleZh: "Day 2", subZh: "基礎架構", titleEn: "Day 2", subEn: "Infrastructure" },
+  { href: "day3.html", titleZh: "Day 3", subZh: "主權雲", titleEn: "Day 3", subEn: "Sovereign Clouds" },
+  { href: "day4.html", titleZh: "Day 4", subZh: "管理工具", titleEn: "Day 4", subEn: "Mgmt Tools" },
+  { href: "day5.html", titleZh: "Day 5", subZh: "ARM & Bicep", titleEn: "Day 5", subEn: "ARM & Bicep" },
+  { href: "day6.html", titleZh: "Day 6", subZh: "Advisor", titleEn: "Day 6", subEn: "Advisor & Health" },
+  { href: "day7.html", style: "background:#fff3cd;border:1px solid #f9c53b;color:#7a5700;", subColor: "#7a5700", titleZh: "Day 7", subZh: "總複習①", titleEn: "Day 7", subEn: "Milestone Review 1" },
+  { href: "day8.html", titleZh: "Day 8", subZh: "VM & VMSS", titleEn: "Day 8", subEn: "VM & VMSS" },
+  { href: "day9.html", titleZh: "Day 9", subZh: "App Service", titleEn: "Day 9", subEn: "App Service" },
+  { href: "day10.html", titleZh: "Day 10", subZh: "ACI & AKS", titleEn: "Day 10", subEn: "ACI & AKS" },
+  { href: "day11.html", titleZh: "Day 11", subZh: "VNet", titleEn: "Day 11", subEn: "VNet & Subnet" },
+  { href: "day12.html", titleZh: "Day 12", subZh: "NSG & ASG", titleEn: "Day 12", subEn: "NSG & ASG" },
+  { href: "day13.html", titleZh: "Day 13", subZh: "ExpressRoute", titleEn: "Day 13", subEn: "ExpressRoute" },
+  { href: "day14.html", titleZh: "Day 14", subZh: "Load Balancer", titleEn: "Day 14", subEn: "Load Balancer" },
+  { href: "day15.html", titleZh: "Day 15", subZh: "Blob Storage", titleEn: "Day 15", subEn: "Blob Storage" },
+  { href: "day16.html", titleZh: "Day 16", subZh: "Azure Files", titleEn: "Day 16", subEn: "Azure Files" },
+  { href: "day17.html", titleZh: "Day 17", subZh: "Storage Explorer", titleEn: "Day 17", subEn: "Storage Explorer" },
+  { href: "day18.html", titleZh: "Day 18", subZh: "SQL Database", titleEn: "Day 18", subEn: "SQL Database" },
+  { href: "day19.html", titleZh: "Day 19", subZh: "Cosmos DB", titleEn: "Day 19", subEn: "Cosmos DB" },
+  { href: "day20.html", titleZh: "Day 20", subZh: "Synapse", titleEn: "Day 20", subEn: "Synapse & Spark" },
+  { href: "day21.html", style: "background:#fff3cd;border:1px solid #f9c53b;color:#7a5700;", subColor: "#7a5700", titleZh: "Day 21", subZh: "總複習②", titleEn: "Day 21", subEn: "Milestone Review 2" },
+  { href: "day22.html", style: "background:#e6f0fa;border:1px solid #0078d4;color:#005a9e;", subColor: "#005a9e", titleZh: "Day 22", subZh: "Entra & 租戶登入", titleEn: "Day 22", subEn: "Entra & Tenant" },
+  { href: "day23.html", titleZh: "Day 23", subZh: "RBAC", titleEn: "Day 23", subEn: "Azure RBAC" },
+  { href: "day24.html", titleZh: "Day 24", subZh: "Zero Trust", titleEn: "Day 24", subEn: "Zero Trust" },
+  { href: "day25.html", titleZh: "Day 25", subZh: "Key Vault", titleEn: "Day 25", subEn: "Key Vault & SIEM" },
+  { href: "day26.html", titleZh: "Day 26", subZh: "Azure Policy", titleEn: "Day 26", subEn: "Azure Policy" },
+  { href: "day27.html", titleZh: "Day 27", subZh: "成本管理", titleEn: "Day 27", subEn: "Cost Mgmt" },
+  { href: "day28.html", titleZh: "Day 28", subZh: "特有題型", titleEn: "Day 28", subEn: "Exam Formats" },
+  { href: "day29.html", style: "background:#dff6dd;border:2px solid #107c10;color:#0b5a08;", subColor: "#0b5a08", titleZh: "Day 29", subZh: "模擬戰① 50題", titleEn: "Day 29", subEn: "Mock Exam 1 (50Q)" },
+  { href: "day30.html", style: "background:#dff6dd;border:2px solid #107c10;color:#0b5a08;", subColor: "#0b5a08", titleZh: "Day 30", subZh: "終局戰② 50題", titleEn: "Day 30", subEn: "Final Exam 2 (50Q)" }
+];
+
 const QUESTIONS = [
   {
     topic: "Cloud Concepts",
+    topicZh: "雲端概念",
     q: "Which cloud service model gives you the MOST control over the underlying infrastructure?",
+    qZh: "哪一種雲端服務模型能讓您對底層基礎結構擁有「最高程度」的控制權？",
     opts: ["Software as a Service (SaaS)", "Platform as a Service (PaaS)", "Infrastructure as a Service (IaaS)", "Function as a Service (FaaS)"],
+    optsZh: ["軟體即服務 (SaaS)", "平台即服務 (PaaS)", "基礎結構即服務 (IaaS)", "函數即服務 (FaaS)"],
     a: 2,
-    exp: "IaaS provides the highest level of control, giving access to virtualized compute, networking, and storage. You manage the OS, middleware, and applications while the provider manages the physical hardware."
+    exp: "IaaS provides the highest level of control, giving access to virtualized compute, networking, and storage. You manage the OS, middleware, and applications while the provider manages physical hardware.",
+    expZh: "IaaS（基礎結構即服務）提供最高程度的控制權，讓您管理虛擬化運算、網路與儲存體，並自行負責作業系統 (Guest OS)、中介軟體與應用程式；雲端供應商僅負責實體硬體與資料中心安全。"
   },
   {
     topic: "Cloud Concepts",
+    topicZh: "雲端概念",
     q: "What is Capital Expenditure (CapEx) in the context of IT infrastructure?",
+    qZh: "在 IT 基礎架構中，什麼是「資本支出 (CapEx)」？",
     opts: ["Ongoing pay-as-you-go service costs", "Per-user monthly subscription fees", "Upfront spending on physical infrastructure such as servers and data centers", "Cost savings from cloud migration"],
+    optsZh: ["隨用隨付 (Pay-as-you-go) 的持續性服務費用", "每位使用者的每月訂閱費用", "前期一次性投入於實體基礎設施（如伺服器與機房）的固定支出", "遷移至雲端所節省的成本"],
     a: 2,
-    exp: "CapEx is spending money on physical infrastructure upfront (servers, buildings, data centers). Cloud computing shifts this to Operational Expenditure (OpEx) — ongoing costs based on consumption, which improves cash flow."
+    exp: "CapEx is spending money on physical infrastructure upfront (servers, buildings, data centers). Cloud computing shifts this to Operational Expenditure (OpEx) — ongoing costs based on consumption.",
+    expZh: "CapEx（資本支出）是指前期一次性花費在實體硬體設備與資料中心建置上的資金，並隨時間攤提折舊。雲端運算則將其轉為 OpEx（營運支出），依實際消耗量隨用隨付。"
   },
   {
     topic: "Cloud Concepts",
+    topicZh: "雲端概念",
     q: "Which deployment model combines on-premises infrastructure with public cloud resources?",
+    qZh: "哪一種雲端部署模型結合了「地端機房基礎設施」與「公有雲資源」？",
     opts: ["Public cloud", "Community cloud", "Hybrid cloud", "Private cloud"],
+    optsZh: ["公有雲 (Public cloud)", "社群雲 (Community cloud)", "混合雲 (Hybrid cloud)", "私有雲 (Private cloud)"],
     a: 2,
-    exp: "A hybrid cloud combines on-premises (private) infrastructure with public cloud services, allowing data and applications to move between the two environments. This gives businesses flexibility and more deployment options."
+    exp: "A hybrid cloud combines on-premises (private) infrastructure with public cloud services, allowing data and applications to move between the two environments.",
+    expZh: "混合雲（Hybrid cloud）結合了地端（私有雲）基礎設施與公有雲服務，允許資料與應用程式在兩個環境之間安全互通，兼具法規彈性與雲端擴充力。"
   },
   {
     topic: "Cloud Concepts",
+    topicZh: "雲端概念",
     q: "What does 'economies of scale' mean in cloud computing?",
+    qZh: "在雲端運算中，「規模經濟 (Economies of scale)」代表什麼意義？",
     opts: [
       "Paying only for what you consume",
       "Cloud providers reduce per-unit costs through large-scale operations and pass those savings to customers",
       "Automatically scaling resources based on demand",
       "Distributing data across multiple geographic regions"
     ],
+    optsZh: [
+      "僅為實際消耗的資源付費",
+      "雲端供應商透過超大規模採購與營運降低單位成本，並將省下的成本回饋給客戶",
+      "根據需求自動擴縮資源",
+      "將資料分散部署於多個地理區域"
+    ],
     a: 1,
-    exp: "Because cloud providers operate at massive scale, they purchase resources more cheaply and efficiently than any single organization could. They pass those savings on to customers in the form of lower prices."
+    exp: "Because cloud providers operate at massive scale, they purchase hardware and power more cheaply and efficiently than any single organization could, passing those savings on to customers.",
+    expZh: "由於微軟等大型雲端供應商以全球超大規模營運，能以比單一企業更低的單位成本採購硬體、電力與頻寬，進而以更實惠的價格提供給客戶。"
   },
   {
     topic: "Cloud Concepts",
-    q: "What cloud characteristic refers to the ability to quickly expand or reduce computing resources based on demand?",
+    topicZh: "雲端概念",
+    q: "What cloud characteristic refers to the ability to quickly expand or reduce computing resources automatically based on demand?",
+    qZh: "哪一項雲端特性是指能夠根據流量需求「自動且迅速地增加或縮減」運算資源？",
     opts: ["High availability", "Geo-redundancy", "Elasticity", "Durability"],
+    optsZh: ["高可用性 (High availability)", "異地備援 (Geo-redundancy)", "彈性 (Elasticity)", "耐用性 (Durability)"],
     a: 2,
-    exp: "Elasticity is the ability to automatically scale compute resources up or down in response to changing demand. You only use (and pay for) what you need at any given moment."
+    exp: "Elasticity is the ability to automatically scale compute resources out or in according to changing demand so you only pay for what you need.",
+    expZh: "彈性（Elasticity）是指系統能隨著負載變化自動放大（Scale out）或自動縮小（Scale in）資源，確保高峰期不當機、離峰期不浪費費用。"
   },
   {
     topic: "Cloud Concepts",
+    topicZh: "雲端概念",
     q: "Which of the following is NOT an advantage of cloud computing over traditional on-premises infrastructure?",
+    qZh: "相較於傳統地端機房，下列何者「不是」雲端運算的優勢？",
     opts: ["Reduced time to provision resources", "High upfront capital expenditure", "Pay-as-you-go pricing model", "Global scale and availability"],
+    optsZh: ["大幅縮短資源佈建時間", "高昂的前期資本支出 (High upfront CapEx)", "隨用隨付 (Pay-as-you-go) 計價模式", "全球規模部署與高可用性"],
     a: 1,
-    exp: "High upfront capital expenditure is a characteristic of traditional on-premises infrastructure, not a benefit of cloud computing. Cloud computing replaces CapEx with OpEx."
+    exp: "High upfront capital expenditure (CapEx) is a characteristic of traditional on-premises infrastructure, not a benefit of cloud computing.",
+    expZh: "高昂的前期資本支出（CapEx）是傳統自建地端機房的缺點，而非雲端運算的優勢。雲端運算改採無預付費用的營運支出（OpEx）。"
   },
   {
     topic: "Cloud Concepts",
+    topicZh: "雲端概念",
     q: "In the shared responsibility model, what is the customer ALWAYS responsible for regardless of cloud service model?",
-    opts: ["Physical security of data centers", "Operating system patching", "Identity and access management (IAM) and data", "Network infrastructure"],
+    qZh: "在共同責任模型 (Shared Responsibility Model) 中，無論採用哪種雲端服務模型，客戶「永遠」必須自行負責哪些項目？",
+    opts: ["Physical security of data centers", "Operating system patching", "Identity and access management (IAM), endpoints, and data", "Network infrastructure"],
+    optsZh: ["資料中心的實體門禁安全", "作業系統更新修補", "身分識別與存取管理 (IAM)、終端裝置與資料內容 (Data)", "底層實體網路基礎架構"],
     a: 2,
-    exp: "Regardless of the cloud service model (IaaS, PaaS, SaaS), the customer always retains responsibility for identity and access management and the data they put in the cloud. Microsoft is responsible for the physical data center security."
+    exp: "Regardless of the service model (IaaS, PaaS, SaaS), the customer always retains responsibility for their data, endpoints, accounts, and identity/access management.",
+    expZh: "無論使用 IaaS、PaaS 或 SaaS，客戶永遠必須對儲存在雲端的「資料與資訊 (Data)」、「終端裝置 (Endpoints)」以及「帳號與身分識別存取管理 (IAM)」負最終責任。"
   },
   {
     topic: "Azure Architecture",
-    q: "What is the MAIN benefit of Azure Availability Zones?",
+    topicZh: "Azure 核心架構",
+    q: "What is the MAIN benefit of deploying resources across Azure Availability Zones?",
+    qZh: "將資源跨多個 Azure 可用性區域 (Availability Zones) 部署的主要優勢為何？",
     opts: ["Reduced monthly costs", "Protection against an entire data center failure within a region", "Faster application deployment", "Increased storage capacity"],
+    optsZh: ["降低每月帳單成本", "抵禦同一區域 (Region) 內單一整座資料中心發生故障", "加快應用程式部署速度", "增加儲存體容量上限"],
     a: 1,
-    exp: "Availability Zones are physically separate data centers within an Azure region, each with independent power, cooling, and networking. Deploying across zones protects applications from single data center failures."
+    exp: "Availability Zones are physically separate data centers within a supported Azure region, each with independent power, cooling, and networking. Deploying across zones protects against single data center failures.",
+    expZh: "可用性區域（AZ）是支援該功能的 Azure Region 內實體隔離的資料中心，各自擁有獨立電力、冷卻與網路。跨 AZ 部署能保護應用程式免受單一資料中心停電或火災中斷影響。"
   },
   {
     topic: "Azure Architecture",
+    topicZh: "Azure 核心架構",
     q: "What is an Azure Resource Group?",
+    qZh: "什麼是 Azure 資源群組 (Resource Group)？",
     opts: ["A billing unit for Azure services", "A virtual network segment", "A type of Azure subscription", "A logical container that holds related Azure resources and shares their lifecycle"],
+    optsZh: ["Azure 服務的計費邊界單位", "虛擬網路的子網段", "Azure 訂用帳戶的一種類型", "用來存放相關 Azure 資源並共用相同生命週期的邏輯容器"],
     a: 3,
-    exp: "A Resource Group is a container that holds related resources for an Azure solution. All resources in a group share the same lifecycle — they can be deployed, updated, and deleted together. It also allows applying policies and access control."
+    exp: "A Resource Group is a logical container that holds related resources for an Azure solution. Resources in a group share the same lifecycle and can have RBAC and policies applied together.",
+    expZh: "資源群組（Resource Group）是存放相關 Azure 資源的邏輯管理容器。群組內的資源共用生命週期（可一併部署、更新或刪除），並可統一套用 RBAC 權限與 Azure Policy。"
   },
   {
     topic: "Azure Architecture",
+    topicZh: "Azure 核心架構",
     q: "Which of the following best describes Azure Regions?",
+    qZh: "下列何者最準確地描述了「Azure 區域 (Azure Regions)」？",
     opts: ["Individual physical data centers", "Paired availability zones", "Geographic areas containing one or more data centers connected by a low-latency network", "Virtual network segments in Azure"],
+    optsZh: ["單一的實體資料中心建築", "配對的可用性區域", "在特定地理範圍內，包含一個或多個以低延遲網路互連之資料中心的區域", "Azure 中的虛擬網路區段"],
     a: 2,
-    exp: "An Azure Region is a geographic area containing at least one (usually multiple) data centers connected by a low-latency network. Azure has 60+ regions globally. You choose a region to deploy resources close to your users or to meet data residency requirements."
+    exp: "An Azure Region is a geographic area containing one or more data centers connected by a dedicated low-latency network.",
+    expZh: "Azure Region（區域）是在特定地理範圍內，由一個或多個透過低延遲專用網路連接的資料中心所組成。全球有超過 60 個區域供客戶就近部署並符合法規。"
   },
   {
     topic: "Azure Architecture",
+    topicZh: "Azure 核心架構",
     q: "What feature allows you to manage multiple Azure subscriptions with unified policies and access control?",
+    qZh: "哪一項功能可讓您透過統一的原則與存取控制來跨多個「Azure 訂用帳戶 (Subscriptions)」進行集中治理？",
     opts: ["Resource Groups", "Management Groups", "Azure Policy", "Azure Blueprints"],
+    optsZh: ["資源群組 (Resource Groups)", "管理群組 (Management Groups)", "Azure Policy", "Azure Blueprints"],
     a: 1,
-    exp: "Management Groups provide a governance scope above subscriptions. You can organize subscriptions into a hierarchy and apply Azure policies and RBAC assignments at the management group level, which cascade down to all subscriptions within."
+    exp: "Management Groups provide a governance scope above subscriptions. Policies and RBAC assignments applied to a management group automatically inherit down to all child subscriptions.",
+    expZh: "管理群組（Management Groups）位於訂用帳戶（Subscriptions）之上，可將多個訂用帳戶組織成階層，統一套用 RBAC 與 Azure Policy 並向下自動繼承。"
   },
   {
     topic: "Azure Compute",
+    topicZh: "Azure 運算服務",
     q: "Which Azure service allows developers to host web applications without managing the underlying virtual machines?",
+    qZh: "哪一項 Azure 服務可讓開發人員託管 Web 應用程式與 API，而無需管理底層虛擬機器作業系統？",
     opts: ["Azure Virtual Machines", "Azure Kubernetes Service (AKS)", "Azure App Service", "Azure Batch"],
+    optsZh: ["Azure 虛擬機器 (Virtual Machines)", "Azure Kubernetes Service (AKS)", "Azure App Service", "Azure Batch"],
     a: 2,
-    exp: "Azure App Service is a PaaS offering for hosting web apps, REST APIs, and mobile back ends. Microsoft manages the underlying infrastructure, OS patching, and scaling, so developers only focus on their application code."
+    exp: "Azure App Service is a fully managed PaaS offering for hosting web apps, REST APIs, and mobile back ends without managing underlying OS or VMs.",
+    expZh: "Azure App Service 是完全受管的 PaaS 服務，專為託管 Web 應用、REST API 與行動後端設計，微軟負責底層 OS 更新與擴縮管理。"
   },
   {
     topic: "Azure Compute",
-    q: "Which of the following is a serverless compute option in Azure where you pay only for execution time?",
+    topicZh: "Azure 運算服務",
+    q: "Which of the following is an event-driven serverless compute option in Azure where you pay only for execution time?",
+    qZh: "下列何者是 Azure 中的「事件驅動無伺服器 (Serverless)」運算選項，且在消耗方案下僅依實際執行時間計費？",
     opts: ["Azure Virtual Machines", "Azure Kubernetes Service", "Azure Batch", "Azure Functions"],
+    optsZh: ["Azure 虛擬機器 (Virtual Machines)", "Azure Kubernetes Service (AKS)", "Azure Batch", "Azure Functions"],
     a: 3,
-    exp: "Azure Functions is a serverless compute service that runs event-triggered code without you provisioning or managing any infrastructure. You are billed only for the number of executions and the time each execution runs."
+    exp: "Azure Functions is an event-driven serverless compute service. In the Consumption plan, you are billed only when your code runs.",
+    expZh: "Azure Functions 是事件驅動的無伺服器運算服務，無需管理伺服器基礎結構，在 Consumption 方案下僅依程式碼執行的次數與秒數計費。"
   },
   {
     topic: "Azure Compute",
-    q: "What Azure service would you use to run containerized applications without managing any underlying infrastructure?",
+    topicZh: "Azure 運算服務",
+    q: "What Azure service would you use to run containerized applications quickly without managing virtual machines or container orchestration?",
+    qZh: "若要在 Azure 中快速執行單一容器化應用程式，且不想管理虛擬機器或複雜的容器編排叢集，應使用哪項服務？",
     opts: ["Azure Virtual Machines", "Azure Container Instances (ACI)", "Azure Blob Storage", "Azure ExpressRoute"],
+    optsZh: ["Azure 虛擬機器 (Virtual Machines)", "Azure 容器執行個體 (ACI)", "Azure Blob 儲存體", "Azure ExpressRoute"],
     a: 1,
-    exp: "Azure Container Instances (ACI) is the fastest and simplest way to run a container in Azure without managing virtual machines. It provides per-second billing and is ideal for scenarios requiring quick startup without complex orchestration."
+    exp: "Azure Container Instances (ACI) is the fastest and simplest way to run a container in Azure without managing VMs or Kubernetes clusters.",
+    expZh: "Azure Container Instances (ACI) 是在 Azure 執行容器最簡單快速的方式，屬於無伺服器容器，免管理 VM 也無需配置 Kubernetes 編排叢集。"
   },
   {
     topic: "Azure Storage",
+    topicZh: "Azure 儲存體",
     q: "Which Azure storage service is optimized for storing massive amounts of unstructured data such as images, videos, and documents?",
+    qZh: "哪一項 Azure 儲存體服務專為儲存大量「非結構化資料」（如圖片、影片、備份與文件）而最佳化？",
     opts: ["Azure SQL Database", "Azure Queue Storage", "Azure Blob Storage", "Azure File Storage"],
+    optsZh: ["Azure SQL Database", "Azure 佇列儲存體 (Queue Storage)", "Azure Blob 儲存體 (Blob Storage)", "Azure 檔案儲存體 (Azure Files)"],
     a: 2,
-    exp: "Azure Blob Storage (Binary Large Object) is Microsoft's object storage solution optimized for massive amounts of unstructured data. It is commonly used for images, documents, video files, backups, and data for analysis."
+    exp: "Azure Blob Storage is Microsoft's object storage solution optimized for massive amounts of unstructured binary and text data.",
+    expZh: "Azure Blob Storage（二進位大型物件儲存體）專為巨量非結構化資料設計，支援 Hot、Cool、Cold 與 Archive 存取層級以最佳化成本。"
   },
   {
     topic: "Azure Storage",
+    topicZh: "Azure 儲存體",
     q: "Which Azure Storage redundancy option replicates data synchronously across three Availability Zones in the primary region?",
+    qZh: "哪一種 Azure 儲存體備援選項會在「主要區域的三個可用性區域 (AZ)」之間同步複寫資料？",
     opts: ["Locally Redundant Storage (LRS)", "Zone-Redundant Storage (ZRS)", "Geo-Redundant Storage (GRS)", "Read-Access Geo-Redundant Storage (RA-GRS)"],
+    optsZh: ["本地備援儲存體 (LRS)", "區域備援儲存體 (ZRS)", "異地備援儲存體 (GRS)", "讀取存取異地備援儲存體 (RA-GRS)"],
     a: 1,
-    exp: "ZRS replicates storage data synchronously across three Azure Availability Zones in the primary region. It provides high availability and protection against zone-level failures, but does not protect against a complete regional outage."
+    exp: "ZRS replicates data synchronously across three Availability Zones in the primary region. Note: GRS and RA-GRS use LRS in the primary region; GZRS/RA-GZRS combine ZRS in the primary region with geo-replication.",
+    expZh: "ZRS（區域備援儲存體）會在主要區域的 3 個可用性區域（AZ）同步複製資料。請注意：GRS 與 RA-GRS 在主要區域僅採 LRS；GZRS 與 RA-GZRS 才是在主區域採 ZRS 並跨區複寫。"
   },
   {
     topic: "Azure Networking",
+    topicZh: "Azure 網路服務",
     q: "Which Azure service provides a dedicated private connection between your on-premises network and Azure, bypassing the public internet?",
+    qZh: "哪一項 Azure 服務可在企業地端網路與 Azure 之間提供「專用私有連線」，且完全不經過公共網際網路？",
     opts: ["Azure Load Balancer", "Azure VPN Gateway", "Azure ExpressRoute", "Azure Traffic Manager"],
+    optsZh: ["Azure 負載平衡器 (Load Balancer)", "Azure VPN 閘道 (VPN Gateway)", "Azure ExpressRoute", "Azure 流量管理員 (Traffic Manager)"],
     a: 2,
-    exp: "Azure ExpressRoute provides a private, dedicated connection from your on-premises network to Azure through a connectivity provider. It bypasses the public internet for greater reliability, faster speeds, lower latency, and higher security."
+    exp: "Azure ExpressRoute provides a dedicated private connection through a connectivity provider, bypassing the public internet for higher reliability, bandwidth, and lower latency.",
+    expZh: "Azure ExpressRoute 透過連線服務供應商建立地端至 Azure 的專用私有光纖連線，完全不經過公共網際網路，提供最高頻寬、最低延遲與高可靠性。"
   },
   {
     topic: "Azure Networking",
-    q: "What Azure service distributes incoming network traffic across multiple backend resources to maximize availability?",
-    opts: ["Azure Application Gateway", "Azure Load Balancer", "Azure Firewall", "Azure Traffic Manager"],
+    topicZh: "Azure 網路服務",
+    q: "What Layer-4 Azure service distributes incoming network traffic across multiple healthy backend VMs?",
+    qZh: "哪一項第 4 層 (TCP/UDP) Azure 服務可將進入的網路流量平均分配至後端多台健康的虛擬機器？",
+    opts: ["Azure Application Gateway", "Azure Load Balancer", "Azure Firewall", "Azure Bastion"],
+    optsZh: ["Azure 應用程式閘道 (Application Gateway)", "Azure 負載平衡器 (Load Balancer)", "Azure 防火牆 (Firewall)", "Azure Bastion"],
     a: 1,
-    exp: "Azure Load Balancer operates at Layer 4 (TCP/UDP) and distributes inbound traffic across healthy backend instances (VMs or containers) based on configured rules, maximizing availability and scalability of applications."
+    exp: "Azure Load Balancer operates at Layer 4 (TCP/UDP) to distribute traffic across healthy backend instances. Application Gateway operates at Layer 7 (HTTP/HTTPS).",
+    expZh: "Azure Load Balancer 在傳輸層（第 4 層 TCP/UDP）運作，負責將流量分發至健康的後端 VM。若需第 7 層 HTTP/HTTPS URL 路由與 WAF 則選用 Application Gateway。"
   },
   {
     topic: "Azure Databases",
+    topicZh: "Azure 資料庫",
     q: "Which Azure service provides a globally distributed, multi-model NoSQL database with single-digit millisecond latency?",
+    qZh: "哪一項 Azure 服務提供全球分散式、多模型 NoSQL 資料庫，並具備個位數毫秒級延遲與最高 99.999% SLA？",
     opts: ["Azure SQL Database", "Azure Table Storage", "Azure Cosmos DB", "Azure Database for PostgreSQL"],
+    optsZh: ["Azure SQL Database", "Azure 表格儲存體 (Table Storage)", "Azure Cosmos DB", "Azure Database for PostgreSQL"],
     a: 2,
-    exp: "Azure Cosmos DB is Microsoft's globally distributed, multi-model database service. It supports multiple APIs (SQL, MongoDB, Cassandra, Gremlin, Table) and provides guaranteed low latency (<10ms) at the 99th percentile with global distribution built in."
+    exp: "Azure Cosmos DB is Microsoft's globally distributed multi-model NoSQL database supporting multi-region writes, <10ms latency, and up to 99.999% SLA.",
+    expZh: "Azure Cosmos DB 是微軟全球分散式多模型 NoSQL 資料庫，原生支援全球多區域同時寫入 (Multi-region writes)、個位數毫秒讀寫延遲與高達 99.999% SLA。"
   },
   {
     topic: "Azure Databases",
-    q: "Your company wants to migrate an on-premises SQL Server database to Azure with minimal application changes. Which service is most appropriate?",
+    topicZh: "Azure 資料庫",
+    q: "Your company wants to migrate an on-premises SQL Server database to a fully managed PaaS database in Azure with minimal changes. Which service is most appropriate?",
+    qZh: "公司希望將地端 SQL Server 資料庫遷移至 Azure 完全受管的 PaaS 關聯式資料庫，應選擇哪一項服務？",
     opts: ["Azure Cosmos DB", "Azure SQL Database", "Azure Table Storage", "Azure Blob Storage"],
+    optsZh: ["Azure Cosmos DB", "Azure SQL Database", "Azure Table Storage", "Azure Blob Storage"],
     a: 1,
-    exp: "Azure SQL Database is a fully managed relational database service (PaaS) based on the latest stable SQL Server engine. It provides high compatibility with SQL Server, so on-premises SQL workloads can be migrated with minimal changes."
+    exp: "Azure SQL Database (and SQL Managed Instance) is a fully managed relational PaaS database based on the SQL Server engine.",
+    expZh: "Azure SQL Database（以及 SQL 受控執行個體 Managed Instance）是基於 SQL Server 引擎的完全受管 PaaS 關聯式資料庫，免管理底層 OS 與資料庫修補。"
   },
   {
-    topic: "Identity & Security",
-    q: "Which Azure service provides cloud-based identity and access management, handling authentication for Azure and Microsoft 365?",
+    topic: "Identity & Tenant",
+    topicZh: "身分識別與租戶",
+    q: "Which service provides cloud-based identity and access management (Tenant directory), handling authentication and SSO for Azure and Microsoft 365?",
+    qZh: "哪一項服務提供雲端身分識別與租用戶目錄 (Tenant Directory) 管理，負責處理 Azure 與 Microsoft 365 的驗證與單一登入 (SSO)？",
     opts: ["Azure Key Vault", "Microsoft Entra ID (formerly Azure Active Directory)", "Azure Firewall", "Azure Policy"],
+    optsZh: ["Azure Key Vault", "Microsoft Entra ID (前身為 Azure Active Directory)", "Azure Firewall", "Azure Policy"],
     a: 1,
-    exp: "Microsoft Entra ID (formerly Azure Active Directory) is Microsoft's cloud-based identity and access management service. It handles authentication, single sign-on (SSO), multi-factor authentication (MFA), and authorization for Azure resources and Microsoft 365."
+    exp: "Microsoft Entra ID is Microsoft's cloud identity and tenant directory service handling authentication, SSO, MFA, Conditional Access, and B2B/B2C collaboration.",
+    expZh: "Microsoft Entra ID 是微軟的雲端身分與租用戶（Tenant）目錄服務，負責處理身分驗證（Authentication）、SSO、MFA、條件式存取與跨租戶 B2B 來賓協作。每個組織的實例稱為一個 Tenant（預設網域 *.onmicrosoft.com）。"
   },
   {
     topic: "Identity & Security",
+    topicZh: "身分與權限管理",
     q: "What is the purpose of Azure Role-Based Access Control (RBAC)?",
+    qZh: "Azure 角色型存取控制 (RBAC) 的主要用途是什麼？",
     opts: ["Encrypting data at rest", "Monitoring application performance", "Controlling who has access to Azure resources and what actions they can perform", "Managing subscription billing"],
+    optsZh: ["對靜態資料進行加密", "監控應用程式效能", "精細控制哪些使用者可以存取哪些 Azure 資源以及可執行的操作", "管理訂用帳戶帳單拆分"],
     a: 2,
-    exp: "Azure RBAC allows you to grant fine-grained access to Azure resources. You assign roles (Owner, Contributor, Reader, or custom roles) to users, groups, or service principals at a specific scope (subscription, resource group, or resource)."
+    exp: "Azure RBAC grants fine-grained authorization to Azure resources at scopes such as Management Group, Subscription, Resource Group, or Resource.",
+    expZh: "Azure RBAC 用於授權管理，透過在特定範圍（管理群組、訂用帳戶、資源群組或單一資源）指派角色（如 Owner、Contributor、Reader），落實最小權限原則。注意：若訂用帳戶移轉至其他 Tenant，原有的 RBAC 指派會被移除。"
   },
   {
     topic: "Identity & Security",
-    q: "What Azure feature prevents accidental deletion or modification of a resource?",
+    topicZh: "治理與資源保護",
+    q: "What Azure feature prevents accidental deletion or modification of a critical resource even by an Owner?",
+    qZh: "哪一項 Azure 功能可以防止關鍵資源遭到意外刪除或修改（即使是具備刪除權限的管理員也需先解除才能刪除）？",
     opts: ["Azure Policy", "Resource Lock", "Azure RBAC", "Azure Blueprints"],
+    optsZh: ["Azure 原則 (Azure Policy)", "資源鎖定 (Resource Lock)", "角色型存取控制 (Azure RBAC)", "Azure 藍圖 (Azure Blueprints)"],
     a: 1,
-    exp: "Resource Locks protect Azure resources from accidental changes or deletion. A 'Delete' lock prevents deletion while allowing modifications. A 'ReadOnly' lock prevents both modifications and deletion. Locks apply to all users regardless of their RBAC permissions."
+    exp: "Resource Locks (CanNotDelete or ReadOnly) prevent accidental deletion or modification of resources regardless of a user's RBAC role.",
+    expZh: "資源鎖定（Resource Locks，分為 CanNotDelete 不可刪除 與 ReadOnly 唯讀）可保護資源免於意外刪除或變更，套用後對所有使用者皆生效。"
   },
   {
     topic: "Identity & Security",
-    q: "Which Azure service provides unified security posture management and threat protection across Azure workloads?",
+    topicZh: "雲端資安防護",
+    q: "Which Azure service provides unified security posture management (Secure Score) and workload threat protection?",
+    qZh: "哪一項 Azure 服務提供統一的安全性態勢管理（包含 Secure Score 安全分數）與雲端工作負載威脅防護？",
     opts: ["Azure Monitor", "Microsoft Sentinel", "Microsoft Defender for Cloud", "Azure Key Vault"],
+    optsZh: ["Azure Monitor", "Microsoft Sentinel", "Microsoft Defender for Cloud", "Azure Key Vault"],
     a: 2,
-    exp: "Microsoft Defender for Cloud (formerly Azure Security Center) provides unified security management and advanced threat protection. It continuously assesses your security posture, provides a Secure Score, and offers actionable security recommendations."
+    exp: "Microsoft Defender for Cloud is a CSPM and CWPP solution that continuously assesses security posture, calculates Secure Score, and protects workloads against threats.",
+    expZh: "Microsoft Defender for Cloud 結合了雲端安全性狀態管理 (CSPM) 與工作負載保護 (CWPP)，能持續評估安全狀態、提供量化安全分數 (Secure Score) 與修復建議。"
   },
   {
     topic: "Azure Management",
-    q: "Which Azure tool provides personalized best-practice recommendations for cost, security, reliability, and performance?",
+    topicZh: "管理與最佳化",
+    q: "Which Azure tool provides free, personalized best-practice recommendations for cost, security, reliability, operational excellence, and performance?",
+    qZh: "哪一項免費的 Azure 工具會針對您的資源配置提供「成本、安全性、可靠性、卓越營運與效能」五大面向的個人化最佳實踐建議？",
     opts: ["Azure Monitor", "Azure Cost Management", "Azure Advisor", "Microsoft Defender for Cloud"],
+    optsZh: ["Azure Monitor", "Azure 成本管理 (Cost Management)", "Azure 顧問 (Azure Advisor)", "Microsoft Defender for Cloud"],
     a: 2,
-    exp: "Azure Advisor analyzes your resource configurations and usage and provides actionable, personalized recommendations across five pillars: Cost, Security, Reliability, Operational Excellence, and Performance. It's like a free personalized cloud consultant."
+    exp: "Azure Advisor analyzes your resource configurations and usage telemetry to provide actionable recommendations across Cost, Security, Reliability, Operational Excellence, and Performance.",
+    expZh: "Azure Advisor（顧問）會自動分析您的 Azure 資源設定與使用遙測數據，在成本、安全性、可靠性、卓越營運與效能五大支柱提供具體改善建議。"
   },
   {
     topic: "Azure Management",
+    topicZh: "合規與治理",
     q: "What is the purpose of Azure Policy?",
+    qZh: "Azure 原則 (Azure Policy) 的主要用途是什麼？",
     opts: ["Manage user identities and access", "Enforce organizational standards and assess compliance across Azure resources at scale", "Monitor application performance metrics", "Configure virtual network routing"],
+    optsZh: ["管理使用者帳號與密碼登入", "大規模強制執行組織標準並評估 Azure 資源的合規性（如限制可用 Region 或 VM SKU）", "監控應用程式效能指標", "設定虛擬網路路由表"],
     a: 1,
-    exp: "Azure Policy helps enforce organizational rules on resources. For example, you can enforce that all VMs must use a specific SKU, or that all resources must have a required tag. Policies evaluate existing resources and can prevent non-compliant resource creation."
+    exp: "Azure Policy evaluates resources against corporate rules (such as allowed locations, required tags, or allowed VM SKUs) to enforce compliance at scale.",
+    expZh: "Azure Policy 用於大規模強制執行企業規則並評估資源合規性（例如：限制只能在特定 Region 建立資源、強制要求資源加上特定標籤 Tag）。"
   },
   {
     topic: "Azure Management",
+    topicZh: "資源分類與帳務",
     q: "What is the purpose of resource tags in Azure?",
-    opts: ["Control access to resources using RBAC", "Encrypt resource data at rest", "Define ARM deployment templates", "Organize and categorize resources for management, billing, and automation"],
+    qZh: "在 Azure 中為資源加上「標籤 (Tags)」的主要目的為何？",
+    opts: ["Control access to resources using RBAC", "Encrypt resource data at rest", "Define ARM deployment templates", "Organize and categorize resources using name-value pairs for management, billing, and automation"],
+    optsZh: ["透過 RBAC 控制資源存取權限", "加密靜態資源資料", "定義 ARM 部署範本", "使用「名稱/值」配對在邏輯上組織與分類資源，以便管理、部門帳單分攤與自動化"],
     a: 3,
-    exp: "Tags are name-value pairs you apply to Azure resources to logically organize them. Common uses include cost allocation by department/project, environment identification (dev/test/prod), owner tracking, and automation. Tags appear in billing reports."
+    exp: "Tags are metadata name-value pairs applied to resources to logically organize them for cost tracking, department billing, and operational management. Note: Tags are not inherited automatically from Resource Groups.",
+    expZh: "標籤（Tags）是附加在資源上的「名稱：值（Name-Value）」中繼資料（例如 Department: Finance），用於邏輯分類與成本分攤追蹤。注意：資源預設不會自動繼承資源群組的標籤。"
   },
   {
     topic: "Azure Management",
-    q: "Which tool helps you estimate the total cost of ownership when comparing on-premises infrastructure to Azure?",
+    topicZh: "成本估算與比較",
+    q: "Which tool helps you estimate the cost savings of migrating workloads from on-premises infrastructure to Azure?",
+    qZh: "哪一項工具能協助您比較「地端自建機房」與「遷移至 Azure」的長期成本，以估算遷移後的整體節省效益？",
     opts: ["Azure Pricing Calculator", "Azure Advisor", "Azure Total Cost of Ownership (TCO) Calculator", "Azure Cost Management"],
+    optsZh: ["Azure 定價計算機 (Pricing Calculator)", "Azure 顧問 (Azure Advisor)", "Azure 總擁有成本 (TCO) 計算機", "Azure 成本管理 (Cost Management)"],
     a: 2,
-    exp: "The Azure TCO Calculator helps you estimate the cost savings of migrating workloads from on-premises to Azure. You input your current on-premises configuration and the tool computes the projected 5-year cost comparison including hardware, software, labor, and facilities."
+    exp: "The TCO Calculator compares the total cost of running workloads on-premises (hardware, electricity, IT labor, facilities) versus on Azure over a 1-to-5 year period.",
+    expZh: "TCO 計算機（總擁有成本計算機）專門用來比較地端機房（含硬體、電費、空調、維運人力）與遷移至 Azure 後的總體擁有成本差異，常製作給高層決策參考。"
   },
   {
     topic: "Azure Management",
-    q: "Which Azure service helps you monitor your applications and infrastructure, collecting metrics, logs, and alerts from across your Azure resources?",
-    opts: ["Azure Advisor", "Azure Monitor", "Azure Security Center", "Azure Service Health"],
+    topicZh: "全方位監控",
+    q: "Which Azure service collects, analyzes, and acts on metrics and logs from across your Azure and on-premises environments?",
+    qZh: "哪一項 Azure 服務負責全方位收集、分析來自 Azure 資源與地端環境的計量 (Metrics) 與日誌 (Logs)，並主動觸發警報？",
+    opts: ["Azure Advisor", "Azure Monitor", "Azure Firewall", "Azure Service Health"],
+    optsZh: ["Azure Advisor", "Azure Monitor", "Azure Firewall", "Azure Service Health"],
     a: 1,
-    exp: "Azure Monitor collects, analyzes, and acts on telemetry from Azure resources and on-premises environments. It includes Log Analytics for log queries, Application Insights for app performance, and Alerts/Action Groups to notify teams when issues occur."
+    exp: "Azure Monitor collects and analyzes telemetry (metrics and logs) via Log Analytics and Application Insights, and triggers alerts when thresholds are met.",
+    expZh: "Azure Monitor 是統一的可觀測性與監控平台，涵蓋 Log Analytics（日誌查詢）、Application Insights（APM 應用程式效能監控）與智慧警報。"
   },
   {
     topic: "Compliance & SLA",
-    q: "What does the Azure Service Level Agreement (SLA) define?",
-    opts: ["Data encryption standards and key management", "Regulatory compliance certifications", "The minimum uptime percentage Microsoft guarantees for a service", "Maximum data transfer limits per subscription"],
+    topicZh: "服務水準協定 (SLA)",
+    q: "What does an Azure Service Level Agreement (SLA) define?",
+    qZh: "Azure 服務水準協定 (SLA) 定義了什麼內容？",
+    opts: ["Data encryption standards and key management", "Regulatory compliance certifications", "Microsoft's formal commitment to service uptime and connectivity, backed by service credits", "Maximum data transfer limits per subscription"],
+    optsZh: ["資料加密標準與金鑰管理方式", "各國法規遵循認證清單", "微軟對服務正常運作時間 (Uptime) 與連線能力的正式承諾（未達標可申請費用抵免）", "每個訂用帳戶的最大資料傳輸上限"],
     a: 2,
-    exp: "An SLA defines Microsoft's uptime and connectivity commitments for each Azure service. For example, Azure VMs with two or more instances across Availability Zones have a 99.99% uptime SLA. If Microsoft misses the SLA, customers may be eligible for service credits."
+    exp: "An SLA defines Microsoft's uptime and connectivity commitment for an Azure service (for example, 99.99% when deploying 2+ VMs across 2+ Availability Zones in supported regions). Note: Free-tier services typically do not have an SLA.",
+    expZh: "SLA 定義微軟對各服務可用性百分比的正式承諾（例如在支援 AZ 的區域將 2 台以上 VM 跨 2 個以上 AZ 部署可享 99.99% SLA）。若未達標，客戶可申請帳單點數折抵（Service Credits）。"
   },
   {
     topic: "Cloud Service Models",
-    q: "Microsoft 365 (Office 365) — Word, Excel, Teams — is an example of which cloud service model?",
-    opts: ["Infrastructure as a Service (IaaS)", "Platform as a Service (PaaS)", "Software as a Service (SaaS)", "Database as a Service (DBaaS)"],
+    topicZh: "雲端服務模型",
+    q: "Microsoft 365 (Word, Excel, Teams, Exchange Online) is an example of which cloud service model?",
+    qZh: "Microsoft 365（包含雲端版 Word、Excel、Teams、Exchange Online）屬於哪一種雲端服務模型？",
+    opts: ["Infrastructure as a Service (IaaS)", "Platform as a Service (PaaS)", "Software as a Service (SaaS)", "Function as a Service (FaaS)"],
+    optsZh: ["基礎結構即服務 (IaaS)", "平台即服務 (PaaS)", "軟體即服務 (SaaS)", "函數即服務 (FaaS)"],
     a: 2,
-    exp: "Microsoft 365 is SaaS. Microsoft manages everything: the infrastructure, platform, and the software itself. Users simply access the applications through a web browser or a thin client. No installation or maintenance of the software is required."
+    exp: "Microsoft 365 is a Software as a Service (SaaS) offering where Microsoft hosts and manages the entire application and underlying infrastructure.",
+    expZh: "Microsoft 365 是標準的 SaaS（軟體即服務），微軟全權管理底層硬體、作業系統與應用程式本身，使用者直接透過瀏覽器或端點軟體登入使用即可。"
   }
 ];
 
@@ -650,6 +777,11 @@ let score = 0;
 let skipped = 0;
 let answered = new Array(QUESTIONS.length).fill(null);
 let shuffled = [];
+let isResultsView = false;
+
+function getLang() {
+  return (window.AZ900_I18N && window.AZ900_I18N.getLang()) || 'bi';
+}
 
 function shuffle(arr) {
   const a = [...arr];
@@ -660,42 +792,197 @@ function shuffle(arr) {
   return a;
 }
 
+function renderStaticSections(lang) {
+  // 1. Header
+  const heroTitle = document.getElementById('heroTitle');
+  const heroSubtitle = document.getElementById('heroSubtitle');
+  const navFullGuide = document.getElementById('navFullGuide');
+  const navScenario = document.getElementById('navScenario');
+  const navDay29 = document.getElementById('navDay29');
+  const navDay30 = document.getElementById('navDay30');
+  const allDaysHeading = document.getElementById('allDaysHeading');
+
+  if (lang === 'en') {
+    heroTitle.textContent = 'AZ-900 Practice Quiz';
+    heroSubtitle.innerHTML = 'Microsoft Azure Fundamentals &mdash; 31 core questions covering all exam domains';
+    navFullGuide.textContent = '📖 30-Day Full Study Guide →';
+    navScenario.textContent = '50 Scenario Quiz →';
+    navDay29.textContent = 'Day 29 Mock Exam →';
+    navDay30.textContent = 'Day 30 Final Boss →';
+    allDaysHeading.textContent = 'All 30 Study Days — Click to Practice';
+  } else if (lang === 'bi') {
+    heroTitle.textContent = 'AZ-900 模擬練習測驗 (Practice Quiz)';
+    heroSubtitle.innerHTML = 'Microsoft Azure Fundamentals &mdash; 涵蓋所有考綱領域的核心練習題 (Bilingual Mode)';
+    navFullGuide.textContent = '📖 30 天全詳解 (Full Study Guide) →';
+    navScenario.textContent = '情境題 50 題 (Scenarios) →';
+    navDay29.textContent = 'Day 29 模擬戰 (Mock 1) →';
+    navDay30.textContent = 'Day 30 終局戰 (Mock 2) →';
+    allDaysHeading.textContent = '所有學習日 — 點選練習 (All 30 Study Days)';
+  } else {
+    heroTitle.textContent = 'AZ-900 標準模擬練習測驗';
+    heroSubtitle.innerHTML = 'Microsoft Azure Fundamentals &mdash; 涵蓋所有考綱領域的核心練習題';
+    navFullGuide.textContent = '📖 30 天全詳解（單頁完整版）→';
+    navScenario.textContent = '情境題 50 題 →';
+    navDay29.textContent = 'Day 29 模擬戰 →';
+    navDay30.textContent = 'Day 30 終局戰 →';
+    allDaysHeading.textContent = '所有學習日 — 點選練習';
+  }
+
+  // 2. Notice Box
+  const noticeBox = document.getElementById('noticeBox');
+  if (lang === 'en') {
+    noticeBox.innerHTML = `
+      <div style="font-weight:700;color:#005a9e;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+        <span>⚡</span><span>AZ-900 Official Exam Highlights &amp; Technical Clarifications</span>
+      </div>
+      <ul style="padding-left:18px;margin:4px 0;">
+        <li><strong>Availability Zones (AZ):</strong> Core Azure exam topic (not AWS-exclusive). Not every Azure Region supports AZs, and SKU support varies.</li>
+        <li><strong>Region Pairs:</strong> Sequenced updates &amp; prioritized recovery; ~300 miles is a typical design goal, not an absolute rule, and <strong>does NOT automatically configure application-level DR for all resources</strong>.</li>
+        <li><strong>99.99% VM SLA:</strong> Requires deploying 2+ VMs across 2+ AZs in an AZ-supported Region with eligible SKUs.</li>
+        <li><strong>Storage Redundancy:</strong> RA-GRS uses LRS in the primary region; RA-GZRS uses ZRS (3 AZs) in the primary region.</li>
+        <li><strong>Azure Tenant Login (New):</strong> 1 Tenant can link multiple Subscriptions, but 1 Subscription trusts only 1 Tenant at a time (transferring resets RBAC). Use <code>az login --tenant</code> for cross-tenant CLI login.</li>
+      </ul>
+      <div style="margin-top:6px;font-size:0.8rem;">
+        📘 Full Reference: <a href="az900-30-day-full-guide.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">Open 30-Day Full Guide</a> ｜ <a href="day22.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">Practice Day 22: Entra ID &amp; Tenant Login (16Q)</a>
+      </div>
+    `;
+  } else {
+    noticeBox.innerHTML = `
+      <div style="font-weight:700;color:#005a9e;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+        <span>⚡</span><span>AZ-900 官方架構考點重點提示與技術勘誤 ${lang === 'bi' ? '(Official Exam Clarifications)' : ''}</span>
+      </div>
+      <ul style="padding-left:18px;margin:4px 0;">
+        <li><strong>可用性區域 (AZ)：</strong>非 AWS 專屬，Azure 同樣支援且為核心考點；並非所有 Region 都有 AZ，各 SKU 支援條件亦有差異。</li>
+        <li><strong>區域配對 (Region Pairs)：</strong>多數相距約 300 英哩但非絕對通用規則；<strong>配對不會自動為所有資源建立 DR 容錯移轉</strong>。</li>
+        <li><strong>SLA 99.99%：</strong>須在支援 AZ 區域中跨 2 個以上 AZ 部署至少 2 台 VM，且符合必要前提，非無條件保證。</li>
+        <li><strong>儲存備援差異：</strong>RA-GRS 主要區域採 LRS；RA-GZRS 主要區域才採跨 AZ 的 ZRS。</li>
+        <li><strong>Tenant 租戶登入（新增補充）：</strong>1 個 Tenant 可關聯多個 Subscriptions，但 1 個 Subscription 只能信任 1 個 Tenant（移轉租戶會重置 RBAC）；跨租戶 CLI 登入使用 <code>az login --tenant</code>。</li>
+      </ul>
+      <div style="margin-top:6px;font-size:0.8rem;">
+        📘 查閱全章節精華整理：<a href="az900-30-day-full-guide.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">前往 AZ-900 30 天全詳解單頁版</a> ｜ <a href="day22.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">練習 Day 22 租戶與身分識別 (16 題)</a>
+      </div>
+    `;
+  }
+
+  // 3. All-Days Grid
+  const grid = document.getElementById('daysGrid');
+  grid.innerHTML = DAYS_DATA.map(d => {
+    const baseStyle = d.style || "background:#f3f2f1;border:1px solid #d2d0ce;color:#201f1e;";
+    const subCol = d.subColor || "#605e5c";
+    const t = lang === 'en' ? d.titleEn : d.titleZh;
+    const s = lang === 'en' ? d.subEn : (lang === 'bi' && d.subZh !== d.subEn ? `${d.subZh} · ${d.subEn}` : d.subZh);
+    return `<a href="${d.href}" style="display:block;padding:11px 6px;${baseStyle}border-radius:8px;text-align:center;text-decoration:none;font-size:.82rem;font-weight:700;">${t}<br><span style="font-size:.7rem;color:${subCol};font-weight:400;">${s}</span></a>`;
+  }).join('');
+}
+
 function startQuiz() {
   shuffled = shuffle(QUESTIONS.map((_, i) => i));
   current = 0;
   score = 0;
   skipped = 0;
   answered = new Array(QUESTIONS.length).fill(null);
+  isResultsView = false;
   document.getElementById('progressWrap').style.display = '';
+  // Restore quizCard inner structure if coming from results screen
+  const card = document.getElementById('quizCard');
+  if (!document.getElementById('questionText')) {
+    card.innerHTML = `
+      <div class="question-meta" id="questionMeta"></div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="explanation" id="explanation"></div>
+      <div class="actions">
+        <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">略過</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" style="display:none">下一題 →</button>
+      </div>
+    `;
+  }
   renderQuestion();
 }
 
 function renderQuestion() {
+  if (isResultsView) {
+    showResults();
+    return;
+  }
+  const lang = getLang();
   const total = QUESTIONS.length;
   const qi = shuffled[current];
   const q = QUESTIONS[qi];
+  const userAns = answered[current];
+  const hasAnswered = userAns !== null && userAns !== -1;
 
-  document.getElementById('progressText').textContent = `Question ${current + 1} of ${total}`;
-  document.getElementById('scoreText').textContent = `Score: ${score}`;
+  if (lang === 'en') {
+    document.getElementById('progressText').textContent = `Question ${current + 1} of ${total}`;
+    document.getElementById('scoreText').textContent = `Score: ${score}`;
+    document.getElementById('questionMeta').innerHTML = `Question ${current + 1} &bull; ${q.topic}`;
+    document.getElementById('questionText').textContent = q.q;
+    document.getElementById('skipBtn').textContent = 'Skip';
+    document.getElementById('nextBtn').textContent = 'Next →';
+  } else if (lang === 'bi') {
+    document.getElementById('progressText').textContent = `題目 ${current + 1} / ${total} (Question ${current + 1} of ${total})`;
+    document.getElementById('scoreText').textContent = `得分 (Score)：${score}`;
+    document.getElementById('questionMeta').innerHTML = `題目 ${current + 1} &bull; ${q.topicZh} (${q.topic})`;
+    document.getElementById('questionText').innerHTML = `${q.qZh}<span class="en-sub">${q.q}</span>`;
+    document.getElementById('skipBtn').textContent = '略過 (Skip)';
+    document.getElementById('nextBtn').textContent = '下一題 (Next) →';
+  } else {
+    document.getElementById('progressText').textContent = `題目 ${current + 1} / ${total}`;
+    document.getElementById('scoreText').textContent = `得分：${score}`;
+    document.getElementById('questionMeta').innerHTML = `題目 ${current + 1} &bull; ${q.topicZh}`;
+    document.getElementById('questionText').textContent = q.qZh;
+    document.getElementById('skipBtn').textContent = '略過';
+    document.getElementById('nextBtn').textContent = '下一題 →';
+  }
+
   document.getElementById('progressFill').style.width = `${(current / total) * 100}%`;
-  document.getElementById('questionMeta').innerHTML = `Question ${current + 1} &bull; ${q.topic}`;
-  document.getElementById('questionText').textContent = q.q;
 
   const letters = ['A', 'B', 'C', 'D'];
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
-  q.opts.forEach((opt, i) => {
+  q.opts.forEach((optEn, i) => {
+    const optZh = q.optsZh ? q.optsZh[i] : optEn;
+    let labelHtml = optZh;
+    if (lang === 'en') {
+      labelHtml = optEn;
+    } else if (lang === 'bi') {
+      labelHtml = optZh === optEn ? optZh : `${optZh}<span class="bi-sub">${optEn}</span>`;
+    }
     const btn = document.createElement('button');
     btn.className = 'option-btn';
-    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    if (hasAnswered) {
+      btn.disabled = true;
+      if (i === userAns) btn.classList.add(userAns === q.a ? 'correct' : 'wrong');
+      if (userAns !== q.a && i === q.a) btn.classList.add('correct');
+    }
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${labelHtml}</span>`;
     btn.onclick = () => selectAnswer(i);
     container.appendChild(btn);
   });
 
-  document.getElementById('explanation').className = 'explanation';
-  document.getElementById('explanation').innerHTML = '';
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('skipBtn').style.display = '';
+  const exp = document.getElementById('explanation');
+  if (hasAnswered) {
+    const isCorrect = userAns === q.a;
+    renderExplanationText(exp, q, isCorrect, lang);
+    exp.className = 'explanation visible';
+    document.getElementById('nextBtn').style.display = '';
+    document.getElementById('skipBtn').style.display = 'none';
+  } else {
+    exp.className = 'explanation';
+    exp.innerHTML = '';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('skipBtn').style.display = '';
+  }
+}
+
+function renderExplanationText(expEl, q, isCorrect, lang) {
+  if (lang === 'en') {
+    expEl.innerHTML = `<strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</strong>${q.exp}`;
+  } else if (lang === 'bi') {
+    expEl.innerHTML = `<strong>${isCorrect ? '✓ 答對了！ (Correct!)' : '✗ 答錯了 (Incorrect)'}</strong>${q.expZh}<div style="margin-top:6px;padding-top:6px;border-top:1px dashed #c7e0f4;color:#484644;font-size:0.85rem;">${q.exp}</div>`;
+  } else {
+    expEl.innerHTML = `<strong>${isCorrect ? '✓ 答對了！' : '✗ 答錯了'}</strong>${q.expZh}`;
+  }
 }
 
 function selectAnswer(idx) {
@@ -712,13 +999,14 @@ function selectAnswer(idx) {
   buttons[idx].classList.add(isCorrect ? 'correct' : 'wrong');
   if (!isCorrect) buttons[q.a].classList.add('correct');
 
+  const lang = getLang();
   const exp = document.getElementById('explanation');
-  exp.innerHTML = `<strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</strong>${q.exp}`;
+  renderExplanationText(exp, q, isCorrect, lang);
   exp.className = 'explanation visible';
 
   document.getElementById('nextBtn').style.display = '';
   document.getElementById('skipBtn').style.display = 'none';
-  document.getElementById('scoreText').textContent = `Score: ${score}`;
+  document.getElementById('scoreText').textContent = lang === 'en' ? `Score: ${score}` : (lang === 'bi' ? `得分 (Score)：${score}` : `得分：${score}`);
 }
 
 function skipQuestion() {
@@ -737,47 +1025,64 @@ function nextQuestion() {
 }
 
 function showResults() {
+  isResultsView = true;
+  const lang = getLang();
   const total = QUESTIONS.length;
   const pct = Math.round((score / total) * 100);
   const pass = pct >= 70;
 
   document.getElementById('progressFill').style.width = '100%';
-  document.getElementById('progressText').textContent = `Complete`;
-  document.getElementById('scoreText').textContent = `Score: ${score}`;
+  document.getElementById('progressText').textContent = lang === 'en' ? 'Complete' : (lang === 'bi' ? '測驗完成 (Complete)' : '測驗完成');
+  document.getElementById('scoreText').textContent = lang === 'en' ? `Score: ${score}` : (lang === 'bi' ? `得分 (Score)：${score}` : `得分：${score}`);
 
   const card = document.getElementById('quizCard');
-  card.innerHTML = `
-    <div class="results">
-      <div class="score-ring ${pass ? 'pass' : 'fail'}">
-        <span class="pct">${pct}%</span>
-        <span class="label">${pass ? 'PASS' : 'FAIL'}</span>
+  if (lang === 'en') {
+    card.innerHTML = `
+      <div class="results">
+        <div class="score-ring ${pass ? 'pass' : 'fail'}">
+          <span class="pct">${pct}%</span>
+          <span class="label">${pass ? 'PASS' : 'FAIL'}</span>
+        </div>
+        <h2>${pass ? 'Well done!' : 'Keep studying!'}</h2>
+        <p class="subtitle">${pass ? 'You have a strong grasp of Azure Fundamentals.' : 'Review the Azure Fundamentals 30-day study guide and try again.'}</p>
+        <div class="stats">
+          <div class="stat-box green"><div class="num">${score}</div><div class="desc">Correct</div></div>
+          <div class="stat-box red"><div class="num">${total - score - skipped}</div><div class="desc">Incorrect</div></div>
+          <div class="stat-box"><div class="num">${skipped}</div><div class="desc">Skipped</div></div>
+          <div class="stat-box"><div class="num">${total}</div><div class="desc">Total</div></div>
+        </div>
+        <button class="btn btn-primary" onclick="startQuiz()">Try Again</button>
+        <p class="disclaimer">AZ-900 passing score is ~700/1000 (≈70%). Questions are randomized each attempt.</p>
       </div>
-      <h2>${pass ? 'Well done!' : 'Keep studying!'}</h2>
-      <p class="subtitle">${pass ? 'You have a strong grasp of Azure Fundamentals.' : 'Review the Azure Fundamentals learning path and try again.'}</p>
-      <div class="stats">
-        <div class="stat-box green">
-          <div class="num">${score}</div>
-          <div class="desc">Correct</div>
+    `;
+  } else {
+    card.innerHTML = `
+      <div class="results">
+        <div class="score-ring ${pass ? 'pass' : 'fail'}">
+          <span class="pct">${pct}%</span>
+          <span class="label">${pass ? '通過 PASS' : '未通過 FAIL'}</span>
         </div>
-        <div class="stat-box red">
-          <div class="num">${total - score - skipped}</div>
-          <div class="desc">Incorrect</div>
+        <h2>${pass ? '表現優異！ (Well done!)' : '繼續加油！ (Keep studying!)'}</h2>
+        <p class="subtitle">${pass ? '您已紮實掌握 Azure Fundamentals 核心觀念。' : '建議搭配「30 天全詳解」複習弱點章節後再挑戰一次。'}</p>
+        <div class="stats">
+          <div class="stat-box green"><div class="num">${score}</div><div class="desc">答對 (Correct)</div></div>
+          <div class="stat-box red"><div class="num">${total - score - skipped}</div><div class="desc">答錯 (Incorrect)</div></div>
+          <div class="stat-box"><div class="num">${skipped}</div><div class="desc">略過 (Skipped)</div></div>
+          <div class="stat-box"><div class="num">${total}</div><div class="desc">總題數 (Total)</div></div>
         </div>
-        <div class="stat-box">
-          <div class="num">${skipped}</div>
-          <div class="desc">Skipped</div>
-        </div>
-        <div class="stat-box">
-          <div class="num">${total}</div>
-          <div class="desc">Total</div>
-        </div>
+        <button class="btn btn-primary" onclick="startQuiz()">再測驗一次 (Try Again)</button>
+        <p class="disclaimer">AZ-900 及格分數為 700/1000 (約 70%)。每次測驗題目皆會隨機排序。</p>
       </div>
-      <button class="btn btn-primary" onclick="startQuiz()">Try Again</button>
-      <p class="disclaimer">AZ-900 passing score is ~700/1000 (≈70%). Questions are randomized each attempt. This quiz is for practice purposes only.</p>
-    </div>
-  `;
+    `;
+  }
 }
 
+window.onAz900LangChange = function (lang) {
+  renderStaticSections(lang);
+  renderQuestion();
+};
+
+renderStaticSections(getLang());
 startQuiz();
 </script>
 </body>

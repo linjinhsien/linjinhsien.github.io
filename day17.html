@@ -277,7 +277,7 @@ function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Mat
 function startQuiz(){shuffled=shuffle(QUESTIONS.map((_,i)=>i));current=0;score=0;skipped=0;answered=new Array(QUESTIONS.length).fill(null);renderQuestion();}
 function renderQuestion(){
   const total=QUESTIONS.length,q=QUESTIONS[shuffled[current]];
-  document.getElementById("progressText").textContent="题目 "+(current+1)+" / "+total;
+  document.getElementById("progressText").textContent="題目 "+(current+1)+" / "+total;
   document.getElementById("scoreText").textContent="得分："+score;
   document.getElementById("progressFill").style.width=((current/total)*100)+"%";
   document.getElementById("questionMeta").innerHTML="題目 "+(current+1)+" &bull; "+q.topic;
@@ -311,5 +311,6 @@ function showResults(){
 }
 startQuiz();
 </script>
+<script src="i18n.js"></script>
 </body>
 </html>

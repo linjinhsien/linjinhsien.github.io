@@ -1313,6 +1313,7 @@
 
 <button id="backToTop" title="回到頂部">↑</button>
 
+<script src="i18n.js"></script>
 <script>
   // Back to top behavior
   const btt = document.getElementById('backToTop');
@@ -1326,6 +1327,76 @@
   btt.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  const GUIDE_EN_TITLES = {
+    day1: "Day 1: Cloud Concepts & Shared Responsibility Model (IaaS / PaaS / SaaS, CapEx vs OpEx)",
+    day2: "Day 2: Azure Core Infrastructure: Regions, Availability Zones, Region Pairs & SLA",
+    day3: "Day 3: Sovereign Clouds (Azure Government & China 21Vianet) & Compliance",
+    day4: "Day 4: Management Tools: Portal, CLI, PowerShell, Cloud Shell & Azure Arc",
+    day5: "Day 5: Infrastructure as Code (IaC): ARM Templates & Bicep",
+    day6: "Day 6: Monitoring & Health: Azure Advisor & Azure Service Health",
+    day7: "Day 7: Milestone Review 1: Cloud Concepts & Core Governance",
+    day8: "Day 8: Compute: Virtual Machines (VM), Scale Sets (VMSS) & Availability",
+    day9: "Day 9: App Services: Azure App Service & Serverless Azure Functions",
+    day10: "Day 10: Containers: Azure Container Instances (ACI) & Kubernetes (AKS)",
+    day11: "Day 11: Networking: Virtual Network (VNet), Subnets & VNet Peering",
+    day12: "Day 12: Network Security: Network Security Groups (NSG) & ASG",
+    day13: "Day 13: Hybrid Connectivity: VPN Gateway vs. Azure ExpressRoute",
+    day14: "Day 14: Load Balancing: Azure Load Balancer (L4) vs. Application Gateway (L7)",
+    day15: "Day 15: Object Storage: Azure Blob Storage & Access Tiers (Hot/Cool/Cold/Archive)",
+    day16: "Day 16: File Shares & Disks: Azure Files (SMB/NFS) & Managed Disks",
+    day17: "Day 17: Data Migration Tools: Storage Explorer & AzCopy",
+    day18: "Day 18: Relational Databases: Azure SQL Database & SQL Managed Instance",
+    day19: "Day 19: Global NoSQL Database: Azure Cosmos DB",
+    day20: "Day 20: Big Data & Analytics: Azure Synapse Analytics & Databricks",
+    day21: "Day 21: Milestone Review 2: Compute, Networking, Storage & Databases",
+    day22: "Day 22: Identity: Microsoft Entra ID, Azure Tenant Login & Conditional Access",
+    day23: "Day 23: Access Control: Azure RBAC & Resource Hierarchy",
+    day24: "Day 24: Security Architecture: Zero Trust & Microsoft Defender for Cloud",
+    day25: "Day 25: Secrets & SIEM: Azure Key Vault & Microsoft Sentinel",
+    day26: "Day 26: Governance: Azure Policy, Resource Locks & Tags",
+    day27: "Day 27: Cost Management, Pricing Calculator, TCO & Hybrid Benefit",
+    day28: "Day 28: Exam Strategy: Mastering Special AZ-900 Question Types",
+    day29: "Day 29: 50-Question Cross-Domain Mock Exam Strategy",
+    day30: "Day 30: Final Boss: Storage Redundancy (LRS/ZRS/GRS/RA-GZRS) & SLA Matrix"
+  };
+
+  window.onAz900LangChange = function (lang) {
+    const heroH1 = document.querySelector('header.hero h1');
+    const heroP = document.querySelector('header.hero p');
+    if (heroH1 && heroP) {
+      if (lang === 'en') {
+        heroH1.textContent = 'Microsoft Azure AZ-900 30-Day Full Study Guide';
+        heroP.textContent = 'Comprehensive coverage of Cloud Concepts, Availability Zones, Region Pairs, Tenant Login, SLA conditions, and Storage Redundancy.';
+      } else if (lang === 'bi') {
+        heroH1.textContent = 'Microsoft Azure AZ-900 30 天全教材詳解 (30-Day Full Study Guide)';
+        heroP.textContent = '嚴謹釐清跨雲混淆、官方 Availability Zones 考點、Tenant 租戶登入、Region Pairs 運作機制、SLA 條件與儲存體備援架構 (Bilingual Mode)。';
+      } else {
+        heroH1.textContent = 'Microsoft Azure AZ-900 30 天全教材詳解';
+        heroP.textContent = '嚴謹釐清跨雲混淆、官方 Availability Zones 考點、Tenant 租戶登入、Region Pairs 運作機制、SLA 條件與儲存體備援架構。';
+      }
+    }
+
+    Object.keys(GUIDE_EN_TITLES).forEach(id => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      const titleEl = sec.querySelector('.day-title');
+      if (!titleEl) return;
+      const rawZh = titleEl.getAttribute('data-zh') || titleEl.textContent;
+      titleEl.setAttribute('data-zh', rawZh);
+      if (lang === 'en') {
+        titleEl.textContent = GUIDE_EN_TITLES[id];
+      } else if (lang === 'bi') {
+        titleEl.innerHTML = `${rawZh}<div style="font-size:0.82rem;color:#005a9e;font-weight:500;margin-top:2px;">${GUIDE_EN_TITLES[id]}</div>`;
+      } else {
+        titleEl.textContent = rawZh;
+      }
+    });
+  };
+
+  if (window.AZ900_I18N) {
+    window.onAz900LangChange(window.AZ900_I18N.getLang());
+  }
 </script>
 </body>
 </html>
