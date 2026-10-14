@@ -394,6 +394,11 @@
             <td><strong>違背資料主權原則！</strong>Azure 保證預設情況下，資料只會在同一個 <strong>Geography（地理邊界）</strong> 內進行複寫與備援，不會未經授權跨國傳送。</td>
             <td>Geography 定義資料駐留（Data Residency）與法規遵循邊界（例如 Asia Pacific 內的 East Asia 與 Southeast Asia 配對）。</td>
           </tr>
+          <tr>
+            <td><strong>「Tenant 與 Subscription 是一樣的，或 Global Admin 自動擁有所有資源 RBAC 權限」</strong></td>
+            <td><strong>層次完全不同！</strong><strong>Tenant（租用戶）</strong>是 Microsoft Entra ID 的身分目錄實例（管「你是誰」）；<strong>Subscription（訂用帳戶）</strong>是計費與資源存取邊界（管「你能存取什麼」）。</td>
+            <td>1 個 Tenant 可關聯多個 Subscriptions，但 1 個 Subscription 同一時間<strong>只能信任 1 個 Tenant</strong>（若變更 Subscription 所屬 Tenant，原有 RBAC 指派會全部失效）。此外，Entra Global Admin 預設不必然具備所有 Subscription 的 RBAC 權限，需手動開啟提權開關。</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -1014,16 +1019,84 @@
 
   <article class="day-section" id="day22">
     <div class="day-header">
-      <div><span class="day-badge">DAY 22</span><h2 class="day-title">身分識別：Microsoft Entra ID 與條件式存取 (Conditional Access)</h2></div>
-      <span class="day-domain">Domain 3: 描述 Azure 管理與治理</span>
+      <div><span class="day-badge">DAY 22</span><h2 class="day-title">身分識別：Microsoft Entra ID、Tenant（租戶登入）與條件式存取</h2></div>
+      <span class="day-domain">Domain 3: 描述 Azure 管理與治理 (30–35%)</span>
     </div>
     <div class="content-block">
-      <h4>📌 核心重點</h4>
+      <h4>📌 核心重點：Microsoft Entra ID 與條件式存取</h4>
       <ul class="point-list">
-        <li><strong>Microsoft Entra ID (前身為 Azure Active Directory)：</strong>雲端原生身分識別與存取管理服務 (IDaaS)。管理使用者、群組、單一登入 (SSO) 與應用程式註冊。</li>
-        <li><strong>多重要素驗證 (MFA)：</strong>要求提供兩種或以上的驗證方式（密碼 + 手機 App 認證碼 / 簡訊）。</li>
-        <li><strong>條件式存取 (Conditional Access)：</strong>「如果...那麼...」政策引擎。例如：「如果使用者從不信任的 IP 或非公司註冊裝置登入，那麼強制要求 MFA 或封鎖存取」。</li>
+        <li><strong>Microsoft Entra ID (前身為 Azure Active Directory)：</strong>微軟雲端原生身分識別與存取管理服務 (IDaaS)，採用現代化驗證協定（OAuth 2.0、OpenID Connect、SAML、WS-Federation），統一管理使用者、群組、單一登入 (SSO) 與應用程式註冊。</li>
+        <li><strong>多重要素驗證 (MFA)：</strong>要求提供兩種或以上不同類別的驗證因素：<strong>你知道的（密碼）</strong> + <strong>你擁有的（Authenticator App 推播 / 硬體金鑰 FIDO2）</strong> + <strong>你具備的生物特徵（Windows Hello 臉部/指紋）</strong>。</li>
+        <li><strong>條件式存取 (Conditional Access)：</strong>在<strong>第一因素驗證（密碼登入）通過之後</strong>觸發的「如果...那麼...」零信任政策引擎。根據訊號（使用者角色、IP 位置、裝置合規狀態、登入風險）動態決定「允許存取」、「強制要求 MFA」或「直接封鎖」。</li>
       </ul>
+    </div>
+
+    <div class="content-block">
+      <h4>🏢 深度補充：Azure Tenant（租用戶）架構與登入機制全解析</h4>
+      <ul class="point-list">
+        <li><strong>什麼是 Azure Tenant（租用戶 / 目錄實例）？</strong>
+          <ul>
+            <li>當組織註冊 Microsoft 雲端服務（如 Azure 或 Microsoft 365）時，會自動獲得一個專屬且受信任的 Microsoft Entra ID 實例，稱為 <strong>Tenant（租用戶）</strong>。</li>
+            <li>每個 Tenant 皆擁有全球唯一的 <strong>Tenant ID（GUID 格式）</strong> 與預設初始網域名稱 <code>&lt;名稱&gt;.onmicrosoft.com</code>（例如 <code>contoso.onmicrosoft.com</code>），企業後續可驗證並綁定自訂網域名稱（如 <code>contoso.com</code>）。</li>
+          </ul>
+        </li>
+        <li><strong>Tenant（租戶）vs Subscription（訂用帳戶）一對多信任關係（必考重點）：</strong>
+          <ul>
+            <li><strong>Tenant = 身分邊界（Authentication 驗證）：</strong>存放帳號、群組與密碼策略，驗證「你是誰」。</li>
+            <li><strong>Subscription = 計費與資源邊界（Authorization 授權）：</strong>部署 VM、資料庫等雲端資源並產生帳單，透過 Azure RBAC 控制「你能對資源做什麼」。</li>
+            <li><strong>關聯規則：</strong><strong>一個 Tenant 下可以掛載多個 Subscriptions</strong>（例如區分研發部、財務部帳單，但共用同一套公司帳號登入）；反之，<strong>一個 Subscription 在同一時間只能信任（關聯）唯一一個 Tenant</strong>。</li>
+            <li><strong>遷移陷阱：</strong>如果將某個 Subscription 變更關聯（移轉）到另一個新的 Tenant，該 Subscription 原本設定的所有 <strong>Azure RBAC 角色指派與自訂角色都會失效（被移除）</strong>，必須在新 Tenant 重新指派！</li>
+          </ul>
+        </li>
+        <li><strong>跨租戶登入：成員 (Member) vs 外部來賓 (B2B Guest) 與目錄切換：</strong>
+          <ul>
+            <li><strong>Member（內部成員）：</strong>在自己公司主租戶（Home Tenant）內建立的員工帳號。</li>
+            <li><strong>Guest（B2B 來賓帳號）：</strong>透過 <strong>Microsoft Entra External ID (B2B Collaboration)</strong> 邀請外部合作夥伴或顧問（使用他們原本公司的企業帳號、Google 或個人 Microsoft 帳號）進入您的 Tenant。目錄中帳號格式會顯示為 <code>user_partner.com#EXT#@contoso.onmicrosoft.com</code>。<strong>驗證（登入帳密）由對方原屬身分提供者負責，授權（RBAC 權限）則由您的目標資源 Tenant 控制！</strong></li>
+            <li><strong>Portal 與 CLI 切換租戶登入：</strong>若一個帳號同時是 A 租戶的員工又是 B 租戶的來賓，在 Azure Portal 右上角需點選<strong>「切換目錄 (Switch directory)」</strong>才能看到 B 租戶的訂用帳戶；使用 Azure CLI 登入指定租戶時，可加上參數：<code>az login --tenant &lt;Tenant-ID 或 網域名稱&gt;</code>。</li>
+          </ul>
+        </li>
+        <li><strong>Entra 目錄角色 vs Azure RBAC 資源角色（Global Admin 提權機制）：</strong>
+          <ul>
+            <li><strong>Entra ID 角色（如 Global Administrator 全域管理員）：</strong>管理 Tenant 內的身分、使用者、群組與網域設定。</li>
+            <li><strong>Azure RBAC 角色（如 Owner / Contributor / Reader）：</strong>管理 Subscription 與 Resource Group 內的雲端資源。</li>
+            <li><strong>關鍵觀念：</strong>Entra ID 的 Global Administrator 預設<strong>不會自動擁有所有 Azure Subscription 的 RBAC 存取權</strong>！若因原 Owner 離職需要救援，Global Admin 必須至 Microsoft Entra ID &gt; 屬性 (Properties) 中開啟<strong>「存取管理以取得 Azure 資源 (Access management for Azure resources)」</strong>提權開關，系統才會授予其根層級的 <code>User Access Administrator</code> 角色以重新指派權限。</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="quiz-sample">
+      <div class="q-title">經典實戰試題 1：Tenant 與 Subscription 的遷移與信任關係</div>
+      <ul class="q-opts">
+        <li>題目：某集團因組織重整，管理員將「研發部 Subscription」從原本的 Tenant A 移轉關聯至新的 Tenant B。請問移轉完成後，原本在「研發部 Subscription」中為各別工程師設定的 Azure RBAC 角色指派（如 Contributor、Reader）會發生什麼事？</li>
+        <li>A. 所有 RBAC 角色指派會自動無縫轉移到 Tenant B 的對應帳號</li>
+        <li>B. 原有的 RBAC 角色指派會全部遺失（被移除），必須根據 Tenant B 的身分重新指派</li>
+        <li>C. 該 Subscription 會同時信任 Tenant A 與 Tenant B 兩邊的帳號</li>
+        <li>D. 訂用帳戶內的所有虛擬機器與儲存體資源會被強制自動刪除</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：一個 Azure Subscription 同一時間只能信任一個 Microsoft Entra Tenant。由於 RBAC 角色指派是綁定在原本 Tenant A 的安全主體（Object ID）上，當 Subscription 變更關聯至 Tenant B 時，原有的 RBAC 角色指派不會一併轉移而會被移除（但底層的 VM、儲存體等雲端資源本身會保留下來不會被刪除）。
+      </div>
+    </div>
+
+    <div class="quiz-sample" style="margin-top:12px;">
+      <div class="q-title">經典實戰試題 2：跨租戶來賓登入 (B2B) 與 CLI 指定租戶</div>
+      <ul class="q-opts">
+        <li>題目：外部技術顧問小王受邀以 B2B Guest（來賓）身分加入客戶 Contoso 的 Azure Tenant 協助排錯。小王在本機終端機執行 <code>az login</code> 後，卻發現列表裡只看得到自己公司的主租戶（Home Tenant），找不到客戶 Contoso 的訂用帳戶。小王應該如何登入才能正確切換至客戶的租戶？</li>
+        <li>A. 必須請客戶為小王重新建立一組全新的 <code>@contoso.onmicrosoft.com</code> 內部員工帳號並重設電腦</li>
+        <li>B. 執行 <code>az login --tenant contoso.onmicrosoft.com</code>（或指定客戶的 Tenant ID）明確登入目標租戶</li>
+        <li>C. 執行 <code>az group create</code> 強制同步跨租戶快取</li>
+        <li>D. Guest 來賓帳號永遠無法使用 Azure CLI 或 Azure Portal</li>
+      </ul>
+      <div class="q-ans">
+        <strong>✓ 正確答案：B</strong><br>
+        詳解：當使用者跨多個 Tenant 協作（身為原公司 Member、同時為客戶 Tenant 的 B2B Guest）時，預設登入會進入自己的 Home Tenant。透過 Azure Portal 右上角「切換目錄 (Switch directory)」或 CLI 指令 <code>az login --tenant &lt;TenantId/Domain&gt;</code>，即可使用同一組帳密通過驗證並取得客戶 Tenant 下的資源授權 Token。
+      </div>
+    </div>
+
+    <div class="official-ref">
+      📖 Microsoft Learn: <a href="https://learn.microsoft.com/zh-tw/entra/fundamentals/whatis" target="_blank">什麼是 Microsoft Entra ID？</a> ｜ <a href="https://learn.microsoft.com/zh-tw/azure/role-based-access-control/transfer-subscription" target="_blank">將 Azure 訂用帳戶轉移至另一個 Microsoft Entra 目錄</a> ｜ <a href="https://learn.microsoft.com/zh-tw/entra/external-id/what-is-b2b" target="_blank">B2B 外部來賓協作概觀</a>
     </div>
   </article>
 

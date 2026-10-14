@@ -354,9 +354,10 @@
     <li><strong>區域配對 (Region Pairs)：</strong>多數相距約 300 英哩但非絕對通用規則；<strong>配對不會自動為所有資源建立 DR 容錯移轉</strong>。</li>
     <li><strong>SLA 99.99%：</strong>須在支援 AZ 區域中跨 2 個以上 AZ 部署至少 2 台 VM，且符合必要前提，非無條件保證。</li>
     <li><strong>儲存備援差異：</strong>RA-GRS 主要區域採 LRS；RA-GZRS 主要區域才採跨 AZ 的 ZRS。</li>
+    <li><strong>Tenant 租戶登入（新增補充）：</strong>1 個 Tenant 可關聯多個 Subscriptions，但 1 個 Subscription 只能信任 1 個 Tenant（移轉租戶會重置 RBAC）；跨租戶 CLI 登入使用 <code>az login --tenant</code>。</li>
   </ul>
   <div style="margin-top:6px;font-size:0.8rem;">
-    📘 查閱全章節精華整理：<a href="az900-30-day-full-guide.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">前往 AZ-900 30 天全詳解單頁版</a>
+    📘 查閱全章節精華整理：<a href="az900-30-day-full-guide.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">前往 AZ-900 30 天全詳解單頁版</a> ｜ <a href="day22.html" style="color:#0078d4;font-weight:600;text-decoration:underline;">練習 Day 22 租戶與身分識別 (16 題)</a>
   </div>
 </div>
 
@@ -385,7 +386,7 @@
     <a href="day19.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 19<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Cosmos DB</span></a>
     <a href="day20.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 20<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Synapse</span></a>
     <a href="day21.html" style="display:block;padding:11px 6px;background:#fff3cd;border:1px solid #f9c53b;border-radius:8px;text-align:center;text-decoration:none;color:#7a5700;font-size:.82rem;font-weight:700;">Day 21<br><span style="font-size:.7rem;font-weight:400;">總複習②</span></a>
-    <a href="day22.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 22<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Entra ID</span></a>
+    <a href="day22.html" style="display:block;padding:11px 6px;background:#e6f0fa;border:1px solid #0078d4;border-radius:8px;text-align:center;text-decoration:none;color:#005a9e;font-size:.82rem;font-weight:700;">Day 22<br><span style="font-size:.7rem;color:#005a9e;font-weight:600;">Entra &amp; 租戶登入</span></a>
     <a href="day23.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 23<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">RBAC</span></a>
     <a href="day24.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 24<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Zero Trust</span></a>
     <a href="day25.html" style="display:block;padding:11px 6px;background:#f3f2f1;border:1px solid #d2d0ce;border-radius:8px;text-align:center;text-decoration:none;color:#201f1e;font-size:.82rem;font-weight:700;">Day 25<br><span style="font-size:.7rem;color:#605e5c;font-weight:400;">Key Vault</span></a>
